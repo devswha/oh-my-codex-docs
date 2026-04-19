@@ -3,4 +3,23 @@ title: "Hooks"
 description: "Hooks that plug into Codex CLI lifecycle events. Five subtopics: lifecycle events, core hooks, context hooks, magic keywords, and Codex-native hooks."
 ---
 
-Hooks that plug into Codex CLI lifecycle events. Five subtopics: lifecycle events, core hooks, context hooks, magic keywords, and Codex-native hooks.
+OMX hooks extend Codex CLI at defined lifecycle boundaries. They inject developer context, activate skills, keep runtime state in sync, and continue long-running workflows without asking you to remember internal commands.
+
+## Hook topics
+
+| Topic | What it covers |
+|---|---|
+| [Lifecycle Events](/docs/hooks/lifecycle-events) | Which Codex events OMX listens to and what fires when |
+| [Core Hooks](/docs/hooks/core-hooks) | Keyword detection, skill activation, routing, and orchestration enforcement |
+| [Context Hooks](/docs/hooks/context-hooks) | Notepad, project memory, compaction handling, and state persistence |
+| [Magic Keywords](/docs/hooks/magic-keywords) | How natural-language phrases and `$skill` invocations map into workflows |
+| [Codex-native Hooks](/docs/hooks/codex-native-hooks) | The concrete Codex hook integration points used by OMX |
+
+## What hooks do in practice
+
+- Detect workflow requests on `UserPromptSubmit`.
+- Add guardrails before and after tool execution.
+- Restore or continue active OMX modes like autopilot, ralph, ultraqa, and team.
+- Persist `.omx/` state so long-running sessions survive interruptions.
+
+If you are debugging why a skill activated, started, resumed, or refused to run, the hook docs are usually the fastest place to look.

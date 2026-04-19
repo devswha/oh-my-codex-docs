@@ -3,4 +3,23 @@ title: "Tools"
 description: "OMX tools available to skills and hooks: state, HUD, wiki, catalog, visual verdict, ask-claude, ask-gemini."
 ---
 
-OMX tools available to skills and hooks: state, HUD, wiki, catalog, visual verdict, ask-claude, ask-gemini.
+OMX tools are the internal capability layer used by skills, hooks, and agents. Unlike `$skills`, these surfaces are usually invoked programmatically while a workflow is running.
+
+## Tool pages
+
+| Tool page | What it helps with |
+|---|---|
+| [State](/docs/tools/state) | Read, write, inspect, and clear OMX runtime state |
+| [HUD](/docs/tools/hud) | Statusline visibility, layout, and session progress display |
+| [Wiki](/docs/tools/wiki) | Persistent markdown knowledge capture and retrieval |
+| [Catalog](/docs/tools/catalog) | Tool inventory and how OMX groups capabilities |
+| [Visual Verdict](/docs/tools/visual) | Screenshot-to-reference QA workflows |
+| [Ask Claude](/docs/tools/ask-claude) | Provider bridge for Claude-backed advisory queries |
+| [Ask Gemini](/docs/tools/ask-gemini) | Provider bridge for Gemini-backed advisory queries |
+
+## How tools differ from skills
+
+- **Skills** are user-facing entry points such as `$autopilot` or `$team`.
+- **Tools** are lower-level capabilities those workflows call while executing.
+
+For example, a workflow skill may update mode state, write to the wiki, or run visual QA through these tool surfaces without exposing each step as a separate user command.
