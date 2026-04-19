@@ -1,0 +1,46 @@
+---
+title: Oh My CodeX
+description: OpenAI Codex CLI 向けマルチエージェントオーケストレーション。学習コストゼロ。
+---
+
+**OpenAI Codex CLI 向けマルチエージェントオーケストレーション。学習コストゼロ。**
+
+_Codex プロンプトを学ぶ必要はありません。OMX をそのまま使ってください。_
+
+Oh My CodeX (OMX) は OpenAI Codex CLI の上で動作するワークフローレイヤーです。1 回の呼び出しで専用エージェントプロンプトを連携させ、複雑な開発タスクをエンドツーエンドで自動化します。
+
+## クイックスタート
+
+### 第 1 ステップ — Codex CLI をインストール
+
+```bash
+npm i -g @openai/codex
+```
+
+### 第 2 ステップ — OMX をインストール
+
+```bash
+npm i -g oh-my-codex
+```
+
+### 第 3 ステップ — セットアップ
+
+```bash
+omx setup
+```
+
+### 第 4 ステップ — $autopilot を試す
+
+Codex CLI セッションで次のように入力します:
+
+```
+autopilot build me a todo app in next.js
+```
+
+## 次のステップ
+
+- [はじめに](./getting-started) — 完全なインストールと初回実行
+- [コアコンセプト](./concepts) — エージェント、スキル、フック、チーム
+- [エージェント](./agents) — 33 個のエージェントプロンプト
+- [スキル](./skills) — 37 個の自動化スキル
+- [統合](./integrations) — OpenClaw、MCP、クロス CLI ブリッジ
