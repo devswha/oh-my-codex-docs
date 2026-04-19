@@ -1,6 +1,44 @@
 ---
-title: "Lifecycle Events（翻译草稿）"
-description: "PreToolUse, PostToolUse, Stop, SessionStart, and other event phases exposed to OMX hooks."
+title: "钩子生命周期事件"
+description: "OMX 监听的七个钩子阶段：PreToolUse、PostToolUse、Stop、SessionStart、PreCompact、Notification 和 UserPromptSubmit。"
 ---
 
-PreToolUse, PostToolUse, Stop, SessionStart, and other event phases exposed to OMX hooks.
+OMX 钩子与 Codex CLI 生命周期事件绑定。每个事件在 Codex 会话的特定时间点触发，并携带类型化的载荷。了解哪些事件在何时触发，有助于预测 OMX 的行为，并确定在哪里添加自定义插件逻辑。
+
+## 概述
+
+Codex CLI 暴露了一组固定的命名事件，外部钩子处理程序可以订阅这些事件。OMX 将自身的运行时关注点——状态持久化、关键词检测、停止门控、上下文注入——映射到这些事件上。相同的事件词汇也暴露给 `.omx/hooks/*.mjs` 插件文件，使自定义逻辑能够在正确的阶段插入，而无需复制 OMX 内部实现。
+
+## 事件
+
+| 事件 | 触发时机 | OMX 典型用途 |
+|---|---|---|
+| `SessionStart` | Codex 会话初始化时 | 恢复启动上下文、填充 wiki 摘要、确保 `.omx/` 已加入 gitignore |
+| `UserPromptSubmit` | 用户发送提示时 | 关键词检测、技能路由、deep-interview 输入锁定 |
+| `PreToolUse` | 工具调用执行前 | Bash 安全检查、内联 `git commit` 格式守卫 |
+| `PostToolUse` | 工具调用完成后 | 命令未找到指导、非零输出审查 |
+| `Stop` | 模型完成一轮响应时 | Ralph/autopilot/ultrawork/ultraqa 继续运行、停滞时自动推进 |
+| `PreCompact` | 上下文窗口接近限制时 | 保留中；wiki 压缩延至 v2 |
+| `Notification` | 系统通知发出时 | 通过 notify-hook 将通知路由到 Discord/Slack/Telegram |
+
+Codex 原生钩子覆盖范围是部分性的。`PreToolUse` 和 `PostToolUse` 目前只拦截 Bash；非 Bash 工具的拦截回退到运行时路径。完整映射矩阵请参阅 [Codex 原生钩子](/docs/hooks/codex-native-hooks)。
+
+## 示例
+
+响应 `post-tool-use` 事件的插件：
+
+```js
+// .omx/hooks/my-plugin.mjs
+export async function onHookEvent(event, sdk) {
+  if (event.event !== 'post-tool-use') return;
+  sdk.log.info('tool finished', event.context);
+}
+```
+
+事件信封始终包含 `schema_version`、`event`、`timestamp`、`source`（`native` 或 `derived`）和 `context`。
+
+## 相关文档
+
+- [核心钩子](/docs/hooks/core-hooks)
+- [Codex 原生钩子](/docs/hooks/codex-native-hooks)
+- [上下文钩子](/docs/hooks/context-hooks)

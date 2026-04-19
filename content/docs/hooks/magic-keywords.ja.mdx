@@ -1,6 +1,52 @@
 ---
-title: "Magic Keywords（翻訳ドラフト）"
-description: "Phrases detected by OMX hooks that route work to skills (\"autopilot\", \"ralph\", \"team\", ...)."
+title: "マジックキーワード"
+description: "キーワード検出器フックが認識して OMX スキルへプロンプトを自動ルーティングするフレーズ — autopilot、ralph、team、ralplan、ulw など。"
 ---
 
-Phrases detected by OMX hooks that route work to skills ("autopilot", "ralph", "team", ...).
+マジックキーワードは、明示的なスラッシュコマンドなしに OMX スキルルーティングをトリガーするフレーズです。キーワード検出器フックはすべての `UserPromptSubmit` イベントでこれらのフレーズをスキャンし、モデルがプロンプトを見る前にスキルのアクティベーション状態を書き込みます。モデルはスキルの指示が実行準備済みの状態で起動します。
+
+## 概要
+
+キーワードレジストリ（`src/hooks/keyword-registry.ts`）は、優先度順のフレーズとスキルのマッピングリストを定義します。検出は明示的な `$skill` 呼び出し（左から右にマッチ）と、語境界ガード付きの暗黙的フレーズマッチングの両方をサポートします。`team`、`ralph`、`parallel` などのいくつかのキーワードは、偶発的な文章で発動しないように追加の意図コンテキストが必要です。
+
+## キーワード一覧
+
+| フレーズ | ルーティング先 | 優先度 |
+|---|---|---|
+| `ralplan`, `consensus plan` | `ralplan` | 11 |
+| `autopilot`, `build me`, `I want a` | `autopilot` | 10 |
+| `ultrawork`, `ulw`, `parallel` | `ultrawork` | 10 |
+| `ralph`, `don't stop`, `must complete`, `keep going` | `ralph` | 9 |
+| `deep interview`, `interview me`, `gather requirements`, `don't assume`, `ouroboros` | `deep-interview` | 8 |
+| `ultraqa` | `ultraqa` | 8 |
+| `team`, `swarm`, `coordinated team` | `team` | 8 |
+| `plan this`, `plan the`, `let's plan` | `plan` | 8 |
+| `code review`, `review code` | `code-review` | 6 |
+| `tdd`, `test first` | `tdd` | 6 |
+| `fix build`, `type errors` | `build-fix` | 6 |
+| `analyze`, `investigate` | `analyze` | 7 |
+| `wiki query`, `wiki add`, `wiki lint` | `wiki` | 5 |
+| `cancel`, `stop`, `abort` | `cancel` | 5 |
+
+複数のキーワードがマッチした場合、高い優先度が勝ちます。明示的な `$skill` 参照は常に暗黙的なフレーズマッチより優先されます。
+
+## 例
+
+暗黙的トリガー——フレーズだけで autopilot へルーティング:
+
+```
+codex
+> build me a REST API for bookstore inventory in TypeScript
+```
+
+明示的呼び出し——`$` プレフィックスで特定スキルを指定:
+
+```
+codex
+> $ralplan design the new auth system
+```
+
+## 関連ドキュメント
+
+- [コアフック](/docs/hooks/core-hooks)
+- [ライフサイクルイベント](/docs/hooks/lifecycle-events)

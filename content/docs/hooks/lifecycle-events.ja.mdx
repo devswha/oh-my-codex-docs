@@ -1,6 +1,44 @@
 ---
-title: "Lifecycle Events（翻訳ドラフト）"
-description: "PreToolUse, PostToolUse, Stop, SessionStart, and other event phases exposed to OMX hooks."
+title: "ライフサイクルイベント"
+description: "OMX が受信する 7 つのフックフェーズ: PreToolUse、PostToolUse、Stop、SessionStart、PreCompact、Notification、UserPromptSubmit。"
 ---
 
-PreToolUse, PostToolUse, Stop, SessionStart, and other event phases exposed to OMX hooks.
+OMX フックは Codex CLI のライフサイクルイベントに紐付けられています。各イベントは Codex セッションの特定のタイミングで発火し、型付きのペイロードを伴います。どのイベントがいつ発火するかを理解することで、OMX の動作を予測し、独自のプラグインロジックをどこに追加するかを把握できます。
+
+## 概要
+
+Codex CLI は、外部フックハンドラーが購読できる固定の名前付きイベントセットを公開しています。OMX は、状態の永続化、キーワード検出、停止ゲーティング、コンテキスト注入といった自身のランタイム関心事をこれらのイベントにマッピングします。同じイベント語彙が `.omx/hooks/*.mjs` プラグインファイルにも公開されており、カスタムロジックが OMX 内部を複製することなく適切なフェーズに差し込めます。
+
+## イベント
+
+| イベント | 発火タイミング | OMX の主な用途 |
+|---|---|---|
+| `SessionStart` | Codex セッション初期化時 | 起動コンテキストの復元、wiki サマリーのシード、`.omx/` の gitignore 確認 |
+| `UserPromptSubmit` | ユーザーがプロンプトを送信したとき | キーワード検出、スキルルーティング、deep-interview 入力ロック |
+| `PreToolUse` | ツール呼び出し実行前 | Bash 安全チェック、インライン `git commit` フォーマットガード |
+| `PostToolUse` | ツール呼び出し完了後 | コマンド未検出ガイダンス、非ゼロ出力レビュー |
+| `Stop` | モデルがターンを完了したとき | Ralph/autopilot/ultrawork/ultraqa の継続、停滞時の自動ナッジ |
+| `PreCompact` | コンテキストウィンドウが上限に近づいたとき | 予約済み；wiki 圧縮は v2 に延期 |
+| `Notification` | システム通知が発生したとき | notify-hook 経由で Discord/Slack/Telegram へ通知ルーティング |
+
+Codex ネイティブフックのカバレッジは部分的です。`PreToolUse` と `PostToolUse` は現在 Bash のみをインターセプトし、Bash 以外のツールのインターセプションはランタイムパスにフォールバックします。完全なマッピングマトリクスは [Codex ネイティブフック](/docs/hooks/codex-native-hooks) を参照してください。
+
+## 例
+
+`post-tool-use` イベントに反応するプラグイン:
+
+```js
+// .omx/hooks/my-plugin.mjs
+export async function onHookEvent(event, sdk) {
+  if (event.event !== 'post-tool-use') return;
+  sdk.log.info('tool finished', event.context);
+}
+```
+
+イベントエンベロープには常に `schema_version`、`event`、`timestamp`、`source`（`native` または `derived`）、`context` が含まれます。
+
+## 関連ドキュメント
+
+- [コアフック](/docs/hooks/core-hooks)
+- [Codex ネイティブフック](/docs/hooks/codex-native-hooks)
+- [コンテキストフック](/docs/hooks/context-hooks)

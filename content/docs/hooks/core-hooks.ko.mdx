@@ -1,6 +1,38 @@
 ---
-title: "Core Hooks (번역 초안)"
-description: "The built-in OMX hooks shipped with oh-my-codex."
+title: "코어 훅"
+description: "oh-my-codex와 함께 제공되는 내장 OMX 훅: 키워드 감지기, ralph 중단 게이트, ultrawork 디스패처, notepad 업데이터."
 ---
 
-The built-in OMX hooks shipped with oh-my-codex.
+코어 훅은 `omx setup`을 실행할 때 OMX가 설치하는 훅 핸들러입니다. 추가 설정 없이 OMX의 워크플로우 스킬을 Codex 라이프사이클 이벤트에 연결합니다. 각 훅은 하나의 책임만 담당하며, 해당 관심사가 비활성 상태일 때는 개입하지 않습니다.
+
+## 개요
+
+OMX는 `.codex/hooks.json`에 등록된 4개의 내장 훅을 제공합니다. 네 가지 모두 `dist/scripts/codex-native-hook.js`를 통해 라우팅되며, 이 단일 진입점이 Codex 이벤트 유형에 따라 올바른 핸들러로 디스패치합니다. 설정은 `.codex/config.toml`의 `[features] codex_hooks = true`에 있습니다. `.omx/hooks/*.mjs`의 플러그인 훅은 이 인터페이스를 확장하지만 대체하지는 않습니다.
+
+## 내장 훅
+
+- **keyword-detector** (`UserPromptSubmit`) — 각 사용자 프롬프트에서 매직 키워드 구문을 스캔합니다. 매치가 발생하면 `.omx/state/`에 스킬 활성화 상태를 기록하고 개발자 컨텍스트를 앞에 추가할 수 있습니다. `$skill` 명시적 호출과 "team", "parallel" 같은 모호한 단어에 대한 의도 가드를 포함한 암묵적 구문 매칭을 지원합니다. [매직 키워드](/docs/hooks/magic-keywords)를 참고하세요.
+- **ralph stop-gate** (`Stop`) — 모델이 멈출 때 Ralph, autopilot, ultrawork, ultraqa 실행이 여전히 활성 상태인지 확인합니다. 활성 상태이며 아직 종료 상태가 아니면 계속 실행을 위한 이유와 함께 `decision: "block"`을 반환합니다. `.omx/state/{mode}-state.json`에서 상태를 읽습니다.
+- **pre-tool-use guard** (`PreToolUse`, Bash 전용) — 파괴적인 명령(`rm -rf dist`)에 경고하고, 필수 Lore 형식 트레일러(`Co-authored-by: OmX <omx@oh-my-codex.dev>`)가 없는 인라인 `git commit` 호출을 차단합니다.
+- **post-tool-use advisor** (`PostToolUse`, Bash 전용) — 비정상 종료 코드, 권한 거부 오류, 경로 미발견 메시지를 해석하고, 다음 프롬프트 컨텍스트에 수정 안내를 주입합니다.
+
+## 예제
+
+OMX 훅이 설치되어 올바르게 구성되었는지 확인:
+
+```bash
+omx doctor
+```
+
+키워드가 발생한 후 원시 훅 상태 검사:
+
+```bash
+cat .omx/state/skill-active-state.json
+```
+
+## 관련 문서
+
+- [라이프사이클 이벤트](/docs/hooks/lifecycle-events)
+- [컨텍스트 훅](/docs/hooks/context-hooks)
+- [매직 키워드](/docs/hooks/magic-keywords)
+- [Codex 네이티브 훅](/docs/hooks/codex-native-hooks)

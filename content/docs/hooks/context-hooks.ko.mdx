@@ -1,6 +1,39 @@
 ---
-title: "Context Hooks (번역 초안)"
-description: "Hooks that inject context (memory, directives, reminders) into Codex prompts."
+title: "컨텍스트 훅"
+description: "system-reminder 태그를 통해 프로젝트 메모리, 지시사항, 리마인더, notepad 내용을 Codex 프롬프트에 주입하는 훅."
 ---
 
-Hooks that inject context (memory, directives, reminders) into Codex prompts.
+컨텍스트 훅은 구조화된 지식으로 다음 프롬프트를 풍부하게 만드는 OMX 훅의 하위 집합입니다. 사용자 메시지를 수정하는 대신, Codex가 주입된 컨텍스트로 읽는 `<system-reminder>` 태그를 발행합니다. 이렇게 하면 사용자 메시지를 깔끔하게 유지하면서, 모델이 항상 최신 프로젝트 메모리, 활성 지시사항, notepad 항목을 볼 수 있도록 보장합니다.
+
+## 개요
+
+컨텍스트 훅이 발생하면 하나 이상의 지식 소스—`.omx/state/`, `.omx/wiki/`의 위키, 프로젝트 메모리, 또는 notepad—를 읽고, 관련 내용을 프롬프트 컨텍스트에 추가되는 `<system-reminder>` 블록으로 포맷합니다. 모델은 이 내용을 사용자 지시사항이 아닌 권위 있는 배경 정보로 인식하므로, 모든 턴에 영향을 주어야 하는 영구적 사실, 제약, 리마인더에 적합합니다.
+
+## 주입되는 소스
+
+- **프로젝트 메모리** — `project_memory_write` 또는 `project_memory_add_directive`로 작성된 핵심 사실과 지시사항. `SessionStart`에 주입되며, 지시사항이 활성 상태일 때는 이후 턴에서도 선택적으로 주입됩니다.
+- **세션 리마인더** — `notepad_write_working` 또는 `notepad_write_priority`를 통해 작성된 단기 메모. 만료되거나 정리될 때까지 주입됩니다.
+- **위키 요약** — wiki 페이지가 존재할 때 `SessionStart`에 표시되는 `.omx/wiki/`의 간략한 발췌. 훅 경로를 차단하지 않기 위해 쓰기 집약적 작업(수집, 재빌드)은 지연됩니다.
+- **모드 상태** — 활성 워크플로우 모드(ralph, team, ultrawork)가 감지되면 현재 단계와 계속 지시사항이 포함되어 모델이 올바른 지점에서 재개할 수 있습니다.
+
+## 예제
+
+모든 커밋에 트레일러를 포함해야 한다는 영구 지시사항 주입:
+
+```bash
+omx memory add-directive "All git commits must include Co-authored-by: OmX <omx@oh-my-codex.dev>"
+```
+
+다음 세션 시작 시 이 지시사항이 `<system-reminder>` 블록으로 자동으로 표시됩니다.
+
+현재 notepad에 있는 내용 읽기:
+
+```bash
+cat .omx/notepad.md
+```
+
+## 관련 문서
+
+- [코어 훅](/docs/hooks/core-hooks)
+- [Wiki 도구](/docs/tools/wiki)
+- [State 도구](/docs/tools/state)
