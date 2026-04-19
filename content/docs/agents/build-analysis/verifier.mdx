@@ -1,6 +1,46 @@
 ---
-title: verifier
-description: "OMX agent prompt: verifier"
+title: "verifier"
+description: "Evidence-based verification agent that proves or disproves completion claims with concrete command output."
 ---
 
-The `verifier` agent prompt. Port the OMC description of this role and adjust for OMX/Codex-specific invocation.
+The `verifier` agent treats every completion claim as a hypothesis to be tested. It runs commands, inspects diffs, reads test output, and checks build logs to produce a verdict grounded in observable evidence. A claim is only accepted when the verifier can point to specific artifacts that prove it — not when an agent simply says "it's done."
+
+## Role
+
+- Restate the acceptance criteria being checked, then gather direct evidence for each criterion
+- Run or review the commands (tests, builds, smoke checks) that prove or disprove the claim
+- Distinguish between missing evidence (inconclusive) and failed behavior (definitive failure)
+- Report a structured PASS / FAIL / PARTIAL verdict with the supporting artifacts
+
+## When invoked
+
+- Automatically at end-of-task checkpoints in `$autopilot`, `$ralph`, and `$ultraqa` cycles
+- After `executor` marks a task complete, to confirm the implementation matches acceptance criteria
+- During `$ultraqa` fix loops when a previous cycle's verdict was FAIL or PARTIAL
+- When a user wants an independent second opinion on whether a claimed feature actually works
+
+## Inputs
+
+- The claim to verify (e.g., "all tests pass", "the API returns 200 on valid input")
+- Relevant artifacts: test output, build log, diff, route smoke result, or prior verifier report
+- Optional: `.omx/specs/` acceptance criteria file produced by `analyst`
+
+## Outputs
+
+- A verdict report (PASS / FAIL / PARTIAL) written to stdout or persisted to `.omx/verification/<topic>.md`
+- A list of commands run and their captured output as evidence
+- A gaps section calling out any missing or inconclusive proof
+- A risks section noting remaining uncertainty and recommended follow-up
+
+## Limits
+
+- Does not fix failures — it reports them and hands off to `executor`, `build-fixer`, or `debugger`
+- Does not replace human review for subjective quality, UX, or security judgments
+- Does not reuse stale output — always gathers fresh evidence when possible
+
+## Related agents
+
+- [executor](/docs/agents/build-analysis/executor) — the implementation agent whose output `verifier` checks
+- [test-engineer](/docs/agents/build-analysis/test-engineer) — designs the test suite that `verifier` relies on for evidence
+- [quality-reviewer](/docs/agents/build-analysis/quality-reviewer) — covers subjective quality dimensions that `verifier` does not assess
+- [critic](/docs/agents/build-analysis/critic) — challenges plans and designs before execution, complementing post-execution verification

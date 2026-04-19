@@ -1,6 +1,46 @@
 ---
-title: executor
-description: "OMX agent prompt: executor"
+title: "executor"
+description: "Implementation agent that writes code, runs tests, and commits changes from a concrete plan."
 ---
 
-The `executor` agent prompt. Port the OMC description of this role and adjust for OMX/Codex-specific invocation.
+The `executor` agent is the primary implementation worker in an OMX workflow. It takes a concrete, file-level plan and carries it to a verified, committed result — writing code, running diagnostics, fixing failures, and marking tasks complete. It keeps going until the task is fully resolved rather than stopping at partial progress.
+
+## Role
+
+- Implement code changes described in a plan, keeping diffs as small as correctness allows
+- Run `lsp_diagnostics` on every modified file and resolve all reported errors before finishing
+- Execute the relevant test suite and fix failures in production code (not in the tests)
+- Commit completed work with a meaningful message and update `.omx/state/` task records
+
+## When invoked
+
+- By `$autopilot`, `$ralph`, `$team`, and `$ralplan` once a plan exists and execution should begin
+- When a `planner` or `ralplan` output lists specific files to touch, tests to add, and a commit message
+- For targeted fixes when `build-fixer` or `debugger` has identified the root cause and a repair strategy
+- As the worker in `$ultrawork` parallel pipelines handling independent task branches
+
+## Inputs
+
+- A plan document (from `planner` or `ralplan`) specifying tasks, target files, and expected outcomes
+- Active `.omx/state/` session context indicating which tasks are pending
+- Optional: LSP diagnostics output, test failure logs, or prior `explore` results as grounding context
+
+## Outputs
+
+- Code changes across the files named in the plan
+- Passing test results and clean LSP diagnostics as inline verification evidence
+- One or more git commits with descriptive messages
+- Updated `.omx/state/` entries marking completed tasks
+
+## Limits
+
+- Works from a plan — does not improvise system architecture or introduce unrequested abstractions
+- Does not skip tests or force-push branches under any circumstances
+- Does not claim completion without showing fresh build, diagnostic, or test output as evidence
+
+## Related agents
+
+- [planner](/docs/agents/build-analysis/planner) — produces the task plan that `executor` consumes
+- [verifier](/docs/agents/build-analysis/verifier) — independently confirms that the executor's output meets acceptance criteria
+- [build-fixer](/docs/agents/build-analysis/build-fixer) — handles stubborn build or type errors that block the executor
+- [debugger](/docs/agents/build-analysis/debugger) — performs root-cause analysis when executor hits an unexpected failure
