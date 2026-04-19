@@ -1,6 +1,47 @@
 ---
-title: $frontend-ui-ux
-description: "OMX skill: frontend-ui-ux"
+title: "frontend-ui-ux"
+description: "UI/UX creation with design-quality guardrails — routes to a designer agent for component design, responsive layouts, and accessibility-compliant implementation."
 ---
 
-Invoke with `$frontend-ui-ux`. Port OMC behavior and adjust for OMX/Codex semantics.
+`$frontend-ui-ux` routes frontend work to the designer agent, ensuring that UI and UX tasks are handled by a model with design-quality awareness rather than a generic code executor. It covers component design, responsive layouts, design system consistency, and accessibility compliance, and closes each design iteration with a `$visual-verdict` pass to catch visual regressions before they accumulate.
+
+## When to use
+
+- You are building or redesigning a UI component, page, or layout
+- You want design-quality output — spacing, typography, and visual hierarchy — not just working code
+- You need accessibility compliance checked as part of implementation
+- You want consistency with an existing design system or token set
+- You say "design", "frontend", "UI", "UX", "component", or "layout"
+
+## How to invoke
+
+Natural language triggers: "frontend-ui-ux", "design a component", "build the UI", "create the layout", "make it look like".
+
+Explicit slash: `$frontend-ui-ux`
+
+```
+codex
+> frontend-ui-ux build a card component with avatar, title, body text, and a like button
+```
+
+```
+codex
+> $frontend-ui-ux redesign the settings page to match the new design system tokens
+```
+
+## What happens
+
+The skill routes your task to the designer agent, which approaches the work from a design perspective: it considers spacing rhythms, typography scales, colour contrast ratios, and interaction states before writing any code. For straightforward component work the designer implements directly. For tasks with visual references, it uses `$visual-verdict` to score the output against a reference image and iterates until the score reaches 90 or above. Responsive layout work includes breakpoint-aware CSS using flexbox or grid patterns extracted from the design context. Accessibility checks verify ARIA roles, focus management, and contrast ratios. If Gemini MCP is available, the skill may route to it for richer design generation; otherwise it falls back to the Codex designer agent.
+
+## Outputs
+
+- Component source files matching the requested design
+- CSS or Tailwind styles with design tokens applied
+- Accessibility annotations and ARIA attributes
+- Visual verdict score if a reference image was provided
+
+## Related skills
+
+- [`$visual-verdict`](/docs/skills/workflow/visual-verdict) — screenshot-to-reference visual QA that frontend-ui-ux uses for iteration gating
+- [`$autopilot`](/docs/skills/workflow/autopilot) — full lifecycle that can include a frontend-ui-ux pass for UI-heavy features
+- [`$web-clone`](/docs/skills/workflow/web-clone) — clones a live URL as working code using this skill's designer capabilities

@@ -1,6 +1,45 @@
 ---
-title: $ultrawork
-description: "OMX skill: ultrawork"
+title: "ultrawork"
+description: "Parallel execution engine for high-throughput task completion — decomposes independent tasks and fires all workers simultaneously with smart model-tier routing."
 ---
 
-Invoke with `$ultrawork`. Port OMC behavior and adjust for OMX/Codex semantics.
+`$ultrawork` is the parallelism layer of the OMX execution stack. It classifies each pending task by complexity, routes it to the appropriate model tier, and fires all independent tasks simultaneously rather than waiting for one to finish before starting the next. Ultrawork is a component, not a persistence mode — it provides concurrency and model routing, while `$ralph` layers persistence and `$autopilot` layers the full lifecycle on top.
+
+## When to use
+
+- Multiple independent tasks can run at the same time and you want them done faster
+- You say "ulw", "ultrawork", or "parallel execution"
+- You need to delegate work to multiple agent tiers at once
+- Task benefits from concurrent execution and you will manage completion yourself
+- You want raw throughput without the overhead of full ralph persistence
+
+## How to invoke
+
+Natural language triggers: "ulw", "ultrawork", "parallel", "run concurrently", "all at once".
+
+Explicit slash: `$ultrawork`
+
+```
+codex
+> ulw add missing type exports, update the README, and add integration tests for the auth middleware
+```
+
+```
+codex
+> ultrawork implement the /api/users endpoint, add unit tests, and lint-fix the entire src/ directory
+```
+
+## What happens
+
+Ultrawork receives the task description and decomposes it into independent subtasks. It classifies each by complexity: simple lookups and trivial fixes go to a low-cost tier, standard implementation work goes to the standard tier, and deep analysis or complex refactors go to the thorough tier. All independent tasks are fired simultaneously as parallel agent calls. Tasks with dependencies are serialised only where necessary. Long-running operations — installs, builds, test suites — run with `run_in_background` so they do not block other tasks. When all tasks complete, ultrawork runs a lightweight verification pass: build and typecheck must pass, affected tests must pass, and no new errors may be introduced. Any task that fails repeatedly is reported rather than retried indefinitely.
+
+## Outputs
+
+- Completed task artifacts from all parallel workers (code changes, test results, docs)
+- Lightweight build and test evidence confirming no regressions were introduced
+
+## Related skills
+
+- [`$ralph`](/docs/skills/workflow/ralph) — wraps ultrawork with persistence, verification loops, and session resume
+- [`$swarm`](/docs/skills/workflow/swarm) — fan-out variant for embarrassingly-parallel work across many files
+- [`$team`](/docs/skills/workflow/team) — full staged pipeline with plan, exec, and verify phases

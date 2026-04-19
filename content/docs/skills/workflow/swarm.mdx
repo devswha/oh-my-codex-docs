@@ -1,6 +1,46 @@
 ---
-title: $swarm
-description: "OMX skill: swarm"
+title: "swarm"
+description: "Parallel agent fan-out for embarrassingly-parallel work — partitions a task list and spawns N ephemeral workers that execute simultaneously."
 ---
 
-Invoke with `$swarm`. Port OMC behavior and adjust for OMX/Codex semantics.
+`$swarm` is the parallel fan-out primitive of the OMX skill set. When your work decomposes into independent subtasks that share no ordering dependency, swarm partitions them and fires all workers at once rather than waiting for each to finish before starting the next. It is a compatibility facade over `$team`, routing all invocations through the team staged pipeline.
+
+## When to use
+
+- Your task list contains multiple items that do not depend on each other
+- You want faster wall-clock time by running work in parallel rather than serially
+- You are fanning out identical operations across many files, modules, or endpoints
+- You explicitly say "swarm" or want N agents working concurrently on independent slices
+- The individual subtasks are small enough that spinning up a dedicated worker per task is not wasteful
+
+## How to invoke
+
+Natural language triggers: "swarm", "fan out", "parallel agents", "run in parallel".
+
+Explicit slash: `$swarm`
+
+```
+codex
+> swarm 4:executor "add JSDoc to every exported function across all packages"
+```
+
+```
+codex
+> $swarm "translate all 20 API route handlers to use the new middleware signature"
+```
+
+## What happens
+
+Swarm receives the task description and an optional worker count prefix (e.g. `4:executor`). It partitions the work into N roughly equal slices, spawns N ephemeral agent workers via the team pipeline, and fires all of them simultaneously. Each worker claims its slice, executes it, commits results, and reports back. Swarm aggregates the completed results and surfaces any failures or conflicts for resolution. Because swarm delegates to the `$team` skill's staged pipeline, it inherits team's state persistence, task lifecycle management, and mailbox-based coordination. When all workers report completion, swarm emits a summary of what was done and flags any slices that errored out.
+
+## Outputs
+
+- Completed subtask artifacts from all workers (code changes, files, reports — depends on task)
+- `.omx/state/team/{name}/tasks/` — task state files for each worker slice
+- Console summary with per-worker status and any failure details
+
+## Related skills
+
+- [`$team`](/docs/skills/workflow/team) — the full staged pipeline that swarm delegates to
+- [`$ultrawork`](/docs/skills/workflow/ultrawork) — parallel execution engine with model-tier routing
+- [`$worker`](/docs/skills/workflow/worker) — the individual worker protocol each swarm agent runs

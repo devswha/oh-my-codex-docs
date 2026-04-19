@@ -1,6 +1,44 @@
 ---
-title: $worker
-description: "OMX skill: worker"
+title: "worker"
+description: "Single sustained worker on a shared task queue — claims the next pending task, executes it, commits results, and loops until the queue is empty."
 ---
 
-Invoke with `$worker`. Port OMC behavior and adjust for OMX/Codex semantics.
+`$worker` is the protocol that each agent session follows when it participates in a team or swarm execution. A worker reads its inbox, claims the next unblocked task via a claim-safe lifecycle API, does the work, and transitions the task to completed or failed before pulling the next item. This claim-before-work contract prevents two workers from stepping on each other when multiple agents share a queue.
+
+## When to use
+
+- Your Codex session was started by `$team` or `$swarm` as a team worker (`OMX_TEAM_WORKER` is set)
+- You need a session to process a persistent task queue and stop only when the queue drains
+- You want a single long-running agent that does not require a new invocation per task
+- A team leader has decomposed work into tasks and needs workers to claim and execute them
+- You are building a multi-agent system and need a reliable worker-loop primitive
+
+## How to invoke
+
+`$worker` is normally started automatically by `$team` or `$swarm`. You can also invoke it directly in a session that has `OMX_TEAM_WORKER` set.
+
+```
+codex
+> $worker
+```
+
+```bash
+# Typically started by the team skill as:
+OMX_TEAM_WORKER="alpha/worker-2" codex
+```
+
+## What happens
+
+On startup the worker parses its identity from `OMX_TEAM_WORKER` (format `{teamName}/{workerName}`) and sends a startup ACK to the leader mailbox before touching any tasks. It then resolves the canonical team state root, reads its inbox at `.omx/state/team/{team}/workers/{worker}/inbox.md`, and picks the first unblocked task. It claims the task via `omx team api claim-task` — if the claim fails because another worker got there first, it skips to the next task. After executing the work it calls `omx team api transition-task-status` to mark the task completed or failed, updates its own status to `idle`, and loops back to pull the next task. The worker listens for shutdown messages in its mailbox and exits cleanly when instructed by the leader.
+
+## Outputs
+
+- Completed task artifacts committed to the working directory
+- Task state files updated in `.omx/state/team/{team}/tasks/`
+- ACK and status messages written to the team mailbox for leader visibility
+
+## Related skills
+
+- [`$team`](/docs/skills/workflow/team) — the coordinator that starts and manages workers
+- [`$swarm`](/docs/skills/workflow/swarm) — fan-out primitive that spawns multiple workers in parallel
+- [`$ralph`](/docs/skills/workflow/ralph) — persistent single-session execution loop

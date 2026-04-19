@@ -1,6 +1,53 @@
 ---
-title: $ultraqa
-description: "OMX skill: ultraqa"
+title: "ultraqa"
+description: "QA cycling workflow — runs tests, diagnoses failures, dispatches fixes, and repeats until your quality goal is met or five cycles are exhausted."
 ---
 
-Invoke with `$ultraqa`. Port OMC behavior and adjust for OMX/Codex semantics.
+`$ultraqa` is an autonomous QA loop that does not stop at the first failure. It executes your chosen quality check, hands failures to an Architect agent for root-cause diagnosis, dispatches targeted fixes via an Executor agent, and re-runs the check — cycling up to five times before surfacing a final diagnosis. It exits early if the same failure repeats three times, avoiding infinite loops on structural problems.
+
+## When to use
+
+- You want a build, test suite, lint run, or typecheck to pass without manually debugging each failure
+- You have inherited a broken codebase and want a systematic first-pass fix
+- You are finishing a feature and want hands-off validation before review
+- You prefer a cycle-by-cycle progress log over a silent background job
+- You say "ultraqa", "qa cycle", "fix until tests pass", or "make the build pass"
+
+## How to invoke
+
+Natural language triggers: "ultraqa", "fix until tests pass", "qa cycle", "make the build pass".
+
+Explicit slash: `$ultraqa`
+
+```
+codex
+> ultraqa --tests
+```
+
+```
+codex
+> $ultraqa --build
+```
+
+```
+codex
+> $ultraqa --custom "no TypeScript errors in packages/api"
+```
+
+Available goal flags: `--tests`, `--build`, `--lint`, `--typecheck`, `--custom "pattern"`, `--interactive`.
+
+## What happens
+
+Ultraqa parses the goal flag and starts cycle 1. It runs the appropriate command for the goal type and checks the exit code or output pattern. If the goal is already met it exits immediately with a success message. If the check fails, an Architect agent analyses the output and identifies the root cause and specific fix recommendations. An Executor agent then applies the fix precisely as recommended. The cycle counter increments and the check runs again. This loop continues until the goal is met, five cycles are exhausted, or the same failure appears three times in a row. On each cycle, ultraqa emits a `[ULTRAQA Cycle N/5]` progress line so you can follow along. State is written to `.omx/state/ultraqa-state.json` and cleared on completion or cancellation.
+
+## Outputs
+
+- Fixed source files as determined by the Architect-Executor repair loop
+- Cycle-by-cycle progress log with failure summaries and fix descriptions
+- Final exit message: success with cycle count, or stopped with root-cause diagnosis if the goal was not met
+
+## Related skills
+
+- [`$ralph`](/docs/skills/workflow/ralph) — persistent verification loop that can wrap ultraqa cycling
+- [`$autopilot`](/docs/skills/workflow/autopilot) — full lifecycle that uses ultraqa as its QA phase
+- [`$tdd`](/docs/skills/workflow/tdd) — test-first workflow for writing new features with failing tests first

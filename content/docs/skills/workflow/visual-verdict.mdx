@@ -1,6 +1,53 @@
 ---
-title: $visual-verdict
-description: "OMX skill: visual-verdict"
+title: "visual-verdict"
+description: "Screenshot-to-reference visual QA — compares a generated UI screenshot against reference images and returns a structured JSON verdict with score, differences, and actionable suggestions."
 ---
 
-Invoke with `$visual-verdict`. Port OMC behavior and adjust for OMX/Codex semantics.
+`$visual-verdict` performs a deterministic visual comparison between your generated UI and one or more reference images. It returns a strict JSON verdict with a 0-100 score, a pass/revise/fail status, a list of concrete differences, and actionable suggestions tied to each difference. Any score below 90 means the iteration should continue; the verdict drives the next round of edits.
+
+## When to use
+
+- You have a generated screenshot and at least one reference image to compare against
+- Your task has visual fidelity requirements — layout, spacing, typography, or component styling
+- You need a deterministic pass/fail gate before merging or shipping UI changes
+- You are inside a `$ralph` or `$web-clone` loop and need a scorable quality signal
+- You say "visual verdict", "compare to reference", "check the screenshot", or "does it match"
+
+## How to invoke
+
+Natural language triggers: "visual verdict", "compare screenshot", "visual QA", "check if it matches".
+
+Explicit slash: `$visual-verdict`
+
+```
+codex
+> $visual-verdict reference_images=["design.png"] generated_screenshot="output.png"
+```
+
+```
+codex
+> visual verdict — compare current screenshot against designs/header-spec.png
+```
+
+## What happens
+
+The skill loads the reference image(s) and the generated screenshot, then performs a structured multi-dimensional comparison covering layout structure, spacing and padding, typography (font families, weights, sizes), colour values, and visual hierarchy. It produces a single JSON object with a numeric score from 0 to 100. A score of 90 or above is a pass; anything lower is a revise. The `differences` array lists concrete mismatches such as "top nav spacing is tighter than reference by 8px". The `suggestions` array contains actionable edits tied one-to-one to each difference. When diagnosing hard-to-see mismatches, pixel-level diff tooling can be used as a secondary debug aid to localise hotspots, but visual-verdict remains the authoritative decision. The verdict is persisted to `.omx/state/{scope}/ralph-progress.json` when running inside ralph so the loop can act on it.
+
+## Outputs
+
+```json
+{
+  "score": 87,
+  "verdict": "revise",
+  "category_match": true,
+  "differences": ["Primary button uses smaller font weight"],
+  "suggestions": ["Set primary button font-weight to 600"],
+  "reasoning": "Core layout matches but style details still diverge."
+}
+```
+
+## Related skills
+
+- [`$frontend-ui-ux`](/docs/skills/workflow/frontend-ui-ux) — UI creation skill that uses visual-verdict as its iteration gate
+- [`$ultraqa`](/docs/skills/workflow/ultraqa) — QA cycling loop that can incorporate visual-verdict as a quality goal
+- [`$web-clone`](/docs/skills/workflow/web-clone) — URL-driven cloning workflow that uses visual-verdict for fidelity scoring

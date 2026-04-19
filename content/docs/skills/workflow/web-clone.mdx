@@ -1,6 +1,46 @@
 ---
-title: $web-clone
-description: "OMX skill: web-clone"
+title: "web-clone"
+description: "Mirror a public-web UI into a local framework stack — extracts layout, styles, and interactions from a live URL using Playwright, then reconstructs them as working code."
 ---
 
-Invoke with `$web-clone`. Port OMC behavior and adjust for OMX/Codex semantics.
+`$web-clone` takes a public URL and produces a local, runnable replica of the page. It uses Playwright MCP for browser automation to extract the DOM structure, computed styles, and interactive elements, reconstructs them as clean code in your target framework, and iterates against `$visual-verdict` until the clone reaches a visual score of 85 or above.
+
+## When to use
+
+- You have a URL and want a local working replica in your own framework stack
+- You say "clone site", "clone website", "copy webpage", or "web-clone"
+- You need both visual fidelity and functional parity — working links, forms, and toggles
+- The reference is a live URL, not a static screenshot (for screenshot-only tasks use `$visual-verdict` directly)
+- You are prototyping and want to start from a real design rather than a blank canvas
+
+## How to invoke
+
+Natural language triggers: "web-clone", "clone site", "clone website", "copy webpage", "replicate this URL".
+
+Explicit slash: `$web-clone`
+
+```
+codex
+> web-clone https://news.ycombinator.com
+```
+
+```
+codex
+> $web-clone https://example.com/pricing output_dir=./clones/pricing tech_stack=react
+```
+
+## What happens
+
+Web-clone runs five passes. Pass 1 (Extract) navigates to the URL with Playwright, takes a full-page screenshot as the reference baseline, captures the accessibility tree for structural understanding, runs DOM and computed-style extraction scripts, and catalogues all interactive elements. Pass 2 (Build Plan) analyses the extraction results, maps page regions to components, extracts design tokens (colour palette, font stack, spacing scale), and defines a file structure for the clone. Pass 3 (Generate Clone) implements the clone component by component — design tokens first, then the layout shell, then each region top to bottom, then interaction wiring for navigation, forms, dropdowns, and toggles. Pass 4 (Verify) serves the clone locally, takes a full-page screenshot, runs `$visual-verdict` against the original screenshot, and spot-checks two to three interactions with Playwright. Pass 5 (Iterate) applies the highest-impact fixes from the verdict and re-verifies, looping up to five times until the overall verdict is `pass` or the iteration ceiling is reached.
+
+## Outputs
+
+- Clone project files in the `output_dir` matching the requested tech stack
+- `.omx/state/{scope}/web-clone-extraction.json` — extraction summary with landmark and interaction counts
+- `.omx/state/{scope}/web-clone-verdicts.json` — composite verdict after each verification pass
+- Final report summarising what was successfully cloned and any remaining differences
+
+## Related skills
+
+- [`$frontend-ui-ux`](/docs/skills/workflow/frontend-ui-ux) — UI creation skill used for component generation within the clone passes
+- [`$visual-verdict`](/docs/skills/workflow/visual-verdict) — visual QA verdict that gates each clone iteration

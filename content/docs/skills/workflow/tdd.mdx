@@ -1,6 +1,47 @@
 ---
-title: $tdd
-description: "OMX skill: tdd"
+title: "tdd"
+description: "Test-first workflow that enforces red-green-refactor — writes a failing test before any production code, then drives implementation to green."
 ---
 
-Invoke with `$tdd`. Port OMC behavior and adjust for OMX/Codex semantics.
+`$tdd` activates a strict test-driven development discipline. No production code may be written before a failing test exists. The skill enforces the red-green-refactor cycle, routes complex test strategy questions to a test-engineer agent, and exits each cycle only when the new test passes and all prior tests remain green.
+
+## When to use
+
+- You want to build a feature with tests first and production code second
+- You say "tdd", "test first", "red green refactor", or "write the test before the code"
+- You are working on critical domain logic where correctness is non-negotiable
+- You want a systematic approach to coverage rather than retrofitting tests after implementation
+- You are onboarding to a codebase and want tests to document expected behaviour as you go
+
+## How to invoke
+
+Natural language triggers: "tdd", "test first", "red green", "write tests before code".
+
+Explicit slash: `$tdd`
+
+```
+codex
+> tdd add a coupon validation function to the checkout module
+```
+
+```
+codex
+> $tdd implement the password-strength checker with edge cases covered
+```
+
+## What happens
+
+TDD mode activates the iron law: no production code without a failing test first. Each cycle begins with a RED phase — the skill writes a test for the next unit of functionality and runs the test suite to confirm the new test fails. If the test passes on the first run, it is considered wrong and must be rewritten to fail. The GREEN phase follows: the minimal production code needed to make the test pass is written, nothing more. The test suite runs again and must go fully green. The REFACTOR phase then cleans up code quality while keeping the suite green, running tests after every change. For complex domain logic or unfamiliar testing patterns, the skill consults a test-engineer agent for strategy validation before writing tests. The cycle repeats with the next unit of functionality until the feature is complete.
+
+## Outputs
+
+- Failing tests written before implementation (RED phase artifacts)
+- Minimal production code that makes each test pass (GREEN phase artifacts)
+- Refactored source with the full test suite green at every step
+- Per-cycle progress output showing RED failure, GREEN pass, and REFACTOR result
+
+## Related skills
+
+- [`$autopilot`](/docs/skills/workflow/autopilot) — full autonomous execution that can apply TDD discipline internally
+- [`$ultraqa`](/docs/skills/workflow/ultraqa) — QA cycling for fixing a broken test suite after implementation
+- [`$ralplan`](/docs/skills/workflow/ralplan) — consensus planning that includes an expanded test plan in deliberate mode

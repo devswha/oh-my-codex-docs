@@ -1,6 +1,47 @@
 ---
-title: $pipeline
-description: "OMX skill: pipeline"
+title: "pipeline"
+description: "Stage-based workflow that sequences ralplan, team execution, and ralph verification in a single resumable session."
 ---
 
-Invoke with `$pipeline`. Port OMC behavior and adjust for OMX/Codex semantics.
+`$pipeline` is the configurable orchestrator that chains the canonical OMX stages — consensus planning, parallel team execution, and iterative ralph verification — into one coherent run. Each stage implements a uniform interface with state persistence, so a failed or interrupted pipeline can resume from the last incomplete stage rather than restarting from scratch.
+
+## When to use
+
+- You want the full plan, exec, and verify lifecycle in a single invocation without manually chaining skills
+- You need resumable execution across multiple sessions for long-running features or overnight runs
+- You want to customise stage parameters such as worker count, agent type, or verification iterations
+- You are building tooling on top of OMX and need a programmatic pipeline API
+- Autopilot is overkill but you still want more structure than a bare `$ralph` invocation
+
+## How to invoke
+
+Natural language triggers: "pipeline", "run pipeline", "staged workflow".
+
+Explicit slash: `$pipeline`
+
+```
+codex
+> $pipeline "add rate-limiting middleware to all API routes"
+```
+
+```
+codex
+> pipeline --workers 3 --max-ralph-iterations 15 "refactor auth module to use new token schema"
+```
+
+## What happens
+
+Pipeline runs three built-in stages in sequence. The `ralplan` stage fires first: it orchestrates a Planner, Architect, and Critic in a bounded deliberation loop and writes the approved plan to `.omx/plans/`. It skips automatically when both a `prd-*.md` and a `test-spec-*.md` already exist. The `team-exec` stage follows: it spawns the configured number of Codex CLI workers (default 2) and feeds them tasks from the plan until all tasks reach `completed` or `failed`. The `ralph-verify` stage runs last: it iterates up to the configured maximum (default 10) checking that acceptance criteria pass, dispatching fixes via executor when they do not, and exiting when all criteria are satisfied or the iteration ceiling is hit. Pipeline state persists at `.omx/state/pipeline-state.json` so the HUD renders the current phase and resume is always available.
+
+## Outputs
+
+- `.omx/plans/` — plan and spec artifacts from the ralplan stage
+- Source code, tests, and configuration changes from the team-exec stage
+- `.omx/state/pipeline-state.json` — current phase and stage history for resume and HUD display
+- Build, lint, and test evidence from the ralph-verify stage
+
+## Related skills
+
+- [`$team`](/docs/skills/workflow/team) — the execution backend pipeline delegates to
+- [`$autopilot`](/docs/skills/workflow/autopilot) — full autonomous lifecycle that uses pipeline internally
+- [`$ralplan`](/docs/skills/workflow/ralplan) — the consensus planning stage that pipeline runs first
