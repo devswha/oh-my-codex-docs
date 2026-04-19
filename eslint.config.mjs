@@ -10,6 +10,6 @@ export default [
     },
   },
   {
-    ignores: [".next/", ".source/", "node_modules/", ".omc/", ".sisyphus/", "dist/"],
+    ignores: [".next/", ".source/", "node_modules/", ".omc/", ".omx/", ".sisyphus/", "dist/"],
   },
 ];
