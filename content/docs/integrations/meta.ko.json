@@ -1,0 +1,9 @@
+{
+  "title": "통합",
+  "pages": [
+    "openclaw",
+    "clawhip",
+    "mcp",
+    "cli-bridges"
+  ]
+}
