@@ -1,6 +1,85 @@
 ---
 title: Core Concepts
-description: "OMX concepts: agent prompts, skills, Codex-native hooks, team orchestration, the `.omx/` state directory."
+description: "OMX adds four layers on top of Codex CLI: agent prompts, skills, Codex-native hooks, and team orchestration."
 ---
 
-OMX concepts: agent prompts, skills, Codex-native hooks, team orchestration, the `.omx/` state directory.
+OMX adds four layers on top of Codex CLI. Each layer is independent — you can use skills without touching team orchestration, or rely on hooks without ever calling a named skill. Together they form a coherent runtime that takes a session from clarification through execution to verified completion.
+
+## Agent prompts
+
+Agent prompts are role-specific system instructions that shape Codex into a focused specialist. Each prompt defines a single responsibility: an `explore` agent maps a codebase without writing code; an `executor` agent writes and edits files without designing architecture; a `verifier` agent collects evidence without implementing fixes.
+
+OMX ships 33 prompts organized into four lanes:
+
+| Lane | Purpose |
+|---|---|
+| Build / Analysis | explore, analyst, planner, architect, debugger, executor, verifier |
+| Review | quality-reviewer, security-reviewer, code-reviewer |
+| Domain | test-engineer, build-fixer, designer, writer, qa-tester, scientist, document-specialist, git-master, code-simplifier |
+| Coordination | critic, and orchestration roles |
+
+Keeping roles narrow reduces hallucination and makes it easier to delegate the right work to the right agent.
+
+See the full [Agents catalog](/docs/agents).
+
+## Skills
+
+Skills are one-shot invocations that orchestrate multi-step workflows. You call them with a `$` prefix inside a Codex session (e.g. `$autopilot`, `$ralplan`, `$ralph`) or via a slash command when supported. A skill can spawn sub-agents, sequence agent roles, manage state, and loop until a condition is met — all without you writing any orchestration code.
+
+OMX ships 37 skills split into two lanes:
+
+- **Workflow skills** — `$autopilot`, `$deep-interview`, `$ralplan`, `$ralph`, `$team`, `$ultrawork`, `$ultraqa`, and more
+- **Utility skills** — `$deepsearch`, `$note`, `$learner`, `$cancel`, `$hud`, and more
+
+See the full [Skills catalog](/docs/skills).
+
+## Codex-native hooks
+
+Hooks are event taps that fire at defined points in the Codex lifecycle. OMX registers handlers for the following native Codex hook events:
+
+| Event | What OMX does |
+|---|---|
+| `SessionStart` | Restores session bookkeeping, injects startup developer context, ensures `.omx/` is gitignored |
+| `UserPromptSubmit` | Detects `$skill` magic keywords and activates the corresponding skill state |
+| `PreToolUse` (Bash) | Cautions on destructive commands; enforces commit message format |
+| `PostToolUse` (Bash) | Surfaces command-not-found / permission-denied guidance |
+| `Stop` | Continues non-terminal Ralph, autopilot, ultrawork, ultraQA, and team sessions |
+
+Hooks that have no native Codex equivalent (e.g. `session-end`, `session-idle`) fall back to the OMX runtime path.
+
+See [Hooks reference](/docs/hooks) for the full mapping matrix.
+
+## Team orchestration
+
+Team mode runs N coordinated Codex sessions against a shared task list. One `team-orchestrator` session manages planning, task assignment, and phase transitions. N `team-executor` worker sessions each own a slice of the task list and run in parallel tmux panes.
+
+The default pipeline is:
+
+```
+team-plan → team-prd → team-exec → team-verify → team-fix (loop)
+```
+
+You invoke it with:
+
+```
+$team 3:executor "execute the approved plan in parallel"
+```
+
+See [Team skill reference](/docs/skills/workflow/team).
+
+## The `.omx/` directory
+
+OMX keeps all project-scoped state under `.omx/` at the git worktree root:
+
+| Path | Contents |
+|---|---|
+| `.omx/state/` | Active mode state (ralph, autopilot, ultrawork, team phase) |
+| `.omx/plans/` | Plans written by `$ralplan` and `$omc-plan` |
+| `.omx/logs/` | Session and execution logs |
+| `.omx/notepad.md` | Freeform scratch space for working notes |
+| `.omx/project-memory.json` | Durable project directives and notes |
+| `.omx/wiki/` | LLM-queryable wiki pages (optional) |
+
+The directory is gitignored by `omx setup`. It persists across sessions so long-running workflows like `$ralph` can resume after interruption.
+
+See [`.omx/` directory reference](/docs/reference/omx-directory).

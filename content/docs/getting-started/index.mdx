@@ -1,6 +1,95 @@
 ---
 title: Getting Started
-description: "Install Codex CLI, install oh-my-codex, run `omx setup`, and invoke `$autopilot`."
+description: "Install Codex CLI, install oh-my-codex, run omx setup, and invoke your first automated workflow."
 ---
 
-Install Codex CLI, install oh-my-codex, run `omx setup`, and invoke `$autopilot`.
+oh-my-codex (OMX) is a workflow layer for [OpenAI Codex CLI](https://github.com/openai/codex). It keeps Codex as the execution engine and wraps it with role-specific agent prompts, reusable skills, and event-driven hooks so you can go from a vague idea to working code in one consistent loop. This page walks you through installing OMX, verifying the setup, and running your first session.
+
+## Prerequisites
+
+- **Node.js 22+** (20+ is the minimum; 22 is recommended)
+- **Codex CLI** installed and authenticated (`npm i -g @openai/codex`, then `codex login`)
+- **macOS or Linux** — OMX is primarily designed and actively tuned for these platforms. Native Windows may break or behave inconsistently and currently receives less support.
+- **tmux** (macOS/Linux) if you want the durable team runtime
+
+## Install
+
+<Steps>
+<Step>
+### Install Codex CLI
+
+```bash
+npm install -g @openai/codex
+```
+
+Then authenticate:
+
+```bash
+codex login
+```
+</Step>
+
+<Step>
+### Install OMX
+
+```bash
+npm install -g oh-my-codex
+```
+</Step>
+
+<Step>
+### Run setup
+
+```bash
+omx setup
+```
+
+`omx setup` wires the Codex-native hooks by writing `.codex/config.toml` (enables `codex_hooks = true`) and `.codex/hooks.json` (registers the OMX hook command). It also creates the `.omx/` project-state directory and configures the session prompt with OMX agent context.
+</Step>
+
+<Step>
+### Verify the installation
+
+```bash
+omx doctor
+```
+
+`omx doctor` checks that all required files exist and are shaped correctly. To also prove the active Codex profile can complete a real model call, run:
+
+```bash
+codex login status
+omx exec --skip-git-repo-check -C . "Reply with exactly OMX-EXEC-OK"
+```
+</Step>
+</Steps>
+
+## First run
+
+Open a new Codex session and try the canonical autopilot skill:
+
+```
+codex
+> $autopilot build me a todo app in next.js
+```
+
+What happens under the hood:
+
+1. The `UserPromptSubmit` hook detects the `$autopilot` magic keyword and activates the skill.
+2. OMX routes to `$deep-interview` to clarify requirements before touching any code.
+3. Once requirements are confirmed, `$ralplan` drafts and validates a plan with consensus.
+4. `executor` carries out the implementation step-by-step.
+5. `$ultraqa` runs a QA iteration loop — test, verify, fix — until the acceptance criteria pass.
+6. `verifier` collects final evidence and confirms completion.
+
+You can also launch OMX directly with the recommended flags:
+
+```bash
+omx --madmax --high
+```
+
+## Next steps
+
+- [Core Concepts](/docs/concepts) — understand the agent/skill/hook separation before going deeper
+- [Agents catalog](/docs/agents) — 33 role-specific prompts across four lanes
+- [Skills catalog](/docs/skills) — 37 one-shot workflow and utility skills
+- [Integrations](/docs/integrations) — connect OMX to external tooling

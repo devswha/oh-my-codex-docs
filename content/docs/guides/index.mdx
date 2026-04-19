@@ -3,4 +3,34 @@ title: Guides
 description: "Task-oriented walkthroughs for common OMX workflows."
 ---
 
-Task-oriented walkthroughs for common OMX workflows.
+Task-oriented walkthroughs for common OMX workflows. Start with [Getting Started](/docs/getting-started) if you haven't already — it covers installation and your first session. The guides here assume OMX is installed and `omx doctor` passes.
+
+## When to use which skill
+
+| Situation | Skill |
+|---|---|
+| Vague idea, need end-to-end automation | `$autopilot` |
+| Clear plan, need consensus before execution | `$ralplan` |
+| Known task, needs sustained loop until done | `$ralph` |
+| Many subtasks, want parallelism | `$team` |
+| Requirements unclear | `$deep-interview` |
+| Fast codebase search | `$deepsearch` |
+| QA iteration | `$ultraqa` |
+
+The canonical full-cycle flow is:
+
+```
+$deep-interview → $ralplan → $ralph (or $team for parallel execution)
+```
+
+Use `$autopilot` when you want OMX to choose the path for you. Use `$deep-interview` + `$ralplan` + `$ralph` when you want explicit checkpoints at each stage.
+
+## Suggested first moves
+
+1. Read [Core Concepts](/docs/concepts) to understand the agent/skill/hook separation before relying on any skill.
+2. Try `$autopilot` on a small throwaway feature — something you can discard — to see the full pipeline without risk.
+3. Read one [agent prompt](/docs/agents/build-analysis/explore) to see how OMX shapes Codex behavior at the system-prompt level.
+
+## Contributing guides
+
+Have a workflow worth sharing? PRs welcome at [GitHub](https://github.com/Yeachan-Heo/oh-my-codex). The docs source lives in the `oh-my-codex-docs` repository — open a PR against `main` with your guide under `content/docs/guides/`.
