@@ -1,6 +1,37 @@
 ---
 title: "Changelog"
-description: "OMX release notes, mirrored from upstream `CHANGELOG.md`."
+description: "OMX release history — latest release summary and link to the full upstream CHANGELOG.md."
 ---
 
-OMX release notes, mirrored from upstream `CHANGELOG.md`.
+The full OMX changelog is maintained upstream at [`CHANGELOG.md`](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/CHANGELOG.md). This page summarizes the most recent releases and links to detailed notes.
+
+## Latest release — v0.13.1
+
+`v0.13.1` is a focused hotfix that restores detached interactive Codex startup.
+
+**Fixed:**
+- Detached tmux startup no longer drops Codex stdin. The detached leader wrapper now preserves stdin while backgrounding Codex, so interactive detached launches like `omx --madmax --high` no longer exit immediately on startup.
+- CLI regression tests now assert that the detached leader command keeps stdin open for the Codex child while preserving leader cleanup semantics.
+
+## v0.13.0
+
+Major release introducing broader team worker improvements, hook pipeline hardening, and model routing updates. See the [full release notes](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/docs/release-notes-0.13.0.md) for details.
+
+## v0.12.x series
+
+The v0.12 series delivered iterative improvements to the team pipeline, spark worker routing, OpenClaw gateway reliability, and notifier verbosity controls. Individual release notes:
+
+- [v0.12.6](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/docs/release-notes-0.12.6.md)
+- [v0.12.5](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/docs/release-notes-0.12.5.md)
+- [v0.12.4](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/docs/release-notes-0.12.4.md)
+
+## Full history
+
+All releases including v0.7.x through current are documented in the upstream repository:
+
+[https://github.com/Yeachan-Heo/oh-my-codex/blob/main/CHANGELOG.md](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/CHANGELOG.md)
+
+## Related
+
+- [Migration](/docs/reference/migration) — breaking changes and upgrade steps between versions
+- [Quick Commands](/docs/reference/quick-commands) — CLI cheat sheet for day-to-day use

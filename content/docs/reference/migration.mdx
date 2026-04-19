@@ -1,6 +1,61 @@
 ---
 title: "Migration"
-description: "Migration notes when moving between OMX versions."
+description: "Cross-version migration notes for OMX — removed prompts, renamed skills, and setup changes between major versions."
 ---
 
-Migration notes when moving between OMX versions.
+This page tracks breaking changes and migration steps between OMX versions. Start here when upgrading to a new major or minor version and consult the [changelog](/docs/reference/changelog) for the full release history.
+
+## Post-v0.4.4 mainline
+
+The post-v0.4.4 mainline merged catalog consolidation, setup scope changes, and tmux hardening. The full upstream guide is at [`docs/migration-mainline-post-v0.4.4.md`](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/docs/migration-mainline-post-v0.4.4.md).
+
+### Removed prompts
+
+- `deep-executor` — use `/prompts:executor` instead.
+- `scientist` — use `/prompts:researcher` for research workflows.
+
+### Removed skills
+
+| Removed | Replacement |
+|---|---|
+| `$pipeline` | `$team` (default orchestrator) |
+| `$ultrapilot` | `$team` |
+| `$deepinit` | `omx agents-init [path]` (CLI command) |
+| `$psm` / `$project-session-manager` | No in-repo replacement — remove from automation |
+| `$release` | No in-repo replacement — use your project release process |
+| `$learn-about-omx` / `$learner` / `$writer-memory` | No in-repo replacement — remove stale references |
+
+### Setup scope changes
+
+`omx setup` now supports `--scope user` and `--scope project`. Legacy `project-local` values in config are auto-migrated. Verify with:
+
+```bash
+omx help | grep -e "--scope"
+```
+
+### Verification checklist
+
+After upgrading, confirm removed references are gone:
+
+```bash
+rg -n "deep-executor|scientist|pipeline|project-session-manager|ultrapilot" \
+  README.md docs scripts .omx -S
+```
+
+Validate team health:
+
+```bash
+omx doctor --team
+```
+
+## General upgrade steps
+
+1. Pull the latest version: `npm install -g oh-my-codex` (or your install method).
+2. Run `omx doctor` to check for configuration issues.
+3. Run `omx setup` if the doctor reports missing prompts or skills.
+4. Check this page and the changelog for version-specific steps.
+
+## Related
+
+- [Changelog](/docs/reference/changelog) — full release history
+- [Configuration](/docs/reference/configuration) — config files affected by migrations

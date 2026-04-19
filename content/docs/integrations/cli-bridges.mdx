@@ -1,6 +1,51 @@
 ---
 title: "CLI Bridges"
-description: "`$ask-claude` and `$ask-gemini` and the tri-model (ccg-style) workflow."
+description: "Cross-CLI bridge commands — `$ask-claude`, `$ask-gemini`, and the `$ccg` tri-model workflow for parallel model consultation."
 ---
 
-`$ask-claude` and `$ask-gemini` and the tri-model (ccg-style) workflow.
+CLI bridges are lightweight commands that let an OMX session reach outside itself to a different AI CLI or model. The three bridges — `$ask-claude`, `$ask-gemini`, and `$ccg` — cover the most common cross-CLI patterns: quick delegation, second opinions, and tri-model consensus.
+
+## What it is
+
+Each bridge opens a fresh subprocess using a different CLI binary, sends your question or task, and returns the response into the current OMX session. Because each subprocess starts with no inherited context, bridge calls are clean-room queries — free from the noise of the active working context.
+
+## How OMX uses it
+
+- **`$ask-claude`** — Spawns a Claude CLI process with the provided argument as the sole input. Useful for quick lookups, summarization, or tasks that benefit from Claude's reasoning without polluting the Codex context.
+- **`$ask-gemini`** — Spawns a Gemini CLI process. Particularly effective for large-context lookups and cases where Google's model provides a useful counterpoint.
+- **`$ccg`** — The tri-model workflow: fans out to Codex, Claude, and Gemini in parallel, then synthesizes the three responses into a single answer. Used by the `$ccg` skill and useful when you want broad coverage before committing to an approach.
+
+## Example
+
+Single-model delegation:
+
+```
+codex
+> $ask-claude "what is the recommended retry strategy for idempotent HTTP endpoints?"
+```
+
+```
+codex
+> $ask-gemini "summarize the tradeoffs between RSA and ECDSA for JWT signing"
+```
+
+Tri-model consensus:
+
+```
+codex
+> $ccg "design a rate-limiting strategy for a public REST API with 10k RPS"
+```
+
+Shell-level invocation (bypassing the skill layer):
+
+```bash
+# Ask Claude directly from a shell script
+echo "explain this error: $(cat error.log)" | claude --print
+```
+
+## Related
+
+- [ask-claude](/docs/skills/utility/ask-claude) — full skill reference for `$ask-claude`
+- [ask-gemini](/docs/skills/utility/ask-gemini) — full skill reference for `$ask-gemini`
+- [MCP](/docs/integrations/mcp) — Model Context Protocol for structured tool invocation
+- [OpenClaw](/docs/integrations/openclaw) — event bridge for cross-session notifications

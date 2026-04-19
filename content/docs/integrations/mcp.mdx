@@ -1,6 +1,53 @@
 ---
 title: "MCP"
-description: "Model Context Protocol servers OMX can invoke from skills and hooks."
+description: "Model Context Protocol integration — how OMX invokes MCP servers from skills and hooks, and how to configure known servers."
 ---
 
-Model Context Protocol servers OMX can invoke from skills and hooks.
+Model Context Protocol (MCP) is an open standard that lets AI assistants call external tools through a common interface. OMX can act as an MCP client, invoking registered MCP servers from within skills, hooks, and agent workflows to reach file systems, APIs, and specialized services without leaving the session.
+
+## What it is
+
+MCP defines a client-server protocol where the AI client (OMX/Codex) sends structured tool-call requests and receives structured responses. Each MCP server exposes a named set of tools. OMX discovers configured servers at startup and makes their tools available as first-class actions inside skills and hooks.
+
+## How OMX uses it
+
+- **Skill-level tool calls** — Skills like `$wiki`, `$trace`, and `$team` invoke MCP tools (`wiki_add`, `state_read`, `TeamCreate`, etc.) as part of their normal execution path.
+- **Hook-level integration** — Hook scripts can call MCP tools to read or write state before and after OMX operations.
+- **Known MCP servers** — OMX ships with support for: `filesystem` (read/write local files), `github` (issues, PRs, code search), `context7` (library documentation lookup), and the OMX plugin server (`oh-my-claudecode_t`) which exposes state, notepad, wiki, LSP, AST, and team tools.
+- **Configuration** — MCP servers are registered in the Claude Code settings file (typically `~/.claude/settings.json`) under the `mcpServers` key. Each entry specifies a `command`, optional `args`, and optional `env` overrides.
+
+## Example
+
+Registering the filesystem and GitHub MCP servers:
+
+```json
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/home/user/projects"]
+    },
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": { "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}" }
+    },
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"]
+    }
+  }
+}
+```
+
+After registration, tools from those servers are callable directly in skills:
+
+```
+codex
+> $wiki add "the DB schema lives in src/db/schema.ts"
+```
+
+## Related
+
+- [OpenClaw](/docs/integrations/openclaw) — hook-event gateway that can trigger MCP-backed actions
+- [CLI Bridges](/docs/integrations/cli-bridges) — cross-CLI shortcuts built on top of MCP and shell bridges

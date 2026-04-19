@@ -1,6 +1,44 @@
 ---
 title: "Contracts"
-description: "Prompt guidance, team mutation, and OpenClaw event contracts."
+description: "OMX behavioral contracts — prompt guidance, team mutation, and OpenClaw event schemas that govern how OMX surfaces behave."
 ---
 
-Prompt guidance, team mutation, and OpenClaw event contracts.
+OMX defines three formal contracts that govern behavior across prompt surfaces, interop brokers, and event consumers. Understanding these contracts matters when you edit prompts, build external integrations, or write tools that read OMX team state.
+
+## Prompt guidance contract
+
+The prompt guidance contract defines how OMX prompt surfaces should behave. It was introduced in the GPT-5.4 guidance rollout and applies to `AGENTS.md`, `templates/AGENTS.md`, `prompts/*.md`, and the generated `developer_instructions` text.
+
+The four core behaviors the contract requires:
+
+1. **Quality-first, intent-deepening output** — prompts default to digging deeper into intent, thinking one more step before replying, and including evidence needed to act safely.
+2. **Automatic follow-through on low-risk steps** — prompts proceed automatically on clear, reversible next steps rather than asking avoidable confirmation questions.
+3. **Scoped overrides** — newer user task updates are treated as local overrides for the active task, not full prompt resets. Earlier non-conflicting instructions are preserved.
+4. **Persistent tool use and evidence-backed completion** — prompts keep using tools when correctness depends on retrieval, diagnostics, tests, or verification. OMX does not stop at a plausible answer if proof is still missing.
+
+Source: [`docs/prompt-guidance-contract.md`](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/docs/prompt-guidance-contract.md)
+
+## Team mutation contract
+
+External interoperability brokers must mutate team state exclusively through the CLI interop path:
+
+```bash
+omx team api <operation> --input '<json-object>' --json
+```
+
+Direct writes to `.omx/state/team/...` are unsupported. Legacy `team_*` MCP APIs are hard-deprecated and return an error with a CLI migration hint.
+
+The required task mutation flow: `read-task` → `claim-task` → `transition-task-status` (`in_progress → completed|failed`). Use `release-task-claim` only for rollback to pending.
+
+Source: [`docs/interop-team-mutation-contract.md`](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/docs/interop-team-mutation-contract.md)
+
+## OpenClaw event contract
+
+The OpenClaw / Clawhip event contract defines the envelope shape and normalized event vocabulary for all hook events OMX emits. Consumers should route on `context.normalized_event`, not raw `event` values.
+
+See [Clawhip](/docs/integrations/clawhip) for the full normalized event table and envelope schema.
+
+## Related
+
+- [Clawhip](/docs/integrations/clawhip) — event-contract layer and normalized event routing
+- [OpenClaw](/docs/integrations/openclaw) — hook-event dispatch pipeline

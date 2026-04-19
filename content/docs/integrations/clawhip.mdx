@@ -1,6 +1,54 @@
 ---
 title: "Clawhip"
-description: "Event-contract layer used by OpenClaw to multiplex OMC and OMX."
+description: "Event-contract layer that normalizes and multiplexes OMX hook events for reliable downstream consumption by OpenClaw and external brokers."
 ---
 
-Event-contract layer used by OpenClaw to multiplex OMC and OMX.
+Clawhip is the event-contract layer that sits between OMX's raw hook pipeline and any downstream consumer — OpenClaw gateways, notification brokers, or interop agents. It defines the canonical envelope shape and a stable set of normalized event names so consumers never need to parse raw OMX event strings directly.
+
+## What it is
+
+Clawhip is a schema and routing contract, not a separate process. When OMX fires a hook, the event envelope already conforms to the clawhip contract: a versioned schema, a `context` block with normalized fields, and a `context.normalized_event` string that maps unstable raw event names to a small, stable vocabulary.
+
+## How OMX uses it
+
+- **Normalized event routing** — Consumers route on `context.normalized_event` (`started`, `blocked`, `finished`, `failed`, `retry-needed`, `pr-created`, `test-started`, `test-finished`, `test-failed`, `handoff-needed`), not on the raw `event` field. This keeps consumers stable even when OMX uses legacy-compatible names like `session-start` or `session-idle`.
+- **Envelope contract** — Every event carries `schema_version: "1"`, `event`, `timestamp`, `source`, and a `context` block. Optional IDs (`session_id`, `thread_id`, `turn_id`, `mode`) appear when available.
+- **Context fields** — The `context` block includes `normalized_event`, `session_name`, `repo_path`, `branch`, `issue_number`, `pr_number`, `pr_url`, `command`, `tool_name`, `status`, and `error_summary`.
+- **Noise controls** — Duplicate suppression gates on `thread_id + turn_id + type`. Idle events obey the idle cooldown gate. Derived operational events (`retry-needed`, `handoff-needed`) never duplicate session lifecycle completions.
+
+## Example
+
+A clawhip-aware consumer routing on `normalized_event`:
+
+```json
+{
+  "schema_version": "1",
+  "event": "session-end",
+  "timestamp": "2025-04-19T10:00:00.000Z",
+  "source": "omx",
+  "session_id": "omx-abc123",
+  "context": {
+    "normalized_event": "finished",
+    "session_name": "omx-abc123",
+    "repo_name": "my-app",
+    "branch": "feat/new-api",
+    "status": "success"
+  }
+}
+```
+
+Consumer routing pattern:
+
+```js
+switch (event.context.normalized_event) {
+  case "finished": handleSuccess(event); break;
+  case "failed":   handleFailure(event); break;
+  case "blocked":  escalate(event);      break;
+}
+```
+
+## Related
+
+- [OpenClaw](/docs/integrations/openclaw) — dispatch pipeline that delivers clawhip-shaped events to gateways
+- [MCP](/docs/integrations/mcp) — Model Context Protocol servers invocable from OMX skills and hooks
+- [Contracts](/docs/reference/contracts) — prompt-guidance and team-mutation contracts that govern OMX behavior surfaces

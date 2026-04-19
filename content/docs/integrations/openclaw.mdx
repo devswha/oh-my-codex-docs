@@ -1,6 +1,66 @@
 ---
 title: "OpenClaw"
-description: "Bridge that connects Codex CLI with Claude Code, sharing state and tool calls."
+description: "Notification and event-dispatch bridge that connects OMX hook events to Claude Code, external agents, and custom command gateways."
 ---
 
-Bridge that connects Codex CLI with Claude Code, sharing state and tool calls.
+OpenClaw is the notification and event-dispatch bridge built into OMX. When OMX reaches a hook point — session start, idle, user question, stop, or session end — OpenClaw packages the context into a structured envelope and delivers it to a configured gateway: an HTTP endpoint, a CLI command, or a clawdbot agent turn.
+
+## What it is
+
+OpenClaw is not a separate service you install. It is a dispatch pipeline inside OMX that activates when `OMX_OPENCLAW=1` is set. A gateway definition in `.codex/.omx-config.json` tells OpenClaw where and how to send each event. Gateways can be HTTP endpoints (for webhooks) or command strings (for local CLIs and agent launchers like `clawdbot`).
+
+## How OMX uses it
+
+- **Session lifecycle hooks** — OpenClaw fires on `session-start`, `session-idle`, `ask-user-question`, `stop`, and `session-end`, injecting template variables like `{{sessionId}}`, `{{tmuxSession}}`, `{{projectName}}`, and `{{question}}`.
+- **Instruction templates** — Each hook carries a configurable `instruction` string rendered at fire time. The instruction is the message body delivered to the gateway.
+- **Gateway routing** — Each hook references a named gateway (`local`, `remote`, etc.) defined once in the `gateways` block. HTTP gateways use bearer-token auth; command gateways interpolate the instruction into a shell command.
+- **Precedence** — When both `notifications.openclaw` and generic aliases (`custom_webhook_command`, `custom_cli_command`) are present, `notifications.openclaw` wins and OMX emits a warning.
+
+## Example
+
+Minimal HTTP gateway that fires on session end and user questions:
+
+```json
+{
+  "notifications": {
+    "enabled": true,
+    "openclaw": {
+      "enabled": true,
+      "gateways": {
+        "local": {
+          "type": "http",
+          "url": "http://127.0.0.1:18789/hooks/agent",
+          "headers": { "Authorization": "Bearer ${HOOKS_TOKEN}" }
+        }
+      },
+      "hooks": {
+        "session-end": {
+          "enabled": true,
+          "gateway": "local",
+          "instruction": "OMX task completed for {{projectPath}} (session {{sessionId}})"
+        },
+        "ask-user-question": {
+          "enabled": true,
+          "gateway": "local",
+          "instruction": "OMX needs input: {{question}}"
+        }
+      }
+    }
+  }
+}
+```
+
+Enable the pipeline before launching OMX:
+
+```bash
+export OMX_OPENCLAW=1
+export HOOKS_TOKEN="your-token-here"
+```
+
+For command gateways (clawdbot agent mode), also set `OMX_OPENCLAW_COMMAND=1` and use `type: "command"` with a timeout of at least `120000` ms.
+
+## Related
+
+- [Clawhip](/docs/integrations/clawhip) — event-contract layer that multiplexes OMX events for downstream consumers
+- [CLI Bridges](/docs/integrations/cli-bridges) — `$ask-claude`, `$ask-gemini`, and `$ccg` cross-CLI workflows
+- [Trace](/docs/skills/workflow/trace) — evidence-driven tracing that surfaces session events

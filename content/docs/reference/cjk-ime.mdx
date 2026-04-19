@@ -1,6 +1,37 @@
 ---
 title: "CJK IME"
-description: "Korean/Chinese/Japanese IME handling in Codex CLI."
+description: "Korean, Chinese, and Japanese IME handling in Codex CLI — known composition event issues and practical workarounds."
 ---
 
-Korean/Chinese/Japanese IME handling in Codex CLI.
+Codex CLI uses a terminal-based input model that can conflict with CJK (Korean, Chinese, Japanese) Input Method Editors. IMEs work by intercepting keystrokes to build composed characters before committing them to the input buffer. This intermediate composition state is invisible to the terminal and can cause dropped characters, duplicate input, or premature submission.
+
+## Known issues
+
+**Composition event conflicts** — When an IME is active and composing a character, some terminals send partial keystrokes to the CLI before composition is complete. Codex CLI may interpret these as separate inputs, resulting in garbled text or unexpected command execution.
+
+**Enter key during composition** — Pressing Enter while an IME candidate list is open can trigger Codex to submit the current incomplete input rather than confirming the IME selection. This is the most common issue for Korean users on macOS and Linux.
+
+**Double-input on commit** — Some IME + terminal combinations send both the composed character and a raw keystroke on commit, causing characters to appear twice in the input buffer.
+
+## Workarounds
+
+**Commit before submitting** — Always close the IME candidate window and confirm composition is complete before pressing Enter to submit a Codex command. The cursor should return to normal (non-underlined) before you submit.
+
+**Switch to ASCII input for commands** — For OMX skill invocations like `$ralph` or `$team`, switch your IME to ASCII/English mode first, then type the command. Switch back to CJK mode for the natural-language argument if needed.
+
+**Use a separate input buffer** — Type your CJK text in a plain text editor, copy it, then paste into the Codex CLI prompt. Paste does not go through IME composition, so it arrives in the buffer correctly.
+
+**Terminal choice** — Some terminals handle IME composition events better than others. iTerm2 (macOS) and Windows Terminal generally have fewer conflicts than basic `xterm`. If you encounter persistent issues, try switching terminals.
+
+## Environment considerations
+
+Set `LANG` and `LC_ALL` to a UTF-8 locale to ensure the terminal and Codex CLI agree on character encoding:
+
+```bash
+export LANG=ko_KR.UTF-8
+export LC_ALL=ko_KR.UTF-8
+```
+
+## Related
+
+- [Environment](/docs/reference/environment) — environment variables including locale settings
