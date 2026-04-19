@@ -1,6 +1,9 @@
 {
   "title": "시작하기",
   "pages": [
-    "index"
+    "[사전 요건](/docs/getting-started#prerequisites)",
+    "[설치](/docs/getting-started#install)",
+    "[첫 실행](/docs/getting-started#first-run)",
+    "[다음 단계](/docs/getting-started#next-steps)"
   ]
 }

@@ -2,11 +2,11 @@
   "title": "リファレンス",
   "pages": [
     "configuration",
+    "quick-commands",
     "environment",
     "migration",
-    "changelog",
-    "quick-commands",
     "cjk-ime",
+    "changelog",
     "contracts",
     "omx-directory"
   ]

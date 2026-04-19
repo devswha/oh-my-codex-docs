@@ -1,6 +1,9 @@
 {
   "title": "クイックスタート",
   "pages": [
-    "index"
+    "[前提条件](/docs/getting-started#prerequisites)",
+    "[インストール](/docs/getting-started#install)",
+    "[初回実行](/docs/getting-started#first-run)",
+    "[次のステップ](/docs/getting-started#next-steps)"
   ]
 }

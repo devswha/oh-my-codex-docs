@@ -1,6 +1,8 @@
 {
   "title": "指南",
   "pages": [
-    "index"
+    "[如何选择技能](/docs/guides#when-to-use-which-skill)",
+    "[建议起步方式](/docs/guides#suggested-first-moves)",
+    "[贡献指南](/docs/guides#contributing-guides)"
   ]
 }

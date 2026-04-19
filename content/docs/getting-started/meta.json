@@ -1,6 +1,9 @@
 {
   "title": "Getting Started",
   "pages": [
-    "index"
+    "[Prerequisites](/docs/getting-started#prerequisites)",
+    "[Install](/docs/getting-started#install)",
+    "[First run](/docs/getting-started#first-run)",
+    "[Next steps](/docs/getting-started#next-steps)"
   ]
 }

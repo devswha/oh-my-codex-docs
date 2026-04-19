@@ -1,6 +1,10 @@
 {
   "title": "コアコンセプト",
   "pages": [
-    "index"
+    "[エージェントプロンプト](/docs/concepts#agent-prompts)",
+    "[スキル](/docs/concepts#skills)",
+    "[Codex ネイティブフック](/docs/concepts#codex-native-hooks)",
+    "[チームオーケストレーション](/docs/concepts#team-orchestration)",
+    "[.omx/ ディレクトリ](/docs/concepts#the-omx-directory)"
   ]
 }

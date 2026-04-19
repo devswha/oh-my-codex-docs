@@ -1,6 +1,8 @@
 {
   "title": "ガイド",
   "pages": [
-    "index"
+    "[どのスキルを使うか](/docs/guides#when-to-use-which-skill)",
+    "[最初に試すこと](/docs/guides#suggested-first-moves)",
+    "[ガイドへの貢献](/docs/guides#contributing-guides)"
   ]
 }
