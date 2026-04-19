@@ -32,5 +32,7 @@ social-preview-1x.png
 !.omc/skills/
 .omc/skills/*
 !.omc/skills/sync-omc-docs/
+!.omc/skills/sync-omx-docs/
+!.omc/skills/add-docs-locale/
 .sisyphus/
 .omx/
