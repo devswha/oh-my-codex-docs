@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import {
   DocsPage,
   DocsBody,
@@ -134,7 +135,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata(props: {
   params: Promise<{ slug?: string[]; lang: string }>;
-}) {
+}): Promise<Metadata> {
   const params = await props.params;
   const page = source.getPage(params.slug, params.lang);
   if (!page) notFound();
