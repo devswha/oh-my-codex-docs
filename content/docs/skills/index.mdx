@@ -3,4 +3,44 @@ title: Skills
 description: "The OMX skill catalog. 37 one-shot invocations that drive complex workflows."
 ---
 
-The OMX skill catalog. 37 one-shot invocations that drive complex workflows.
+Skills are reusable OMX workflows. You invoke them explicitly with `$name` inside a Codex session, or let hooks activate them when a matching keyword or routing phrase appears.
+
+## Skill lanes
+
+| Lane | Purpose | Examples |
+|---|---|---|
+| [Workflow Skills](/docs/skills/workflow) | Multi-step execution lanes that plan, implement, verify, or coordinate teams | `$autopilot`, `$deep-interview`, `$ralplan`, `$ralph`, `$team`, `$ultrawork`, `$ultraqa` |
+| [Utility Skills](/docs/skills/utility) | Helpers for research, review, setup, debugging, notifications, and maintenance | `$analyze`, `$ask-claude`, `$ask-gemini`, `$doctor`, `$hud`, `$note`, `$skill` |
+
+## How skills fit into OMX
+
+A skill can do more than inject text:
+
+- load a specific workflow prompt,
+- sequence multiple agent roles,
+- read or write `.omx/` state,
+- spawn Codex-native subagents or team workers,
+- and loop until a success condition is satisfied.
+
+That is why high-level skills like `$autopilot` and `$team` feel like full execution modes rather than simple macros.
+
+## Common entry points
+
+| Goal | Recommended skill |
+|---|---|
+| I have a vague idea and want OMX to drive the full path | [`$autopilot`](/docs/skills/workflow/autopilot) |
+| I need clarification before anyone touches code | [`$deep-interview`](/docs/skills/workflow/deep-interview) |
+| I want a reviewed plan before execution | [`$ralplan`](/docs/skills/workflow/ralplan) |
+| I already know the task and want a persistent implementation loop | [`$ralph`](/docs/skills/workflow/ralph) |
+| I need parallel execution across multiple workers | [`$team`](/docs/skills/workflow/team) or [`$ultrawork`](/docs/skills/workflow/ultrawork) |
+| I need targeted analysis or tooling help | [Utility skills](/docs/skills/utility) |
+
+## Invocation reminder
+
+```bash
+$autopilot build me a todo app
+$ralplan refactor the auth module
+$team 3:executor "ship the approved plan in parallel"
+```
+
+For the workflow details behind those entry points, continue into [Workflow Skills](/docs/skills/workflow).

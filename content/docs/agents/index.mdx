@@ -3,4 +3,31 @@ title: Agents
 description: "The OMX agent catalog. 33 role-specific prompts grouped into four lanes."
 ---
 
-The OMX agent catalog. 33 role-specific prompts grouped into four lanes.
+OMX ships 33 role-specific prompts. Each prompt keeps one narrow responsibility so the orchestrator can delegate intentionally instead of asking one general-purpose agent to do everything.
+
+## Four-lane structure
+
+| Lane | Purpose | Representative prompts |
+|---|---|---|
+| [Build & Analysis](/docs/agents/build-analysis) | Discovery, requirements, planning, implementation, and verification | `explore`, `analyst`, `planner`, `architect`, `executor`, `verifier` |
+| [Review](/docs/agents/review) | Quality, security, API, performance, and style review | `code-reviewer`, `security-reviewer`, `quality-reviewer` |
+| [Domain](/docs/agents/domain) | Specialist help for testing, design, docs, dependency work, and release hygiene | `test-engineer`, `designer`, `writer`, `dependency-expert`, `git-master` |
+| [Coordination](/docs/agents/coordination) | Cross-agent challenge, orchestration, and team execution support | `critic`, `team-orchestrator`, `team-executor` |
+
+## How OMX chooses an agent
+
+The orchestrator routes by task shape:
+
+- Use `explore` for repo lookup and implementation discovery.
+- Use `analyst` or `planner` when the main need is requirements clarity or sequencing.
+- Use `executor` for implementation and `verifier` for evidence-backed completion checks.
+- Use review/domain specialists only when the task clearly benefits from their narrower expertise.
+
+This separation keeps prompts composable and makes team-mode delegation easier to audit.
+
+## Suggested next steps
+
+- Start with [Build & Analysis](/docs/agents/build-analysis) if you want to understand the default execution lane.
+- Read [Review](/docs/agents/review) when you need the quality and security gates.
+- Use [Domain](/docs/agents/domain) for task-specific specialists.
+- See [Core Concepts](/docs/concepts) for the larger agent-skill-hook model.
