@@ -1,6 +1,44 @@
 ---
 title: "Lifecycle Events"
-description: "PreToolUse, PostToolUse, Stop, SessionStart, and other event phases exposed to OMX hooks."
+description: "The seven hook phases OMX listens to: PreToolUse, PostToolUse, Stop, SessionStart, PreCompact, Notification, and UserPromptSubmit."
 ---
 
-PreToolUse, PostToolUse, Stop, SessionStart, and other event phases exposed to OMX hooks.
+OMX hooks are keyed to Codex CLI lifecycle events. Each event fires at a defined point in a Codex session and carries a typed payload. Understanding which event fires when helps you predict what OMX will do — and where to add your own plugin logic.
+
+## What it is
+
+Codex CLI exposes a fixed set of named events that external hook handlers can subscribe to. OMX maps its own runtime concerns — state persistence, keyword detection, stop-gating, context injection — onto these events. The same event vocabulary is exposed to `.omx/hooks/*.mjs` plugin files so custom logic can slot in at the right phase without duplicating OMX internals.
+
+## Events
+
+| Event | Fires when | Typical OMX use |
+|---|---|---|
+| `SessionStart` | Codex session initialises | Restore startup context, seed wiki summary, ensure `.omx/` is gitignored |
+| `UserPromptSubmit` | User sends a prompt | Keyword detection, skill routing, deep-interview input lock |
+| `PreToolUse` | Before any tool call executes | Bash safety checks, inline `git commit` format guard |
+| `PostToolUse` | After a tool call completes | Command-not-found guidance, non-zero output review |
+| `Stop` | Model finishes a turn | Ralph/autopilot/ultrawork/ultraqa continuation, auto-nudge on stalls |
+| `PreCompact` | Context window nears limit | Reserved; wiki compaction deferred to v2 |
+| `Notification` | System notification emitted | Notification routing to Discord/Slack/Telegram via notify-hook |
+
+Native Codex hook coverage is partial. `PreToolUse` and `PostToolUse` currently intercept Bash only; non-Bash tool interception falls back to runtime paths. See [Codex-Native Hooks](/docs/hooks/codex-native-hooks) for the full mapping matrix.
+
+## Example
+
+A plugin that reacts to `post-tool-use` events:
+
+```js
+// .omx/hooks/my-plugin.mjs
+export async function onHookEvent(event, sdk) {
+  if (event.event !== 'post-tool-use') return;
+  sdk.log.info('tool finished', event.context);
+}
+```
+
+The envelope always includes `schema_version`, `event`, `timestamp`, `source` (`native` or `derived`), and `context`.
+
+## Related
+
+- [Core Hooks](/docs/hooks/core-hooks)
+- [Codex-Native Hooks](/docs/hooks/codex-native-hooks)
+- [Context Hooks](/docs/hooks/context-hooks)

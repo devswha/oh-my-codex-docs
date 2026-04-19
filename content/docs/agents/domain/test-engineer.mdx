@@ -1,6 +1,40 @@
 ---
-title: test-engineer
-description: "OMX agent prompt: test-engineer"
+title: "test-engineer"
+description: "Designs test strategies, authors unit/integration/e2e tests, hardens flaky suites, and drives TDD workflows."
 ---
 
-The `test-engineer` agent prompt. Port the OMC description of this role and adjust for OMX/Codex-specific invocation.
+`test-engineer` is the agent responsible for all things testing. It designs test pyramids, writes tests at every layer, diagnoses flaky failures, and enforces the red-green-refactor TDD cycle. It never implements production features — if code changes are needed to make tests pass, it flags them for `executor` rather than making them itself.
+
+## Role
+
+- Design test strategies covering unit (70%), integration (20%), and e2e (10%) layers
+- Author tests with names that describe expected behavior ("returns empty array when no users match filter")
+- Diagnose and fix flaky tests by identifying root causes: timing, shared state, hardcoded dates, environment coupling
+- Enforce TDD: write the failing test first, run to confirm RED, then hand off or implement the minimal code to go GREEN
+
+## When invoked
+
+- Triggered by the `$tdd` keyword or `$ultraqa` workflow
+- After a feature is implemented and coverage gaps need filling
+- When CI shows intermittent failures that need root-cause analysis
+- Before a release when a full regression sweep is required
+
+## Inputs
+
+Provide the feature or module to test, existing test files for pattern reference, and any acceptance criteria or expected behaviors. If triggering TDD, provide the function signature or interface before implementation exists.
+
+## Outputs
+
+New or updated test files that pass, a coverage gap report with risk levels, flaky-test diagnoses with applied fixes, and a fresh test run output as verification evidence.
+
+## Limits
+
+- Does not implement production code — recommends changes and defers to `executor`
+- Does not set CI/CD pipeline configuration — defers to `build-fixer`
+- Does not write performance benchmarks — defers to `quality-reviewer`
+
+## Related agents
+
+- [`qa-tester`](/docs/agents/domain/qa-tester) — runtime interactive validation complementing automated tests
+- [`verifier`](/docs/agents/build-analysis/verifier) — completion evidence and claim validation
+- [`executor`](/docs/agents/build-analysis/executor) — implements production code when tests reveal gaps

@@ -1,6 +1,38 @@
 ---
 title: "Core Hooks"
-description: "The built-in OMX hooks shipped with oh-my-codex."
+description: "The built-in OMX hooks shipped with oh-my-codex: keyword detector, ralph stop-gate, ultrawork dispatcher, and notepad updater."
 ---
 
-The built-in OMX hooks shipped with oh-my-codex.
+Core hooks are the hook handlers that OMX installs when you run `omx setup`. They wire OMX's workflow skills into Codex lifecycle events without any additional configuration. Each hook targets one responsibility and stays out of the way when its concern is inactive.
+
+## What it is
+
+OMX ships four built-in hooks registered in `.codex/hooks.json`. All four route through `dist/scripts/codex-native-hook.js`, the single entrypoint that dispatches to the correct handler based on the Codex event type. Configuration lives in `.codex/config.toml` (`[features] codex_hooks = true`). Plugin hooks in `.omx/hooks/*.mjs` extend this surface but do not replace it.
+
+## Built-in hooks
+
+- **keyword-detector** (`UserPromptSubmit`) — Scans each user prompt for magic keyword phrases. On a match it writes skill activation state to `.omx/state/` and can prepend developer context. Supports `$skill` explicit invocations and implicit phrase matching with intent guards for ambiguous words like "team" and "parallel". See [Magic Keywords](/docs/hooks/magic-keywords).
+- **ralph stop-gate** (`Stop`) — Checks whether a Ralph, autopilot, ultrawork, or ultraqa run is still active when the model stops. If active and not yet terminal, it returns `decision: "block"` with a continuation reason to keep the run going. Reads state from `.omx/state/{mode}-state.json`.
+- **pre-tool-use guard** (`PreToolUse`, Bash-only) — Cautions on destructive commands (`rm -rf dist`) and blocks inline `git commit` calls that lack the required Lore-format trailer (`Co-authored-by: OmX <omx@oh-my-codex.dev>`).
+- **post-tool-use advisor** (`PostToolUse`, Bash-only) — Interprets non-zero exit codes, permission-denied errors, and missing-path messages, then injects corrective guidance into the next prompt context.
+
+## Example
+
+Check that OMX hooks are installed and shaped correctly:
+
+```bash
+omx doctor
+```
+
+Inspect raw hook state after a keyword fires:
+
+```bash
+cat .omx/state/skill-active-state.json
+```
+
+## Related
+
+- [Lifecycle Events](/docs/hooks/lifecycle-events)
+- [Context Hooks](/docs/hooks/context-hooks)
+- [Magic Keywords](/docs/hooks/magic-keywords)
+- [Codex-Native Hooks](/docs/hooks/codex-native-hooks)
