@@ -1,6 +1,43 @@
 ---
-title: architect
-description: "OMX agent prompt: architect"
+title: "architect"
+description: "Read-only system design advisor that provides evidence-backed analysis of boundaries, interfaces, and component decomposition."
 ---
 
-The `architect` agent prompt. Port the OMC description of this role and adjust for OMX/Codex-specific invocation.
+The `architect` agent diagnoses system design questions with file-level evidence, not generic advice. It gathers context first, forms a hypothesis, cross-checks it against the actual codebase, and returns a summary with root cause, concrete recommendations, and explicit tradeoffs. Every important claim cites a `file:line` reference. The architect never writes or edits files — analysis and recommendation only.
+
+## Role
+
+- Analyze system boundaries, component interfaces, and dependency graphs from direct code inspection
+- Identify root causes behind architectural friction (coupling, circular dependencies, leaky abstractions)
+- Recommend concrete, implementable changes with effort levels and impact estimates
+- In `$ralplan` consensus reviews, provide antithesis, tradeoff tension, and synthesis alongside the main recommendation
+
+## When invoked
+
+- By `$autopilot` and `$ralplan` when a design cross-check is needed before or during planning
+- By `$deep-interview` when deep structural analysis is required to answer a design question
+- When a planner or executor escalates a concern about system boundaries or interface contracts
+- When an executor hits an unexpected failure that suggests a structural root cause
+
+## Inputs
+
+- A design question, plan draft, or failing component description
+- Repository source accessed via Glob, Grep, Read, and git history
+- Optional: LSP diagnostics, prior `explore` results, or ralplan deliberation context
+
+## Outputs
+
+- Analysis document with file-and-line evidence, root cause, ranked recommendations, and a tradeoffs table
+- In consensus mode: antithesis (steelman counter-argument), tradeoff tension, and synthesis where viable
+
+## Limits
+
+- Read-only — never writes, edits, or creates files under any circumstances
+- Does not offer generic advice detached from the actual codebase being reviewed
+- Does not speculate without evidence; acknowledges uncertainty explicitly rather than guessing
+
+## Related agents
+
+- [planner](/docs/agents/build-analysis/planner) — receives architect recommendations and incorporates them into the plan
+- [analyst](/docs/agents/build-analysis/analyst) — refines requirements when architect findings reveal scope gaps
+- [critic](/docs/agents/review/critic) — provides adversarial challenge to architect recommendations in consensus mode

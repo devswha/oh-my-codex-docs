@@ -1,6 +1,44 @@
 ---
-title: explore-harness
-description: "OMX agent prompt: explore-harness"
+title: "explore-harness"
+description: "Evidence-driven tracer that manages competing hypotheses with for/against evidence, uncertainty scores, and next-probe recommendations."
 ---
 
-The `explore-harness` agent prompt. Port the OMC description of this role and adjust for OMX/Codex-specific invocation.
+The `explore-harness` agent goes beyond surface-level exploration by maintaining a structured set of competing hypotheses, each with explicit supporting and contradicting evidence and a tracked uncertainty score. Rather than converging prematurely on the first plausible explanation, it proposes the next targeted probe needed to reduce uncertainty, then keeps narrowing until one hypothesis is clearly supported by the evidence. This makes it the right tool for deep causal investigations where the root cause is genuinely ambiguous.
+
+## Role
+
+- Maintain multiple competing hypotheses simultaneously, each with for/against evidence and an uncertainty score
+- Propose concrete next-probe steps (specific files, commands, or tests) that would most efficiently reduce overall uncertainty
+- Update hypothesis scores as new evidence arrives and retire hypotheses that are definitively disproved
+- Produce a structured investigation summary that shows the reasoning trail, not just the conclusion
+
+## When invoked
+
+- By `$trace` when a causal chain is unclear and multiple explanations are plausible
+- During deep investigations where the `debugger` circuit breaker has triggered and a wider evidence sweep is needed
+- When a system exhibits intermittent or environment-dependent behavior that resists simple reproduction
+- When an architect or planner needs rigorous causal grounding before committing to a design recommendation
+
+## Inputs
+
+- An initial failure description or causal question
+- Repository access for shell inspection and read-only code analysis
+- Optional: prior debugger findings, stack traces, or existing hypothesis notes
+
+## Outputs
+
+- A structured investigation report listing each hypothesis with evidence, confidence level, and current status (active, confirmed, or retired)
+- Ranked next-probe recommendations with rationale for why each probe would reduce uncertainty
+- A final causal summary once one hypothesis reaches sufficient confidence
+
+## Limits
+
+- Read-only — does not write, edit, or modify any files in the repository
+- Does not collapse to a single hypothesis before evidence justifies the conclusion
+- Not suited for straightforward lookups; use `explore` for simple read-only repository queries
+
+## Related agents
+
+- [explore](/docs/agents/build-analysis/explore) — lightweight read-only lookup for simpler repository questions
+- [debugger](/docs/agents/build-analysis/debugger) — handles standard root-cause analysis before escalating to explore-harness
+- [critic](/docs/agents/review/critic) — provides adversarial challenge when a hypothesis appears too strong too quickly

@@ -1,6 +1,44 @@
 ---
-title: debugger
-description: "OMX agent prompt: debugger"
+title: "debugger"
+description: "Root-cause analysis agent that isolates bugs and regressions through evidence-driven hypothesis testing."
 ---
 
-The `debugger` agent prompt. Port the OMC description of this role and adjust for OMX/Codex-specific invocation.
+The `debugger` agent traces failures to their root cause rather than patching symptoms. It requires reproduction before investigation, reads full error messages and stack traces, forms one hypothesis at a time, and recommends the minimal fix needed to resolve the underlying issue. After three failed hypotheses it stops and escalates upward rather than looping indefinitely on variations of the same broken approach.
+
+## Role
+
+- Reproduce the failure reliably and document the minimal trigger steps
+- Read full stack traces and error messages, then inspect the relevant `file:line` locations
+- Form and test one hypothesis at a time, cross-checking against git history and working examples
+- Recommend a single minimal code change and identify whether the same pattern exists elsewhere in the codebase
+
+## When invoked
+
+- When a test suite fails and the root cause is not immediately obvious from the error message
+- On "debug X" requests where a developer has observed a bug but not yet located the source
+- When a `ralph` or `$autopilot` loop stalls on a repeating failure that previous executor passes have not resolved
+- After a regression is introduced and `git blame` is needed to isolate the offending change
+
+## Inputs
+
+- Error messages, stack traces, or failing test output
+- Access to the full codebase via Grep, Read, and git log/blame
+- Optional: reproduction steps, environment details, or prior hypothesis notes
+
+## Outputs
+
+- A bug report naming the root cause with `file:line` evidence, minimal reproduction steps, a one-change fix recommendation, and a verification method
+- A list of other codebase locations where the same pattern may exist
+
+## Limits
+
+- Applies a three-hypothesis circuit breaker — after three failed hypotheses it escalates with evidence rather than continuing to iterate
+- Does not bundle multiple fixes; one hypothesis, one change at a time
+- Does not produce a diagnosis without `file:line` evidence; "probably" and "seems like" are not findings
+
+## Related agents
+
+- [explore](/docs/agents/build-analysis/explore) — performs lightweight read-only lookup when the bug location is unknown
+- [verifier](/docs/agents/build-analysis/verifier) — confirms the fix resolves the failure and passes the full test suite
+- [test-engineer](/docs/agents/build-analysis/test-engineer) — writes regression tests once the root cause is confirmed
+- [explore-harness](/docs/agents/build-analysis/explore-harness) — used for deep multi-hypothesis causal investigations
