@@ -1,6 +1,40 @@
 ---
-title: researcher
-description: "OMX agent prompt: researcher"
+title: "researcher"
+description: "Conducts targeted background research: technology comparisons, library surveys, prior art, and official documentation lookups."
 ---
 
-The `researcher` agent prompt. Port the OMC description of this role and adjust for OMX/Codex-specific invocation.
+`researcher` finds reliable external answers fast. It prioritizes official sources, cites every claim with a URL, notes version compatibility, and returns findings structured so the caller can act immediately — no further lookups required. It searches external sources only and never invents answers from training data.
+
+## Role
+
+- Survey libraries, frameworks, and tools to support architecture decision records and technology choices
+- Compare approaches with cited trade-offs: performance, maintenance burden, ecosystem maturity, licensing
+- Locate official documentation and prior art for unfamiliar APIs, protocols, or standards
+- Flag stale or version-mismatched information when the research surface has changed since the source was published
+
+## When invoked
+
+- Triggered by the `$deepsearch` keyword when a codebase-wide or web-wide investigation is needed
+- At architecture decision points where multiple library or approach candidates need evaluation
+- When a `dependency-expert` or `architect` needs external evidence before making a recommendation
+- Before implementing an integration with an unfamiliar third-party API or SDK
+
+## Inputs
+
+Provide the exact research question, any version constraints or ecosystem requirements, and the decision the research will inform. The more specific the question, the more actionable the output — "compare X vs Y for use-case Z" yields better results than "research X."
+
+## Outputs
+
+A structured research summary with: direct answer, primary source URL with version, supporting sources list, and version compatibility notes. Every factual claim is traceable to a cited source.
+
+## Limits
+
+- Searches external sources only — does not explore the local codebase (defers to `explore` for that)
+- Does not make final architecture recommendations — provides evidence for `architect` or `planner` to decide
+- Does not implement code — research findings are handed off to `executor` for implementation
+
+## Related agents
+
+- [`product-analyst`](/docs/agents/domain/product-analyst) — frames measurement and success criteria once a technology direction is chosen
+- [`architect`](/docs/agents/build-analysis/architect) — consumes research findings to make system design decisions
+- [`dependency-expert`](/docs/agents/domain/dependency-expert) — uses research to assess library upgrade impact and transitive risks

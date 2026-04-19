@@ -1,6 +1,40 @@
 ---
-title: qa-tester
-description: "OMX agent prompt: qa-tester"
+title: "qa-tester"
+description: "Validates application behavior through interactive CLI and service runtime testing using tmux sessions."
 ---
 
-The `qa-tester` agent prompt. Port the OMC description of this role and adjust for OMX/Codex-specific invocation.
+`qa-tester` verifies that real running systems behave as expected. It spins up services, drives them with real commands, captures output, and asserts against actual behavior — catching integration failures, startup bugs, and user-facing regressions that automated unit tests miss entirely.
+
+## Role
+
+- Execute manual and automated smoke tests against running services via tmux session management
+- Validate user-facing flows end-to-end: startup, command dispatch, error handling, and teardown
+- Capture actual CLI output as evidence before making any PASS/FAIL assertion
+- Clean up all tmux sessions and test artifacts after every run, even on failure
+
+## When invoked
+
+- Triggered by the `$ultraqa` workflow as the validation lane after implementation
+- Before a release when user-facing flows need a live smoke sweep
+- After a build-fixer change to confirm the fix holds in a real runtime context
+- When unit tests pass but users still report misbehavior in the running application
+
+## Inputs
+
+Provide the service or CLI target to test, expected behaviors or acceptance criteria, and any environment prerequisites (ports, directories, environment variables). If testing a specific flow, describe the entry command and expected output pattern.
+
+## Outputs
+
+A structured QA test report with: tmux session name, each test case showing command sent / expected output / actual output / PASS-FAIL verdict, a summary of total/passed/failed counts, and confirmation that all sessions were killed and artifacts removed.
+
+## Limits
+
+- Does not implement features or fix bugs — reports failures and defers to `executor` or `build-fixer`
+- Does not write or maintain unit/integration test suites — that is `test-engineer`'s domain
+- Does not configure CI/CD pipelines — defers to `build-fixer`
+
+## Related agents
+
+- [`test-engineer`](/docs/agents/domain/test-engineer) — designs and authors automated test suites at unit/integration/e2e layers
+- [`verifier`](/docs/agents/build-analysis/verifier) — completion evidence and claim validation for agent outputs
+- [`build-fixer`](/docs/agents/domain/build-fixer) — resolves build and toolchain failures found during QA runs

@@ -1,6 +1,39 @@
 ---
-title: code-simplifier
-description: "OMX agent prompt: code-simplifier"
+title: "code-simplifier"
+description: "Refactors code for clarity, removes dead code, and reduces cognitive load without changing observable behavior."
 ---
 
-The `code-simplifier` agent prompt. Port the OMC description of this role and adjust for OMX/Codex-specific invocation.
+`code-simplifier` makes code easier to read and maintain after the feature work is done. It removes dead paths, collapses unnecessary abstractions, renames for precision, and restructures logic so the next developer understands it immediately — without changing what the code does.
+
+## Role
+
+- Remove dead code: unreachable branches, unused variables, deprecated feature flags, and commented-out blocks
+- Collapse over-engineered abstractions into direct, readable logic when they serve only one use case
+- Rename symbols to reflect actual behavior rather than original intent that has since shifted
+- Restructure complex conditionals and deeply nested logic into flat, readable sequences
+
+## When invoked
+
+- After a feature is shipped and the implementation has accumulated complexity that no longer needs to exist
+- When a code review identifies sections that are functionally correct but hard to follow
+- During post-sprint simplify passes scheduled by the team to control technical debt accumulation
+- When onboarding new developers reveals that key modules require excessive explanation
+
+## Inputs
+
+Provide the file or module to simplify, the specific concerns (dead code, over-abstraction, naming, nesting), and any constraints (public API surface that must not change, performance characteristics that must be preserved). If a particular cognitive-load complaint motivated the task, describe it — it guides where to focus.
+
+## Outputs
+
+Simplified code with a change summary explaining each transformation and why it reduces complexity. The observable behavior contract is unchanged — all existing tests pass without modification. A before/after complexity note highlights the most significant reduction.
+
+## Limits
+
+- Does not change observable behavior — any behavioral change is a bug to be reported, not a simplification
+- Does not add new abstractions or utilities not already requested — simplification means less code, not different code
+- Does not perform security or performance optimization — defers to `security-reviewer` and `quality-reviewer`
+
+## Related agents
+
+- [`executor`](/docs/agents/build-analysis/executor) — implements new features; code-simplifier cleans up afterward
+- [`quality-reviewer`](/docs/agents/review/quality-reviewer) — identifies maintainability and logic defects that may precede a simplify pass

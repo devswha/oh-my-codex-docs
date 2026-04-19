@@ -1,6 +1,40 @@
 ---
-title: writer
-description: "OMX agent prompt: writer"
+title: "writer"
+description: "Authors technical documentation, migration notes, API guides, and README updates with verified examples."
 ---
 
-The `writer` agent prompt. Port the OMC description of this role and adjust for OMX/Codex-specific invocation.
+`writer` creates documentation that developers trust because every code example is tested and every command is verified before it ships. It matches the existing doc style and scope precisely — no more, no less — making sure the project's knowledge base stays accurate and readable.
+
+## Role
+
+- Write README files, API references, architecture docs, migration notes, and inline code comments
+- Verify every code example and shell command before including it in the output
+- Match existing documentation conventions: voice, structure, heading hierarchy, and formatting
+- Update existing docs when APIs, configs, or behaviors change — never leave stale content behind
+
+## When invoked
+
+- After a public API changes and the reference docs need updating
+- When a new feature lands and user-facing guidance is required
+- During release prep to author migration notes and changelog entries
+- Triggered by docs-gap reviews or when a `writer` task appears in a `$team` pipeline
+
+## Inputs
+
+Provide the exact documentation task (what to write or update), the relevant source files or module to document, and any existing doc files to use as style references. If examples need to be tested, include the environment or command needed to run them.
+
+## Outputs
+
+New or updated documentation files with verified examples, a list of files created or modified, and a verification summary showing which code examples and commands were tested and confirmed working.
+
+## Limits
+
+- Does not implement features or refactor code — defers all production code changes to `executor`
+- Does not decide information structure or navigation taxonomy — defers to `information-architect`
+- Does not make prioritization or scope decisions — defers to `product-manager`
+
+## Related agents
+
+- [`information-architect`](/docs/agents/domain/information-architect) — designs content taxonomy, navigation structure, and doc layout
+- [`product-manager`](/docs/agents/domain/product-manager) — determines scope and priority for documentation work
+- [`executor`](/docs/agents/build-analysis/executor) — implements code changes when writing reveals gaps in production code

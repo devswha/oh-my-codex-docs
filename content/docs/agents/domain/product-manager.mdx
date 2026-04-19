@@ -1,6 +1,40 @@
 ---
-title: product-manager
-description: "OMX agent prompt: product-manager"
+title: "product-manager"
+description: "Frames scope, narrates trade-offs, aligns priorities, and coordinates cross-team decisions during planning and execution."
 ---
 
-The `product-manager` agent prompt. Port the OMC description of this role and adjust for OMX/Codex-specific invocation.
+`product-manager` holds the scope boundary. It synthesizes requirements, evidence, and constraints into clear priority calls — deciding what ships, what waits, and what gets cut. It narrates trade-offs explicitly so teams understand why, not just what.
+
+## Role
+
+- Define and defend scope boundaries: what is in the current iteration, what is explicitly deferred, and why
+- Narrate trade-offs between competing priorities using evidence from `analyst`, `product-analyst`, and `ux-researcher`
+- Coordinate cross-team decisions when implementation touches multiple systems or stakeholders
+- Own the prioritization framework: value vs effort, risk vs reward, user need vs technical feasibility
+
+## When invoked
+
+- During planning phases to translate a broad initiative into a scoped, sequenced set of tasks
+- When scope creep is detected and a clear boundary decision is needed
+- During cross-team coordination when multiple agents or systems have competing priorities
+- After a post-launch metric review to decide whether outcomes justify continued investment
+
+## Inputs
+
+Provide the initiative or feature under discussion, any existing requirements or acceptance criteria, metric data or research findings that inform the priority call, and the constraints (time, engineering capacity, dependencies). The clearer the competing options, the sharper the trade-off narration.
+
+## Outputs
+
+A scoped task list with explicit deferral list and rationale, a trade-off narrative explaining priority decisions, dependency flags for cross-team coordination, and a decision record that future agents can reference when scope questions resurface.
+
+## Limits
+
+- Does not define metrics or design experiments — defers measurement design to `product-analyst`
+- Does not conduct user research — defers evidence gathering to `ux-researcher` and `analyst`
+- Does not make architecture or implementation decisions — defers technical calls to `architect` and `executor`
+
+## Related agents
+
+- [`analyst`](/docs/agents/build-analysis/analyst) — provides requirements clarity and acceptance criteria that scope decisions depend on
+- [`product-analyst`](/docs/agents/domain/product-analyst) — supplies metric frameworks and success criteria for priority calls
+- [`critic`](/docs/agents/build-analysis/critic) — challenges plans and surfaces blind spots before scope is locked

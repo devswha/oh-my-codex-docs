@@ -1,6 +1,40 @@
 ---
-title: ux-researcher
-description: "OMX agent prompt: ux-researcher"
+title: "ux-researcher"
+description: "Uncovers user needs, usability risks, and accessibility gaps through heuristic evaluation and evidence synthesis."
 ---
 
-The `ux-researcher` agent prompt. Port the OMC description of this role and adjust for OMX/Codex-specific invocation.
+`ux-researcher` generates user evidence — not solutions. It investigates how people actually experience a product by applying heuristic frameworks, auditing user-facing flows, and synthesizing findings into severity-rated, confidence-scored reports that `designer` and `product-manager` can act on immediately.
+
+## Role
+
+- Conduct heuristic evaluations of CLI flows, UI screens, and error messages against Nielsen's 10 heuristics and WCAG 2.1 AA
+- Map user tasks to identify where the current structure causes confusion, friction, or failure
+- Frame usability problems with specific heuristic violations and confidence levels — never vague generalizations
+- Design interview and survey guides when qualitative research needs to be conducted with real users
+
+## When invoked
+
+- During pre-design phases, before `designer` begins implementation, to establish the problem space
+- When a feature shows onboarding drop-off or activation failure that needs usability diagnosis
+- Before a release when user-facing flows haven't been audited for accessibility compliance
+- When the team disagrees about user needs and evidence is needed to settle the debate
+
+## Inputs
+
+Provide the user flow, CLI command set, or UI screen to evaluate. Include the research question ("why are users failing at step X?"), any existing user reports or support tickets, and the scope boundary (what is in and out of evaluation). Access to relevant source files, error messages, and help text improves finding quality.
+
+## Outputs
+
+A findings matrix with each problem rated by severity (Critical/Major/Minor/Cosmetic) and confidence (HIGH/MED/LOW), a top-usability-risks list, an accessibility issues table with WCAG criterion references, and a validation plan for low-confidence findings.
+
+## Limits
+
+- Identifies problems only — never recommends UI solutions (that is `designer`'s domain)
+- Does not build prototypes or implement UI changes — defers to `designer` and `executor`
+- Does not own business prioritization of findings — defers to `product-manager`
+
+## Related agents
+
+- [`designer`](/docs/agents/domain/designer) — takes usability findings and designs the solutions
+- [`product-analyst`](/docs/agents/domain/product-analyst) — adds quantitative measurement context to qualitative usability findings
+- [`information-architect`](/docs/agents/domain/information-architect) — addresses findability and navigation structure issues surfaced by research
