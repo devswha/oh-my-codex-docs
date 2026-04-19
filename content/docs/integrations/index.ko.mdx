@@ -3,4 +3,22 @@ title: "통합"
 description: "외부 생태계와의 OMX 통합: OpenClaw (Codex↔Claude 브릿지), Clawhip 이벤트 계약, MCP 서버, CLI 브릿지."
 ---
 
-외부 생태계와의 OMX 통합: OpenClaw (Codex↔Claude 브릿지), Clawhip 이벤트 계약, MCP 서버, CLI 브릿지.
+통합 문서는 OMX의 Codex 중심 런타임이 이벤트 게이트웨이, 상호운용 계약, MCP 서버, 교차 CLI 워크플로와 어떻게 연결되는지 설명합니다.
+
+## 통합 문서 구성
+
+| 페이지 | 다루는 내용 |
+|---|---|
+| [OpenClaw](/docs/integrations/openclaw) | OMX 훅 이벤트를 외부 게이트웨이로 전달하는 알림/디스패치 브릿지 |
+| [Clawhip](/docs/integrations/clawhip) | 외부 소비자가 기준으로 삼아야 하는 정규화 이벤트 계약 |
+| [MCP](/docs/integrations/mcp) | OMX가 Model Context Protocol 서버를 발견하고 호출하는 방식 |
+| [CLI Bridges](/docs/integrations/cli-bridges) | `$ask-claude`, `$ask-gemini`, 다중 CLI 상담 워크플로 |
+
+## 이 섹션을 읽어야 할 때
+
+다음이 필요할 때 통합 문서를 보세요.
+
+- OMX 훅 이벤트를 다른 시스템으로 연결해야 할 때
+- 외부 소비자가 받는 이벤트 envelope 구조를 이해해야 할 때
+- MCP 기반 도구와 서버를 설정해야 할 때
+- Codex, Claude, Gemini 사이에 작업을 의도적으로 분배해야 할 때
