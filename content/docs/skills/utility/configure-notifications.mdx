@@ -1,6 +1,46 @@
 ---
-title: $configure-notifications
-description: "OMX skill: configure-notifications"
+title: "configure-notifications"
+description: "Natural-language setup for Telegram, Discord, and Slack notifications from OMX execution modes."
 ---
 
-Invoke with `$configure-notifications`. Port OMC behavior and adjust for OMX/Codex semantics.
+configure-notifications walks you through connecting OMX to your preferred messaging platform so long-running tasks like ralph, autopilot, and team can notify you when they finish, fail, or need attention. Setup is conversational — you describe what you want and the skill generates the configuration.
+
+## Purpose
+
+OMX execution modes can run for minutes or longer. configure-notifications lets you step away from the terminal and receive a push notification when something needs your attention. It supports Telegram, Discord, and Slack out of the box, and stores credentials safely in `.omx/notifications.json`.
+
+## How to invoke
+
+Natural language triggers: "configure discord", "setup telegram", "configure slack", "notify me when done", "set up notifications".
+
+Explicit slash: `$configure-notifications`
+
+```
+codex
+> configure discord notifications
+```
+
+```
+codex
+> setup telegram so I get notified when ralph finishes
+```
+
+## What it does
+
+- Detects the target platform from your description (Telegram, Discord, or Slack)
+- Guides you through obtaining and providing the required token or webhook URL
+- Validates the connection by sending a test message
+- Writes the verified configuration to `.omx/notifications.json`
+- Enables notifications for all active OMX execution modes going forward
+
+## Outputs
+
+- `.omx/notifications.json` — platform configuration with validated credentials
+- Test message confirming delivery to your channel or chat
+- Confirmation that notifications are active for future OMX runs
+
+## Related
+
+- [`$doctor`](/docs/skills/utility/doctor) — diagnose OMX install issues including notification configuration
+- [`$omx-setup`](/docs/skills/utility/omx-setup) — full install/update that can optionally configure notifications as a step
+- [`$hud`](/docs/skills/utility/hud) — in-terminal status display as an alternative to push notifications

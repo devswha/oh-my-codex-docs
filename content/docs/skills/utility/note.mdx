@@ -1,6 +1,42 @@
 ---
-title: $note
-description: "OMX skill: note"
+title: "note"
+description: "Append a timestamped note to the OMX notepad for later retrieval by agents or by you."
 ---
 
-Invoke with `$note`. Port OMC behavior and adjust for OMX/Codex semantics.
+note is a fast capture tool. It appends your text to `.omx/notepad.md` with a timestamp so nothing gets lost between sessions. Agents that run later in the same worktree can read the notepad, making note a lightweight way to pass context forward without editing a plan file.
+
+## Purpose
+
+Ideas, decisions, and reminders that surface mid-session often get lost when the context window scrolls away. note persists them immediately to a file that survives session boundaries. The notepad is also readable by OMX agents — you can leave instructions for a future ralph or autopilot run by writing a note now.
+
+## How to invoke
+
+Direct invocation with your text:
+
+```
+codex
+> $note remember to add rate limiting to the /export endpoint before launch
+```
+
+```
+codex
+> note: the DB migration requires a maintenance window — coordinate with ops first
+```
+
+## What it does
+
+- Appends the provided text to `.omx/notepad.md` with a UTC timestamp
+- Creates the notepad file if it does not yet exist
+- Does not overwrite existing notes — every entry is additive
+- Makes the note immediately available to any agent that reads the notepad in this worktree
+- Prints a confirmation with the timestamp used
+
+## Outputs
+
+- Updated `.omx/notepad.md` with the new entry appended
+- Confirmation message showing the timestamp and first line of the note
+
+## Related
+
+- [`$wiki`](/docs/skills/workflow/wiki) — structured knowledge base for longer, categorised reference material
+- [`$omx-setup`](/docs/skills/utility/omx-setup) — creates the `.omx/` directory that the notepad lives in

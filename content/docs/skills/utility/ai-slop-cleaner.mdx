@@ -1,6 +1,46 @@
 ---
-title: $ai-slop-cleaner
-description: "OMX skill: ai-slop-cleaner"
+title: "ai-slop-cleaner"
+description: "Regression-safe, deletion-first workflow that strips AI-generated noise from changed files."
 ---
 
-Invoke with `$ai-slop-cleaner`. Port OMC behavior and adjust for OMX/Codex semantics.
+AI-generated code often carries a layer of noise: redundant comments, over-explained variable names, unnecessary abstractions, and verbose scaffolding that was never needed. The ai-slop-cleaner skill runs a structured reviewer pass on changed files, deletes everything that does not earn its place, and re-runs verification to confirm nothing broke.
+
+## Purpose
+
+ai-slop-cleaner enforces a deletion-first discipline on AI-authored output. Rather than polishing slop, it removes it. The skill targets recently changed files, applies a quality-reviewer pass with an explicit anti-slop checklist, makes edits, and validates with a regression run before declaring the result clean.
+
+## How to invoke
+
+Natural language triggers: "deslop", "anti-slop", "clean up the AI noise", "remove slop".
+
+Explicit slash: `$ai-slop-cleaner`
+
+```
+codex
+> deslop the last set of changes
+```
+
+```
+codex
+> anti-slop pass on src/api/
+```
+
+## What it does
+
+- Identifies recently changed or staged files as the target set
+- Applies a quality-reviewer checklist focused on redundancy, over-abstraction, and unnecessary verbosity
+- Deletes or rewrites every line that does not serve a clear purpose
+- Re-runs the project's test and lint suite to confirm regression safety
+- Optionally runs in reviewer-only mode to report findings without making edits
+
+## Outputs
+
+- Modified source files with slop removed
+- Reviewer report listing each issue found and the action taken
+- Fresh test and lint output confirming no regressions introduced
+
+## Related
+
+- [`$code-review`](/docs/skills/utility/code-review) — full code-reviewer pass for correctness and maintainability
+- [`$review`](/docs/skills/utility/review) — composite router that includes quality and security passes
+- [`$ralph`](/docs/skills/workflow/ralph) — ralph runs a mandatory deslop pass before exiting

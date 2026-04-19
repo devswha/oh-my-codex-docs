@@ -1,6 +1,51 @@
 ---
-title: $help
-description: "OMX skill: help"
+title: "help"
+description: "Top-level help router — skill listing, agent catalog, quick-command reference, and OMX orientation for new users."
 ---
 
-Invoke with `$help`. Port OMC behavior and adjust for OMX/Codex semantics.
+help is the entry point for discovering what OMX can do. It lists available skills, summarises the agent catalog, and explains how to invoke any command. Whether you are new to OMX or just need a quick reminder of a trigger phrase, help surfaces the right information without opening documentation.
+
+## Purpose
+
+OMX has dozens of skills and agents. help provides a fast, in-session reference so you never have to leave the terminal to find a command. It adapts its output to what you ask: a bare `$help` gives a full overview, while `$help <topic>` narrows to the relevant skill or agent.
+
+## How to invoke
+
+Natural language triggers: "help", "what can you do", "list skills", "show commands", "OMX commands".
+
+Explicit slash: `$help`
+
+```
+codex
+> help
+```
+
+```
+codex
+> help ralplan
+```
+
+```
+codex
+> what skills are available?
+```
+
+## What it does
+
+- Lists all available skills grouped by category: workflow, utility, and analysis
+- Summarises the agent catalog with one-line descriptions and model tiers
+- Shows trigger phrases for each skill so you know the natural-language shortcuts
+- Accepts a topic argument to show detailed help for a specific skill or agent
+- Links to relevant documentation pages for deeper reading
+
+## Outputs
+
+- Formatted skill and agent listing in the current session
+- Detailed help card when a specific topic is provided
+- No source code changes or file writes
+
+## Related
+
+- [`$omx-setup`](/docs/skills/utility/omx-setup) — run this first if OMX is not yet installed or configured
+- [`$skill`](/docs/skills/utility/skill) — manage, add, and edit skills in your local install
+- [`$doctor`](/docs/skills/utility/doctor) — diagnose install issues if skills are not triggering as expected

@@ -1,6 +1,46 @@
 ---
-title: $doctor
-description: "OMX skill: doctor"
+title: "doctor"
+description: "Diagnose the OMX install — checks hooks, config files, directory structure, and reports warnings with recommended fixes."
 ---
 
-Invoke with `$doctor`. Port OMC behavior and adjust for OMX/Codex semantics.
+doctor runs a structured health check on your OMX installation. It verifies that hooks are wired, the `.omx/` directory exists with the expected structure, Codex config is present and valid, and all required integrations are reachable. Problems are reported with severity levels and concrete fix commands.
+
+## Purpose
+
+OMX relies on hooks, config files, and directory conventions. When something behaves unexpectedly — skills not triggering, state not persisting, notifications not arriving — doctor is the first step. It produces a deterministic report so you know exactly what is broken and how to fix it.
+
+## How to invoke
+
+Natural language triggers: "doctor", "diagnose OMX", "check my setup", "why isn't OMX working".
+
+Explicit slash: `$doctor`
+
+```
+codex
+> doctor
+```
+
+```
+codex
+> diagnose my OMX install
+```
+
+## What it does
+
+- Checks that OMX hooks are registered and firing correctly
+- Verifies `.omx/` directory structure: `state/`, `plans/`, `context/`, `notifications.json`
+- Validates Codex config (`.codex/config.json` or equivalent) for required fields
+- Tests notification integrations if configured
+- Reports each check as pass, warning, or error with a recommended fix command
+
+## Outputs
+
+- Health report listing every check with pass/warning/error status
+- Recommended fix command for each warning or error
+- Summary: total checks, issues found, and whether the install is ready to use
+
+## Related
+
+- [`$omx-setup`](/docs/skills/utility/omx-setup) — run after doctor to apply the recommended fixes automatically
+- [`$configure-notifications`](/docs/skills/utility/configure-notifications) — fix notification issues that doctor surfaces
+- [`$help`](/docs/skills/utility/help) — top-level help if you need to understand what OMX expects

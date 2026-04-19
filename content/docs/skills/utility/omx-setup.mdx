@@ -1,6 +1,47 @@
 ---
-title: $omx-setup
-description: "OMX skill: omx-setup"
+title: "omx-setup"
+description: "Install or update OMX — wires hooks, creates the .omx/ directory, and configures the Codex prompt integration."
 ---
 
-Invoke with `$omx-setup`. Port OMC behavior and adjust for OMX/Codex semantics.
+omx-setup is the installer and updater for OMX. Run it once to wire everything into a fresh Codex environment, or re-run it after an OMX update to apply the latest hook and config changes. It is idempotent: running it on an already-configured install updates what has changed and leaves the rest untouched.
+
+## Purpose
+
+OMX requires hooks registered in the Codex config, a `.omx/` directory for state and plans, and a prompt integration so skills trigger correctly. omx-setup handles all three steps in the right order, validates the result, and reports any issues it could not resolve automatically.
+
+## How to invoke
+
+Natural language triggers: "setup omx", "install omx", "update omx", "omx setup".
+
+Explicit slash: `$omx-setup`
+
+```
+codex
+> setup omx
+```
+
+```
+codex
+> omx-setup
+```
+
+## What it does
+
+- Creates `.omx/` with subdirectories: `state/`, `plans/`, `context/`, `logs/`
+- Registers OMX hooks in the Codex configuration file
+- Installs or updates the prompt integration so skill triggers are recognised
+- Validates the completed install by running a quick `$doctor` check
+- Reports any steps that require manual intervention (e.g. API keys not yet set)
+
+## Outputs
+
+- `.omx/` directory tree created or updated
+- Codex config updated with OMX hook registrations
+- Install report listing each step as success, updated, or requires-action
+- Automatic `$doctor` summary confirming the install is ready
+
+## Related
+
+- [`$doctor`](/docs/skills/utility/doctor) — run after setup to verify everything is wired correctly
+- [`$configure-notifications`](/docs/skills/utility/configure-notifications) — optional next step to enable push notifications
+- [`$help`](/docs/skills/utility/help) — orientation to what OMX can do once setup is complete

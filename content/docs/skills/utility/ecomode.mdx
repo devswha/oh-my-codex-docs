@@ -1,6 +1,45 @@
 ---
-title: $ecomode
-description: "OMX skill: ecomode"
+title: "ecomode"
+description: "Low-token, low-cost execution mode — routes tasks to cheaper models and prunes context aggressively to reduce spend."
 ---
 
-Invoke with `$ecomode`. Port OMC behavior and adjust for OMX/Codex semantics.
+ecomode switches the active session to a cost-optimised profile. It re-routes all subsequent agent dispatches to lower-tier models, enables aggressive context pruning, and disables high-context features like deep research passes. Use it when you want results at minimal token cost and can accept a modest quality trade-off.
+
+## Purpose
+
+Not every task needs opus-tier reasoning or a full context window. ecomode makes the trade-off explicit: you accept slightly lower fidelity in exchange for significantly lower spend. It is particularly useful for repetitive tasks, bulk file operations, or exploratory work where you expect to iterate anyway.
+
+## How to invoke
+
+Natural language triggers: "ecomode", "eco mode", "low cost", "cheap mode", "save tokens".
+
+Explicit slash: `$ecomode`
+
+```
+codex
+> ecomode
+```
+
+```
+codex
+> enable ecomode for this session
+```
+
+## What it does
+
+- Sets the default model tier to haiku or the cheapest available model
+- Enables aggressive context pruning: removes prior conversation turns beyond a short window
+- Disables high-cost features: deep research, consensus planning, and multi-reviewer passes
+- Applies through the rest of the session or until you explicitly disable it
+- Reports the estimated cost impact when switching modes
+
+## Outputs
+
+- Confirmation that ecomode is active with the current model tier shown
+- Updated HUD indicator reflecting the reduced cost profile
+- No source code changes
+
+## Related
+
+- [`$hud`](/docs/skills/utility/hud) — monitor token usage and active model tier in real time
+- [`$cancel`](/docs/skills/utility/cancel) — exit the current mode to return to default tier settings

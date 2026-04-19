@@ -1,6 +1,45 @@
 ---
-title: $git-master
-description: "OMX skill: git-master"
+title: "git-master"
+description: "Git operations skill — atomic commits, interactive rebase, history cleanup, and branch management via a dedicated git-master agent."
 ---
 
-Invoke with `$git-master`. Port OMC behavior and adjust for OMX/Codex semantics.
+git-master delegates git operations to a specialist agent that understands commit hygiene, rebase workflows, and history cleanup. Rather than running raw git commands and hoping for the right outcome, you describe the desired git state and git-master constructs and executes the correct sequence of operations.
+
+## Purpose
+
+Git operations have sharp edges: a wrong rebase, a force-push to the wrong branch, or a squash that drops important context can be costly to recover from. git-master applies a safety-first approach — it plans the operation, previews the outcome, and only executes after confirming the result is what you intended.
+
+## How to invoke
+
+Natural language triggers: "git master", "clean up commits", "squash commits", "rebase", "fix commit history".
+
+Explicit slash: `$git-master`
+
+```
+codex
+> git-master squash the last 4 commits into one with a clear message
+```
+
+```
+codex
+> git-master clean up the commit history on this branch before the PR
+```
+
+## What it does
+
+- Plans the git operation and previews the resulting commit graph before executing
+- Performs atomic commits: one logical change per commit with a descriptive message
+- Handles interactive rebase for squash, fixup, reorder, and edit operations
+- Manages branch creation, renaming, and safe deletion
+- Applies force-push only when explicitly requested and only to non-protected branches
+
+## Outputs
+
+- Executed git operations with confirmation of the new commit graph
+- Updated branch state matching the requested history shape
+- Summary of what changed: commits added, squashed, renamed, or removed
+
+## Related
+
+- [`$ralph`](/docs/skills/workflow/ralph) — ralph uses git-master conventions for its mandatory commit step
+- [`$autopilot`](/docs/skills/workflow/autopilot) — autopilot finalises work with a git-master commit pass

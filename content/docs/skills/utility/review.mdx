@@ -1,6 +1,46 @@
 ---
-title: $review
-description: "OMX skill: review"
+title: "review"
+description: "Composite review router — dispatches code, security, and quality reviewer agents as appropriate for the changed files."
 ---
 
-Invoke with `$review`. Port OMC behavior and adjust for OMX/Codex semantics.
+review is the single command for a complete pre-merge review. Rather than deciding which reviewer to run, you invoke review and it inspects the changes, determines which reviewer types are warranted, and dispatches them in parallel. The result is a consolidated report covering correctness, security posture, and code quality in one pass.
+
+## Purpose
+
+Individual review skills (code-review, security-review) are precise but require you to know in advance which concerns apply. review removes that decision: it reads the diff, identifies the relevant risk areas, and routes accordingly. A change touching authentication always gets a security pass; a change adding a public API always gets a contract review; all changes get a quality pass.
+
+## How to invoke
+
+Natural language triggers: "review", "review this", "full review", "pre-merge review", "review plan".
+
+Explicit slash: `$review`
+
+```
+codex
+> review the changes in the auth module
+```
+
+```
+codex
+> full review before I open the PR
+```
+
+## What it does
+
+- Reads the diff (staged, branch, or specified path) to identify change types
+- Dispatches code-reviewer for all changes: logic, contracts, edge cases, backward compatibility
+- Dispatches security-reviewer when changes touch auth, input handling, secrets, or trust boundaries
+- Dispatches quality-reviewer for all changes: redundancy, abstraction quality, maintainability
+- Consolidates findings into a single report ordered by severity
+
+## Outputs
+
+- Unified review report with findings from all dispatched reviewers
+- Each finding tagged with its source (code/security/quality) and severity
+- Recommended actions for blocking and important issues
+
+## Related
+
+- [`$code-review`](/docs/skills/utility/code-review) — standalone code-reviewer dispatch when you only need a logic review
+- [`$security-review`](/docs/skills/utility/security-review) — standalone security-reviewer dispatch for an OWASP-focused pass
+- [`$ai-slop-cleaner`](/docs/skills/utility/ai-slop-cleaner) — deletion pass to act on quality findings the review surfaces

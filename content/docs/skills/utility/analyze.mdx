@@ -1,6 +1,46 @@
 ---
-title: $analyze
-description: "OMX skill: analyze"
+title: "analyze"
+description: "Debugger-dispatch shortcut — root-cause investigation for bugs, regressions, and unexpected behavior."
 ---
 
-Invoke with `$analyze`. Port OMC behavior and adjust for OMX/Codex semantics.
+Analyze is a thin routing skill that delegates to the Debugger agent the moment you describe a problem. Instead of manually spinning up a debugger sub-agent, you describe the symptom and analyze dispatches it with the right context, model tier, and evidence-gathering protocol already configured.
+
+## Purpose
+
+Analyze exists so you never have to remember the agent name or construct the delegation prompt yourself. It maps "analyze", "debug", and "investigate" triggers directly to a structured root-cause workflow that reads logs, traces call paths, isolates the regression boundary, and reports a precise diagnosis.
+
+## How to invoke
+
+Natural language triggers: "analyze", "debug", "investigate", "what's wrong with", "why is X failing".
+
+Explicit slash: `$analyze`
+
+```
+codex
+> analyze why the auth middleware is returning 403 on valid tokens
+```
+
+```
+codex
+> debug the memory leak in the job processor
+```
+
+## What it does
+
+- Dispatches a Debugger agent at the appropriate model tier
+- Reads logs, stack traces, and relevant source files to build an evidence base
+- Traces call paths to isolate the regression boundary or root cause
+- Distinguishes symptoms from causes and reports the precise failure point
+- Suggests a concrete fix or the next investigative step
+
+## Outputs
+
+- Root-cause report identifying the failure point and evidence trail
+- Reproduction steps or a minimal reproducer when discoverable
+- Recommended fix or next investigative action
+
+## Related
+
+- [`$trace`](/docs/skills/workflow/trace) — causal trace for multi-step system flows
+- [`$build-fix`](/docs/skills/utility/build-fix) — targeted fix for CI reds and type errors
+- [`$deep-dive`](/docs/skills/workflow/deep-interview) — two-stage pipeline for complex, multi-system investigations

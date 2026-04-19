@@ -1,6 +1,46 @@
 ---
-title: $build-fix
-description: "OMX skill: build-fix"
+title: "build-fix"
+description: "Dispatch the build-fixer agent to resolve CI failures, type errors, and broken toolchain configurations."
 ---
 
-Invoke with `$build-fix`. Port OMC behavior and adjust for OMX/Codex semantics.
+build-fix is a targeted dispatch skill for build and type failures. When CI goes red, the TypeScript compiler reports errors, or a dependency configuration breaks the toolchain, build-fix routes the problem to a dedicated build-fixer agent that specialises in resolving exactly these failure modes without touching unrelated code.
+
+## Purpose
+
+Build failures have a distinct shape: compiler diagnostics, missing types, version mismatches, and linker or bundler configuration errors. build-fix sends the failure context to an agent trained on these patterns, keeping the fix surgical and avoiding collateral changes to application logic.
+
+## How to invoke
+
+Natural language triggers: "fix build", "type errors", "CI is red", "compiler error", "build is broken".
+
+Explicit slash: `$build-fix`
+
+```
+codex
+> fix build — the TypeScript compiler is reporting 14 errors in src/api/
+```
+
+```
+codex
+> build-fix: CI is failing on the lint step with ESLint rule violations
+```
+
+## What it does
+
+- Reads compiler output, CI logs, or the error description to understand the failure
+- Identifies the root cause: type mismatch, missing import, config error, or dependency version conflict
+- Applies the minimal fix needed to make the build pass
+- Re-runs the build or relevant check to confirm the fix works
+- Reports what was changed and why
+
+## Outputs
+
+- Source or config file edits that resolve the build failure
+- Confirmation output from a re-run build or type-check
+- Brief summary of the root cause and the applied fix
+
+## Related
+
+- [`$analyze`](/docs/skills/utility/analyze) — root-cause investigation when the failure is not a straightforward build error
+- [`$debugger`](/docs/skills/workflow/trace) — deeper investigation for runtime failures and regressions
+- [`$ralph`](/docs/skills/workflow/ralph) — persistent loop that includes build-fix retries automatically

@@ -1,6 +1,51 @@
 ---
-title: $skill
-description: "OMX skill: skill"
+title: "skill"
+description: "Manage local OMX skills — list, add, remove, search, edit, and run the setup wizard for custom skill authoring."
 ---
 
-Invoke with `$skill`. Port OMC behavior and adjust for OMX/Codex semantics.
+skill is the skill manager for your OMX install. It gives you a complete interface for working with the skills registered in your local environment: browsing what is available, adding new skills from a template, editing existing ones, and removing those you no longer need.
+
+## Purpose
+
+OMX skills are Markdown files that define trigger phrases, agent routing, and execution logic. skill makes it easy to extend OMX with custom workflows without editing config directly. The built-in setup wizard walks you through naming, triggers, and agent routing so a new skill is ready to invoke in minutes.
+
+## How to invoke
+
+Natural language triggers: "list skills", "add skill", "remove skill", "edit skill", "skill wizard".
+
+Explicit slash: `$skill`
+
+```
+codex
+> skill list
+```
+
+```
+codex
+> skill add — I want a skill that runs my database migration scripts
+```
+
+```
+codex
+> skill edit deploy-preview
+```
+
+## What it does
+
+- Lists all locally registered skills with their trigger phrases and descriptions
+- Runs an interactive wizard to author a new skill: name, triggers, agent routing, and output spec
+- Opens an existing skill file for editing in the current session
+- Removes a skill by name, with confirmation before deletion
+- Searches skills by keyword across names, descriptions, and trigger phrases
+
+## Outputs
+
+- For list/search: formatted skill listing in the current session
+- For add: new skill file written to `.omx/skills/` and registered for triggering
+- For edit: updated skill file
+- For remove: skill file deleted and trigger deregistered
+
+## Related
+
+- [`$help`](/docs/skills/utility/help) — top-level help that references all skills including custom ones
+- [`$omx-setup`](/docs/skills/utility/omx-setup) — ensures the `.omx/skills/` directory exists before adding skills

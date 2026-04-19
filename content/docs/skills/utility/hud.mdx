@@ -1,6 +1,49 @@
 ---
-title: $hud
-description: "OMX skill: hud"
+title: "hud"
+description: "Configure the in-terminal heads-up display — layout, presets, and visible elements for active OMX sessions."
 ---
 
-Invoke with `$hud`. Port OMC behavior and adjust for OMX/Codex semantics.
+hud controls what information appears in the persistent status bar during OMX execution modes. You can switch between presets, enable or disable individual elements, and adjust the layout to match your terminal size and workflow preferences.
+
+## Purpose
+
+Long-running OMX modes — ralph, autopilot, ultrawork, team — produce a continuous stream of activity. The HUD gives you a stable, glanceable summary: which mode is active, how many tasks are in progress, current model tier, token usage, and loop count. hud lets you tune this display so it shows exactly what you need without overwhelming your terminal.
+
+## How to invoke
+
+Natural language triggers: "hud", "configure hud", "show hud", "hud minimal", "hud debug".
+
+Explicit slash: `$hud`
+
+```
+codex
+> hud minimal
+```
+
+```
+codex
+> hud debug
+```
+
+```
+codex
+> configure hud — show token usage and active agents only
+```
+
+## What it does
+
+- Switches between named presets: `minimal` (mode + status), `standard` (adds task count and model tier), `debug` (full detail including token counts and loop counters)
+- Enables or disables individual HUD elements by name
+- Persists the chosen layout to `.omx/hud-config.json` for future sessions
+- Applies the new layout immediately without restarting the active mode
+
+## Outputs
+
+- Updated HUD display reflecting the new configuration
+- `.omx/hud-config.json` — persisted layout preferences
+- No source code changes
+
+## Related
+
+- [`$cancel`](/docs/skills/utility/cancel) — exit the active mode whose status the HUD is displaying
+- [`$ecomode`](/docs/skills/utility/ecomode) — ecomode updates the HUD model-tier indicator when activated
