@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc" shape-rendering="crispEdges">
+  <title id="title">OMX logo</title>
+  <desc id="desc">Pixel-art hooded mascot with a white face ring, black center face, and two white eyes on a dark background.</desc>
+  <rect width="64" height="64" fill="#2b2c31"/>
+
+  <!-- antenna -->
+  <rect x="23" y="0" width="4" height="4" fill="#000"/>
+  <rect x="37" y="0" width="4" height="4" fill="#000"/>
+  <rect x="27" y="4" width="10" height="4" fill="#000"/>
+  <rect x="29" y="8" width="6" height="4" fill="#000"/>
+
+  <!-- outer hood -->
+  <path fill="#000" d="M24 12h16v4h8v4h4v4h4v20h-4v8h-4v4H16v-4h-4v-8H8V24h4v-4h4v-4h8z"/>
+
+  <!-- white face ring -->
+  <path fill="#fff" d="M24 16h16v4h8v4h4v20h-4v8h-4v4H20v-4h-4v-8h-4V24h4v-4h8z"/>
+
+  <!-- inner face -->
+  <rect x="24" y="24" width="16" height="4" fill="#000"/>
+  <rect x="20" y="28" width="24" height="16" fill="#000"/>
+
+  <!-- eyes -->
+  <rect x="28" y="34" width="4" height="4" fill="#fff"/>
+  <rect x="36" y="34" width="4" height="4" fill="#fff"/>
+
+  <!-- lower hood / shoulders -->
+  <path fill="#000" d="M16 44h4v8h4v4h16v-4h8v8h8v4H8v-8h4v-4h4z"/>
+
+  <!-- white sash / shoulder accent -->
+  <path fill="#fff" d="M12 48h8v4h4v4h8v4h-8v-4h-8v-4h-4z"/>
+  <rect x="8" y="52" width="4" height="8" fill="#fff"/>
+</svg>

@@ -14,7 +14,6 @@ import { Step, Steps } from 'fumadocs-ui/components/steps';
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 import { Mermaid } from '@/components/mermaid';
 import { ReportForm } from '@/components/report-form';
-import { PageFooter } from '@/components/page-footer';
 import type { ComponentType } from 'react';
 
 type PageDataWithContent = {
@@ -33,14 +32,6 @@ export default async function Page(props: {
   const page = source.getPage(params.slug, params.lang);
   if (!page) notFound();
 
-  const slugPath = (params.slug ?? []).join('/');
-  // The docs MDX file on GitHub — locale suffix matches the loader's
-  // convention (e.g. 'foo.ko.mdx' for ko), default locale uses plain '.mdx'.
-  const mdxFile =
-    params.lang === i18n.defaultLanguage
-      ? `${slugPath || 'index'}.mdx`
-      : `${slugPath || 'index'}.${params.lang}.mdx`;
-  const editUrl = `https://github.com/devswha/oh-my-codex-website/edit/main/content/docs/${mdxFile}`;
   const pageData = page.data as typeof page.data & PageDataWithContent;
 
   const MDXContent = pageData.body;
@@ -129,11 +120,6 @@ export default async function Page(props: {
             Mermaid,
             ReportForm,
           }}
-        />
-        <PageFooter
-          path={page.url}
-          locale={params.lang}
-          editUrl={editUrl}
         />
       </DocsBody>
     </DocsPage>

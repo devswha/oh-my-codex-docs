@@ -27,10 +27,10 @@ export default async function Layout({
         title: (
           <div className="flex items-center gap-2">
             <Image
-              src="/logo.png"
+              src="/logo.svg"
               alt="OMX"
               width={28}
-              height={24}
+              height={28}
               priority
               className="shrink-0"
             />
