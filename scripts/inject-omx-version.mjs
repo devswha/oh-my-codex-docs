@@ -2,7 +2,7 @@
 // Fetches the current upstream oh-my-codex version and writes it to src/lib/version.ts.
 // Strategy: try GitHub raw package.json over HTTPS; on failure, keep existing version.ts.
 
-import { writeFileSync, readFileSync, existsSync } from 'node:fs';
+import { writeFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
