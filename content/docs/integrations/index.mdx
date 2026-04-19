@@ -3,4 +3,22 @@ title: "Integrations"
 description: "OMX integrations with external ecosystems: OpenClaw (Codex↔Claude bridge), Clawhip event contract, MCP servers, and CLI bridges."
 ---
 
-OMX integrations with external ecosystems: OpenClaw (Codex↔Claude bridge), Clawhip event contract, MCP servers, and CLI bridges.
+Integrations explain how OMX connects its Codex-first runtime to adjacent systems: event gateways, interoperability contracts, MCP servers, and cross-CLI helper flows.
+
+## Integration pages
+
+| Page | What it covers |
+|---|---|
+| [OpenClaw](/docs/integrations/openclaw) | The notification and dispatch bridge that sends OMX hook events to external gateways |
+| [Clawhip](/docs/integrations/clawhip) | The normalized event contract downstream consumers should route on |
+| [MCP](/docs/integrations/mcp) | How OMX discovers and invokes Model Context Protocol servers |
+| [CLI Bridges](/docs/integrations/cli-bridges) | `$ask-claude`, `$ask-gemini`, and multi-CLI consultation workflows |
+
+## When to use this section
+
+Use the integrations docs when you need to:
+
+- connect OMX hook events to another system,
+- understand the event envelope external consumers receive,
+- configure MCP-backed tools and servers,
+- or route work across Codex, Claude, and Gemini intentionally.
