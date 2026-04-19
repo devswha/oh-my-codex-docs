@@ -1,6 +1,49 @@
 ---
-title: $autopilot
-description: "OMX skill: autopilot"
+title: "autopilot"
+description: "Full autonomous execution from idea to working code — requirements, planning, implementation, QA, and validation in one command."
 ---
 
-Invoke with `$autopilot`. Port OMC behavior and adjust for OMX/Codex semantics.
+Autopilot takes a brief product description and handles the full development lifecycle without manual intervention. It coordinates requirement analysis, technical design, parallel implementation, QA cycling, and multi-perspective code review so you can describe what you want and receive verified, working code.
+
+## When to use
+
+- You have a clear enough idea but don't want to manage each phase yourself
+- The task spans multiple concerns: architecture, implementation, tests, and review
+- You want hands-off execution from a two-line description to a finished feature
+- You prefer a single command over manually chaining `$deep-interview`, `$ralplan`, `$ralph`, and review passes
+- The prompt includes "build me", "create me", "make me", or "I want a"
+
+## How to invoke
+
+Natural language triggers: "autopilot", "build me X", "create me X", "full auto", "autonomous", "handle it all".
+
+Explicit slash: `$autopilot`
+
+```
+codex
+> autopilot build me a REST API for bookstore inventory in TypeScript
+```
+
+```
+codex
+> build me a CLI habit tracker with streak counting
+```
+
+## What happens
+
+Autopilot runs five sequential phases. First, it expands your idea into a detailed spec using Analyst and Architect agents, writing the result to `.omx/plans/autopilot-spec.md`. If the input is too vague, it routes through `$deep-interview` first to close ambiguity before continuing. Next, a planning phase produces an implementation plan at `.omx/plans/autopilot-impl.md`, validated by a Critic agent. The execution phase implements all tasks in parallel, routing simple work to low-tier executors and complex work to higher-tier specialists. A QA phase then cycles build, lint, and test runs up to five times, stopping early if the same error repeats three times. Finally, a parallel validation phase sends the result to Architect, Security-reviewer, and Code-reviewer agents; all three must approve before autopilot declares completion and cleans up state.
+
+## Outputs
+
+- `.omx/plans/autopilot-spec.md` — expanded requirements and technical specification
+- `.omx/plans/autopilot-impl.md` — implementation plan with tasks
+- `.omx/context/{slug}-{timestamp}.md` — grounded context snapshot used across all phases
+- Source code, tests, and any configuration files required by the spec
+- Fresh build, lint, and test evidence confirming the implementation passes
+
+## Related skills
+
+- [`$deep-interview`](/docs/skills/workflow/deep-interview) — surface ambiguities before autopilot starts
+- [`$ralplan`](/docs/skills/workflow/ralplan) — consensus planning step you can run before autopilot
+- [`$ralph`](/docs/skills/workflow/ralph) — persistent loop for focused single-owner execution
+- [`$team`](/docs/skills/workflow/team) — coordinated parallel workers for large or multi-lane tasks
