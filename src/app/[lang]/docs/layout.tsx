@@ -27,10 +27,10 @@ export default async function Layout({
         title: (
           <div className="flex items-center gap-2">
             <Image
-              src="/images/omx-character-nobg.png"
+              src="/logo.png"
               alt="OMX"
-              width={48}
-              height={26}
+              width={28}
+              height={24}
               priority
               className="shrink-0"
             />
