@@ -78,11 +78,6 @@ function sanitizeIssueBody(raw: string): string {
 }
 
 export async function POST(req: NextRequest) {
-  if (!process.env.TURNSTILE_SECRET_KEY) {
-    console.error('Missing TURNSTILE_SECRET_KEY');
-    return NextResponse.json({ error: 'Server misconfigured' }, { status: 500 });
-  }
-
   let json: unknown;
   try {
     json = await req.json();
@@ -118,20 +113,12 @@ export async function POST(req: NextRequest) {
       const retryAfter = Math.max(1, Math.ceil((reset - Date.now()) / 1000));
       return NextResponse.json(
         { error: 'Rate limit exceeded' },
-        { status: 429, headers: { 'Retry-After': String(retryAfter) } },
+        {
+          status: body.kind === 'report' ? 503 : 429,
+          headers: { 'Retry-After': String(retryAfter) },
+        },
       );
     }
-  }
-
-  const verify = await verifyTurnstile(
-    body.turnstileToken,
-    ip === 'unknown' ? null : ip,
-  );
-  if (!verify.ok || verify.replay) {
-    return NextResponse.json(
-      { error: 'Verification failed' },
-      { status: 403 },
-    );
   }
 
   if (body.kind === 'vote') {
@@ -145,6 +132,22 @@ export async function POST(req: NextRequest) {
       }),
     );
     return NextResponse.json({ ok: true });
+  }
+
+  if (!process.env.TURNSTILE_SECRET_KEY) {
+    console.error('Missing TURNSTILE_SECRET_KEY');
+    return NextResponse.json({ error: 'Server misconfigured' }, { status: 500 });
+  }
+
+  const verify = await verifyTurnstile(
+    body.turnstileToken,
+    ip === 'unknown' ? null : ip,
+  );
+  if (!verify.ok || verify.replay) {
+    return NextResponse.json(
+      { error: 'Verification failed' },
+      { status: 403 },
+    );
   }
 
   const token = process.env.GITHUB_REPORT_TOKEN;

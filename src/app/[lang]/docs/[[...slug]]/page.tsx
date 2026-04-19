@@ -15,6 +15,16 @@ import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 import { Mermaid } from '@/components/mermaid';
 import { ReportForm } from '@/components/report-form';
 import { PageFooter } from '@/components/page-footer';
+import type { ComponentType } from 'react';
+
+type PageDataWithContent = {
+  body: ComponentType<{
+    components?: Record<string, unknown>;
+  }>;
+  toc: unknown;
+  title: string;
+  description?: string;
+};
 
 export default async function Page(props: {
   params: Promise<{ slug?: string[]; lang: string }>;
@@ -31,8 +41,9 @@ export default async function Page(props: {
       ? `${slugPath || 'index'}.mdx`
       : `${slugPath || 'index'}.${params.lang}.mdx`;
   const editUrl = `https://github.com/devswha/oh-my-codex-website/edit/main/content/docs/${mdxFile}`;
+  const pageData = page.data as typeof page.data & PageDataWithContent;
 
-  const MDXContent = page.data.body;
+  const MDXContent = pageData.body;
 
   const langPrefix =
     params.lang === i18n.defaultLanguage ? '' : `/${params.lang}`;
@@ -101,12 +112,12 @@ export default async function Page(props: {
 
   return (
     <DocsPage
-      toc={page.data.toc}
+      toc={pageData.toc}
       breadcrumb={{ enabled: true, includeRoot: true, includePage: true }}
       footer={{ items: footerItems }}
     >
-      <DocsTitle>{page.data.title}</DocsTitle>
-      <DocsDescription>{page.data.description}</DocsDescription>
+      <DocsTitle>{pageData.title}</DocsTitle>
+      <DocsDescription>{pageData.description}</DocsDescription>
       <DocsBody>
         <MDXContent
           components={{
@@ -139,9 +150,10 @@ export async function generateMetadata(props: {
   const params = await props.params;
   const page = source.getPage(params.slug, params.lang);
   if (!page) notFound();
+  const pageData = page.data as typeof page.data & PageDataWithContent;
 
   return {
-    title: `${page.data.title} — OMX Docs`,
-    description: page.data.description,
+    title: `${pageData.title} — OMX Docs`,
+    description: pageData.description,
   };
 }

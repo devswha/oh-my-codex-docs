@@ -63,7 +63,6 @@ export function PageFooter({
     (lang === 'en' ? '' : `/${lang}`) +
     `/docs/support?path=${encodeURIComponent(path)}`;
 
-  // TODO: server currently rejects votes (Turnstile required). UI-only for MVP.
   async function vote(value: Vote) {
     if (voted) return;
     setVoted(value);
@@ -80,7 +79,6 @@ export function PageFooter({
           path,
           locale: lang,
           value,
-          turnstileToken: 'n/a',
         }),
       });
     } catch {
