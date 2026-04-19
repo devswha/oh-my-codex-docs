@@ -2,5 +2,5 @@
   "title": "OMX Docs",
   "pages": ["index", "getting-started", "concepts", "guides",
             "agents", "skills", "hooks", "tools",
-            "integrations", "reference"]
+            "integrations", "reference", "support"]
 }
