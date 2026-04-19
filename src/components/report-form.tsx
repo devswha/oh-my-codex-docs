@@ -22,6 +22,7 @@ const COPY = {
     errValidation: 'Please fill in all required fields correctly.',
     errVerify: 'Verification failed, refresh and retry.',
     errRate: 'Temporarily unavailable, please try later.',
+    disabled: 'Support form disabled (missing Turnstile site key).',
   },
   ko: {
     categoryLabel: '유형',
@@ -38,6 +39,7 @@ const COPY = {
     errValidation: '필수 항목을 올바르게 입력해주세요.',
     errVerify: '검증에 실패했습니다. 새로고침 후 다시 시도해주세요.',
     errRate: '일시적으로 이용할 수 없습니다. 잠시 후 다시 시도해주세요.',
+    disabled: '지원 양식이 비활성화되었습니다 (Turnstile 사이트 키 누락).',
   },
   ja: {
     categoryLabel: '種別',
@@ -54,6 +56,7 @@ const COPY = {
     errValidation: '必須項目を正しく入力してください。',
     errVerify: '検証に失敗しました。再読み込みして再試行してください。',
     errRate: '一時的に利用できません。しばらくしてから再試行してください。',
+    disabled: 'サポートフォームは無効です（Turnstile サイトキー未設定）。',
   },
   zh: {
     categoryLabel: '类型',
@@ -70,6 +73,7 @@ const COPY = {
     errValidation: '请正确填写所有必填项。',
     errVerify: '验证失败，请刷新后重试。',
     errRate: '暂时不可用，请稍后再试。',
+    disabled: '支持表单已禁用（缺少 Turnstile 站点密钥）。',
   },
 } as const;
 
@@ -111,7 +115,7 @@ function ReportFormInner() {
   if (!siteKey) {
     return (
       <div className="rounded border border-fd-border bg-fd-muted p-4 text-sm text-fd-muted-foreground">
-        Support form disabled (missing Turnstile site key).
+        {copy.disabled}
       </div>
     );
   }
@@ -163,7 +167,7 @@ function ReportFormInner() {
         setState({ kind: 'error', message: copy.errValidation });
       } else if (res.status === 403) {
         setState({ kind: 'error', message: copy.errVerify });
-      } else if (res.status === 503) {
+      } else if (res.status === 429 || res.status === 503) {
         setState({ kind: 'error', message: copy.errRate });
       } else {
         setState({ kind: 'error', message: copy.errGeneric });

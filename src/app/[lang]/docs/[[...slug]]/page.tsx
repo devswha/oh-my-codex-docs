@@ -30,7 +30,7 @@ export default async function Page(props: {
     params.lang === i18n.defaultLanguage
       ? `${slugPath || 'index'}.mdx`
       : `${slugPath || 'index'}.${params.lang}.mdx`;
-  const editUrl = `https://github.com/Yeachan-Heo/oh-my-codex/edit/main/${mdxFile}`;
+  const editUrl = `https://github.com/devswha/oh-my-codex-website/edit/main/content/docs/${mdxFile}`;
 
   const MDXContent = page.data.body;
 
