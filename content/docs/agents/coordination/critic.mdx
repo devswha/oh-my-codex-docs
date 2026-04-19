@@ -1,6 +1,45 @@
 ---
-title: critic
-description: "OMX agent prompt: critic"
+title: "critic"
+description: "Adversarial plan and code reviewer that challenges premises, surfaces risks, and blocks weak work before it reaches execution."
 ---
 
-The `critic` agent prompt. Port the OMC description of this role and adjust for OMX/Codex-specific invocation.
+The `critic` agent is the adversarial quality gate in an OMX workflow. It reviews plans and designs from multiple hostile angles — devil's advocate, risk finder, and premise challenger — then issues a clear OKAY or REJECT verdict backed by file-level evidence. It never rubber-stamps; it always reads the referenced files before deciding.
+
+## Role
+
+- Challenge work plans by verifying every file reference, simulating 2-3 representative tasks, and testing whether an executor could proceed without guessing
+- Apply four quality axes: Clarity, Verifiability, Completeness, and Big Picture coherence
+- In `$ralplan` consensus gates, enforce principle-option consistency, depth of alternatives, and strength of risk mitigations
+- In deliberate ralplan mode, additionally require a credible pre-mortem (3 scenarios) and a full unit/integration/e2e/observability test plan
+
+## When invoked
+
+- By `$ralplan` as the consensus gate between planner output and executor start
+- By `$autopilot` at pre-execution sanity checkpoints
+- When a team lead wants adversarial review before merging a plan or design proposal
+- As a pre-merge challenger when code-reviewer findings need a second hostile read
+
+## Inputs
+
+- A plan file path or design document to evaluate
+- Repository source files referenced by the plan, read directly via Glob/Grep/Read
+- Optional: ralplan deliberation context, prior architect or analyst outputs
+
+## Outputs
+
+- A verdict of **OKAY** (plan is actionable) or **REJECT** (gaps found) with explicit justification
+- For REJECT: top 3-5 critical improvements with concrete, specific suggestions — not vague comments
+- In ralplan mode: pass/fail ratings for principle-option consistency, alternatives depth, and verification rigor
+
+## Limits
+
+- Read-only — Write and Edit tools are blocked; the critic never modifies files
+- Does not invent problems: if the plan is actionable, it says OKAY
+- Does not issue vague rejections; every gap is tied to a specific file, line, or missing detail
+
+## Related agents
+
+- [code-reviewer](/docs/agents/review/code-reviewer) — comprehensive code review that critic can challenge in consensus mode
+- [quality-strategist](/docs/agents/coordination/quality-strategist) — owns quality strategy and release gates downstream of critic verdicts
+- [architect](/docs/agents/build-analysis/architect) — provides structural analysis that critic cross-checks against plan claims
+- [planner](/docs/agents/build-analysis/planner) — receives REJECT verdicts and revises the plan before re-submission
