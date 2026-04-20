@@ -319,12 +319,13 @@ export default async function HomePage({
         title: (
           <span className="inline-flex items-center gap-2">
             <Image
-              src="/logo.svg"
+              src="/logo.png"
               alt="OMX"
               width={28}
               height={28}
               priority
               className="shrink-0"
+              style={{ imageRendering: 'pixelated' }}
             />
             Oh My CodeX
           </span>

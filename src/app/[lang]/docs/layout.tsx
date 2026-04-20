@@ -32,12 +32,13 @@ export default async function Layout({
         title: (
           <div className="flex items-center gap-2">
             <Image
-              src="/logo.svg"
+              src="/logo.png"
               alt="OMX"
               width={28}
               height={28}
               priority
               className="shrink-0"
+              style={{ imageRendering: 'pixelated' }}
             />
             <div className="flex flex-col">
               <span>Oh My CodeX</span>

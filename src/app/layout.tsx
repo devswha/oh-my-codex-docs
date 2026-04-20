@@ -9,8 +9,9 @@ export const metadata: Metadata = {
     'Official documentation for oh-my-codex, a multi-agent orchestration layer for OpenAI Codex CLI.',
   icons: {
     // Keep the browser icon aligned with the public OMX logo asset.
-    icon: '/icon.svg',
-    shortcut: '/icon.svg',
+    icon: '/icon.png',
+    shortcut: '/icon.png',
+    apple: '/icon.png',
   },
 };
 
