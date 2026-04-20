@@ -14,3 +14,43 @@
     linear-gradient(90deg, var(--color-fd-foreground) 1px, transparent 1px);
   background-size: 60px 60px;
 }
+
+.docs-sidebar-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.4375rem;
+  padding-top: 0.125rem;
+}
+
+.docs-sidebar-footer__icon,
+.docs-sidebar-footer__lang {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.125rem;
+  height: 2.125rem;
+  border-radius: 9999px;
+  color: var(--color-fd-muted-foreground);
+  background: transparent;
+  border: 0;
+}
+
+.docs-sidebar-footer__theme {
+  margin-left: auto;
+  min-width: 3rem;
+  padding: 0.375rem 0.4375rem;
+  border: 1px solid var(--color-fd-border);
+  border-radius: 9999px;
+  background: var(--color-fd-card);
+}
+
+.docs-sidebar-footer__theme svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+@media (min-width: 768px) {
+  .docs-sidebar-footer {
+    padding-bottom: 0.125rem;
+  }
+}

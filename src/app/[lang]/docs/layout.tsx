@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { source } from '@/lib/source';
 import { i18n } from '@/lib/i18n';
 import { OMX_VERSION } from '@/lib/version';
+import { DocsSidebarFooter } from '@/components/docs-sidebar-footer';
 
 export default async function Layout({
   params,
@@ -18,6 +19,10 @@ export default async function Layout({
     ({ en: 'Support', ko: '지원', ja: 'サポート', zh: '支持' } as const)[
       lang as 'en' | 'ko' | 'ja' | 'zh'
     ] ?? 'Support';
+  const languageLabel =
+    ({ en: 'Choose language', ko: '언어 선택', ja: '言語を選択', zh: '选择语言' } as const)[
+      lang as 'en' | 'ko' | 'ja' | 'zh'
+    ] ?? 'Choose language';
   const langPrefix = lang === i18n.defaultLanguage ? '' : `/${lang}`;
 
   return (
@@ -44,35 +49,24 @@ export default async function Layout({
       }}
       sidebar={{
         defaultOpenLevel: 1,
+        footer: (
+          <DocsSidebarFooter
+            supportHref={`${langPrefix}/docs/support`}
+            supportLabel={supportLabel}
+            languageLabel={languageLabel}
+          />
+        ),
       }}
       i18n={i18n}
+      slots={{
+        languageSelect: false,
+        themeSwitch: false,
+      }}
       links={[
         {
           text: 'GitHub',
           url: 'https://github.com/Yeachan-Heo/oh-my-codex',
           external: true,
-        },
-        {
-          type: 'icon',
-          text: supportLabel,
-          label: supportLabel,
-          url: `${langPrefix}/docs/support`,
-          icon: (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <circle cx="12" cy="12" r="10" />
-              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-              <path d="M12 17h.01" />
-            </svg>
-          ),
         },
       ]}
     >
