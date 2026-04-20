@@ -7,6 +7,11 @@ export const metadata: Metadata = {
   title: 'Oh My CodeX — Docs',
   description:
     'Official documentation for oh-my-codex, a multi-agent orchestration layer for OpenAI Codex CLI.',
+  icons: {
+    // Keep the browser icon aligned with the public OMX logo asset.
+    icon: '/icon.svg',
+    shortcut: '/icon.svg',
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

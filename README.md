@@ -12,6 +12,7 @@ Unlike the docs-only OMC reference repo, this repository contains both the MDX c
 
 ```bash
 npm install
+cp .env.example .env.local   # optional: support/report form + rate-limit envs
 npm run dev
 ```
 
@@ -35,7 +36,8 @@ The `prebuild` script fetches the current `oh-my-codex` version from upstream an
 │   └── support/              # FAQ + report form
 ├── src/                      # Next.js app shell and components
 ├── public/                   # static assets
-└── scripts/                  # content/build helpers
+├── scripts/                  # content/build helpers
+└── docs/                     # repo-maintainer docs (not published)
 ```
 
 ## Content conventions
@@ -50,6 +52,10 @@ All MDX lives under `content/docs/`. Each page ships in four languages using par
 | 日本語 | `foo.ja.mdx` | Japanese translation |
 
 Each directory also includes `meta.json` plus matching `meta.{ko,zh,ja}.json` siblings.
+
+## Translations
+
+See [`docs/CONTRIBUTING-TRANSLATIONS.md`](./docs/CONTRIBUTING-TRANSLATIONS.md) for the file-naming convention, glossary, and PR flow.
 
 ## Build
 

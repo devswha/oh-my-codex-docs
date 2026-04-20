@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { JetBrains_Mono } from 'next/font/google';
+import Image from 'next/image';
 import { HomeLayout } from 'fumadocs-ui/layouts/home';
 import { CopyInstallCommand } from '@/components/copy-install';
 import { i18n } from '@/lib/i18n';
@@ -315,7 +316,19 @@ export default async function HomePage({
   return (
     <HomeLayout
       nav={{
-        title: 'Oh My CodeX',
+        title: (
+          <span className="inline-flex items-center gap-2">
+            <Image
+              src="/logo.svg"
+              alt="OMX"
+              width={28}
+              height={28}
+              priority
+              className="shrink-0"
+            />
+            Oh My CodeX
+          </span>
+        ),
         url: lp || '/',
         transparentMode: 'top' as const,
       }}
