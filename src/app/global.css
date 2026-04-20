@@ -15,64 +15,41 @@
   background-size: 60px 60px;
 }
 
-/* Compact docs sidebar controls to match icon-only language + help + theme layout */
+.docs-sidebar-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding-top: 0.125rem;
+}
+
+.docs-sidebar-footer__icon,
+.docs-sidebar-footer__lang {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.125rem;
+  height: 2.125rem;
+  border-radius: 9999px;
+  color: var(--color-fd-muted-foreground);
+  background: transparent;
+  border: 0;
+}
+
+.docs-sidebar-footer__theme {
+  margin-left: auto;
+  padding: 0.3125rem;
+  border: 1px solid var(--color-fd-border);
+  border-radius: 9999px;
+  background: var(--color-fd-card);
+}
+
+.docs-sidebar-footer__theme svg {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
 @media (min-width: 768px) {
-  #nd-sidebar > div:last-child {
-    flex-direction: row;
-    align-items: center;
-    gap: 0.375rem;
-    padding: 0.5rem 1rem 1rem;
-  }
-
-  #nd-sidebar > div:last-child > button:first-child {
-    margin-bottom: 0;
-    min-width: 0;
-    width: 2.125rem;
-    height: 2.125rem;
-    padding: 0.5rem;
-    justify-content: center;
-    background: transparent;
-    border: 0;
-    color: var(--color-fd-muted-foreground);
-    border-radius: 9999px;
-  }
-
-  #nd-sidebar > div:last-child > button:first-child span,
-  #nd-sidebar > div:last-child > button:first-child svg:last-child {
-    display: none;
-  }
-
-  #nd-sidebar > div:last-child > div:last-child {
-    flex: 1 1 auto;
-    display: flex;
-    align-items: center;
-    gap: 0.375rem;
-    background: transparent;
-    border: 0;
-    padding: 0;
-  }
-
-  #nd-sidebar > div:last-child > div:last-child > a {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.125rem;
-    height: 2.125rem;
-    padding: 0.5rem;
-    border-radius: 9999px;
-    color: var(--color-fd-muted-foreground);
-  }
-
-  #nd-sidebar > div:last-child > div:last-child > [data-theme-toggle] {
-    margin-left: auto;
-    padding: 0.3125rem;
-    border: 1px solid var(--color-fd-border);
-    border-radius: 9999px;
-    background: var(--color-fd-card);
-  }
-
-  #nd-sidebar > div:last-child > div:last-child > [data-theme-toggle] svg {
-    width: 1.125rem;
-    height: 1.125rem;
+  .docs-sidebar-footer {
+    padding-bottom: 0.125rem;
   }
 }
