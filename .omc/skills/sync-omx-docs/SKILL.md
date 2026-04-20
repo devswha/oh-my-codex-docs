@@ -33,7 +33,7 @@ oh-my-codex repo.
 | `UPSTREAM_BRANCH` | `main` |
 | `WEBSITE_VERSION_FILE` | `src/app/[lang]/docs/layout.tsx` (search `v4.9.3` style). Note: version is also auto-injected via `node scripts/inject-omx-version.mjs` which writes to `src/lib/version.ts` — run that script after pulling upstream rather than doing manual search-and-replace. |
 | `LANDING_AGENTS_CONST` | `src/app/[lang]/page.tsx` (`AGENTS` object) |
-| `SYNC_NOTES` | `.omc/docs-sync-notes.md` |
+| `SYNC_NOTES` | `.omc/docs-sync-notes.md` (optional; create on first sync if you want a persistent change log) |
 
 ## Workflow
 
@@ -104,9 +104,9 @@ Read the upstream `CHANGELOG.md` for the version range
 
 ### Step 5 — Walk the mapping table
 
-This table mirrors the prior sync session documented in `.omc/docs-sync-notes.md`.
-**Verify each row exists on first run** — mark stale entries and update this
-SKILL.md as you go.
+If `.omc/docs-sync-notes.md` exists, use it as historical context. Otherwise,
+derive the first-run mapping directly from the upstream tree and record fresh
+notes only after the sync completes.
 
 ## OMX Upstream Structure
 
@@ -115,7 +115,7 @@ the following mapping instead of a static table:
 
 - Upstream `prompts/*.md` (33 agent-role prompts across 4 lanes) →
   our `content/docs/agents/<lane>/<name>.mdx`
-- Upstream `skills/*/` (37 skill directories) →
+- Upstream `skills/*/` (38 skill directories as of 2026-04-20) →
   our `content/docs/skills/<lane>/<name>.mdx` (utility / workflow lanes)
 - Upstream `docs/codex-native-hooks.md`, `docs/hooks-extension.md` →
   our `content/docs/hooks/codex-native-hooks.mdx`
@@ -196,7 +196,7 @@ updated in the same commit. Two acceptable strategies:
 - **Mark for translation**: prepend a `<Callout>TODO ko-translation: {summary}</Callout>`
   banner inside the affected section, keeping the rest of the KO file intact.
 
-The current parity is **74 EN ↔ 74 KO** (verified 2026-04-09 via
+The current parity is **105 EN ↔ 105 KO** (re-verified 2026-04-20 via
 `find content/docs -name "*.mdx"`). Drift here breaks the
 [[../wiki/i18n-system|i18n fallback assumption]].
 
@@ -270,7 +270,8 @@ docs: sync website with omx-fork v{NEW_VERSION} source
 - ko parity: {translated|marked}
 ```
 
-Append a new section to `.omc/docs-sync-notes.md`:
+If you keep a project-local sync log, append a new section to
+`.omc/docs-sync-notes.md` (create the file first if it does not exist):
 
 ```markdown
 ## Sync log
@@ -344,12 +345,9 @@ rm -f ~/.omc/state/ralph-state.json  # manual cleanup
   Mark it as a re-release of the previous tag and link to the canonical entry.
   Sync should detect this pattern automatically: if two adjacent release
   bodies hash-equal, stop and require manual review.
-- **Skill count precision: total ≠ user-invocable.** Upstream `skills/`
-  directory has 37 entries, but one (`omx-reference`) has
-  `user-invocable: false` in its frontmatter. So:
-  - "37 built-in skills" — accurate, includes internal `omx-reference`
-  - "36 user-callable skills + 1 internal" — more precise
-  Pick one phrasing and apply consistently. Don't mix.
+- **Skill count precision:** upstream `skills/` currently contains **38**
+  directories (re-verified 2026-04-20). Recount from the directory tree on
+  every sync instead of trusting older prose totals.
 
 ### Discovered on first dogfood run (2026-04-09 sync v4.9.3 → v4.11.4)
 
@@ -359,16 +357,15 @@ rm -f ~/.omc/state/ralph-state.json  # manual cleanup
   not-found errors. **Fix:** add `.omc/` to `eslint.config.mjs` ignores
   BEFORE running lint (see Step 1). This project uses flat config, not
   `.eslintignore`.
-- **Skill count discrepancy: REFERENCE.md says 32, dir has 37.** Upstream
-  `docs/REFERENCE.md` is internally stale ("Skills (32 Total)") but
-  `.claude-plugin/skills/` actually has 37 entries. Trust the directory, not
-  REFERENCE.md, for the user-facing count.
+- **Skill count discrepancy:** older prose totals can drift. Trust the current
+  upstream `skills/` directory count over stale narrative docs when deriving
+  user-facing counts.
 - **`omx-plan` vs `plan` directory naming.** Upstream `skills/plan/` is
   renamed to `omx-plan` at runtime registration via SKILL.md frontmatter.
   Don't double-count.
-- **`vision` agent in REFERENCE.md but not `prompts/` dir.** REFERENCE.md
-  table mentions `vision` but `prompts/` has no `vision.md` file. Source of
-  truth: the directory listing, not the table.
+- **Prompt count source of truth:** use the actual `prompts/` directory
+  listing. As of 2026-04-20 it contains **33** prompt files including
+  `vision.md`.
 - **`deep-executor`, `build-fixer` are former agent names** (deprecated,
   removed in v4.x). The `agents/build-analysis/{executor,debugger}.mdx` files
   document them under "Former Name" tables — keep those as compatibility
@@ -382,7 +379,7 @@ rm -f ~/.omc/state/ralph-state.json  # manual cleanup
   `"30 Skills"`, `"30 skills"`, `"30개 스킬"`, `"30개의 스킬이"`. The first
   diff pass should use case-insensitive grep + multiple count patterns.
 
-### Older notes (from `.omc/docs-sync-notes.md`)
+### Older notes (carry forward only if still relevant)
 
 - **Upstream rename of `claude-skills/` ↔ `skills/`**: as of 4.x the canonical
   upstream directory is `skills/`. Older docs still reference `claude-skills/`.
@@ -398,7 +395,7 @@ rm -f ~/.omc/state/ralph-state.json  # manual cleanup
 
 ## Cross-references
 
-- [[../wiki/index|Wiki Index]] — meta-doc for the website itself
-- [[../wiki/docs-taxonomy|Docs Taxonomy]] — current EN/KO parity baseline
-- [[../wiki/i18n-system|i18n System]] — why parity matters
-- `.omc/docs-sync-notes.md` — historical sync context
+- [[../wiki/index|Wiki Index]] — meta-doc for the website itself (if this wiki exists in the repo)
+- [[../wiki/docs-taxonomy|Docs Taxonomy]] — current EN/KO parity baseline (if present)
+- [[../wiki/i18n-system|i18n System]] — why parity matters (if present)
+- `.omc/docs-sync-notes.md` — optional historical sync context

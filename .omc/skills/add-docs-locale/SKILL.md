@@ -1,6 +1,6 @@
 ---
 name: add-docs-locale
-description: Add a new third-party locale (es, vi, pt, etc.) to the Fumadocs site. Extends i18n config, translates all 104 MDX pages plus 15 meta files with a 3-tier glossary, produces full EN↔KO↔{locale} parity across 6 verifiable commits. Note: ja and zh are already shipped — the next invocation would typically be for es, vi, pt, etc.
+description: Add a new third-party locale (es, vi, pt, etc.) to the Fumadocs site. Extends i18n config, translates all 105 MDX pages plus 17 meta files with a 3-tier glossary, produces full EN↔KO↔{locale} parity across 6 verifiable commits. Note: ja and zh are already shipped — the next invocation would typically be for es, vi, pt, etc.
 > Ported from oh-my-claudecode-docs for the OMX docs site.
 triggers:
   - "add locale"
@@ -38,8 +38,8 @@ commit references.
 | `MARKETING_TRANSLATIONS` | `src/app/[lang]/page.tsx` (`translations` record) |
 | `DOCS_ROOT` | `content/docs/` |
 | `UPSTREAM_README_ZH` | `.omc/upstream/oh-my-codex/README.{locale}.md` |
-| `EXPECTED_PAGE_COUNT` | 104 (per locale) <!-- Count may drift as upstream adds agents/skills — keep in sync with scaffolder totals in scripts/scaffold-agents.mjs (33 agents) and scripts/scaffold-skills.mjs (37 skills). --> |
-| `EXPECTED_META_COUNT` | 15 |
+| `EXPECTED_PAGE_COUNT` | 105 (per locale) <!-- Count may drift as upstream adds pages — re-check with `find content/docs` before large locale work. --> |
+| `EXPECTED_META_COUNT` | 17 |
 | `IN_PAGE_TOC_META` | `getting-started/meta.json`, `concepts/meta.json`, `guides/meta.json` |
 
 ## Glossary framework (shared across locales)
@@ -78,7 +78,7 @@ Fixed list that applies to any target locale:
 These terms must be translated per locale. Before starting, the skill
 **proposes** a Tier B mapping from `README.{locale}.md` (where upstream
 has already translated them) and **asks the user** to confirm each
-ambiguous entry before applying it to all 104 pages.
+ambiguous entry before applying it to all 105 pages.
 
 Canonical English → locale mapping slots:
 
@@ -166,8 +166,9 @@ Why: OMX sits on top of Codex CLI. OMX users reading
 `omx.vibetip.help/{locale}/docs` are Codex CLI users in that
 language. Aligning jargon with Codex CLI's own docs avoids
 whiplash when they context-switch between the two sites. See
-`.omc/wiki/localization-terminology-policy.md` for the full
-rationale.
+the repo's localization policy note if one exists. If it does not, rely on
+the source README plus current repo precedent and record the chosen terms in
+the commit/report.
 
 **Extract candidates:**
 
@@ -410,10 +411,10 @@ echo "ZH: $(find content/docs -name '*.zh.mdx' | wc -l)"
 echo "{LOCALE}: $(find content/docs -name '*.{locale}.mdx' | wc -l)"
 ```
 
-All four counts must equal `EXPECTED_PAGE_COUNT` (104).
+All four counts must equal `EXPECTED_PAGE_COUNT` (105).
 
 ```bash
-echo "meta.{locale}.json: $(find content/docs -name 'meta.{locale}.json' | wc -l)"   # expect 15
+echo "meta.{locale}.json: $(find content/docs -name 'meta.{locale}.json' | wc -l)"   # expect 17
 ```
 
 Final build and parity of pages[]:
@@ -463,7 +464,8 @@ git push origin main
    official docs for the target locale.** When Codex CLI and upstream
    `README.{locale}.md` disagree on a core term (agent/skill/hook/
    plugin/command/memory/context), Codex CLI wins. See
-   `.omc/wiki/localization-terminology-policy.md`.
+   the repo's localization policy note when one exists; otherwise record the
+   chosen glossary in the task output.
 
 ## Idempotency contract
 
@@ -471,7 +473,7 @@ Running this skill for a locale that already exists with full parity
 MUST produce:
 - Zero file modifications
 - Zero git changes
-- A `Locale {locale} already has 104/104 parity` report
+- A `Locale {locale} already has 105/105 parity` report
 
 If the second run wants to write anything, it means previous output
 drifted — inspect which files differ and decide whether to refresh
@@ -535,10 +537,10 @@ blocks (tag stripped) or dropped sections.
 
 | Locale | Pages | Commits (oldest→newest) | Notes |
 |---|---|---|---|
-| en | 104 | — | Source of truth |
-| ko | 104 | `9403248` (initial), various syncs | Meta titles left in English |
-| zh | 104 | `5a54d4a` → `84ba2b0` → `4b34982` → `da981d9` → `6d3f19e` → `48bfe4d` → `d83ca9d` → `ef88be7` | Full run used as template for this skill |
-| ja | 104 | (shipped) | Already available — do not re-add |
+| en | 105 | — | Source of truth |
+| ko | 105 | `9403248` (initial), various syncs | Meta titles left in English |
+| zh | 105 | `5a54d4a` → `84ba2b0` → `4b34982` → `da981d9` → `6d3f19e` → `48bfe4d` → `d83ca9d` → `ef88be7` | Full run used as template for this skill |
+| ja | 105 | (shipped) | Already available — do not re-add |
 
 ## Cross-references
 
@@ -546,7 +548,5 @@ blocks (tag stripped) or dropped sections.
   upstream; run after this skill completes if upstream has drifted
 - `.omc/upstream/oh-my-codex/README.{locale}.md` — primary
   translation baseline for the docs landing
-- `.omc/plans/2026-04-17-chinese-docs-i18n-design.md` — original
-  design doc from the zh run (glossary rationale, scope decisions)
-- `.omc/plans/2026-04-17-chinese-docs-i18n-plan.md` — original
-  implementation plan from the zh run (task breakdown template)
+- Historical zh-run plan docs under `.omc/plans/` — optional reference only
+  if those files exist in the repo
