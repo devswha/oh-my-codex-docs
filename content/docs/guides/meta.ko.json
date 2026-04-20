@@ -1,8 +1,8 @@
 {
   "title": "가이드",
   "pages": [
-    "[어떤 스킬을 사용할까](/docs/guides#when-to-use-which-skill)",
-    "[시작 추천 방법](/docs/guides#suggested-first-moves)",
-    "[기여 가이드](/docs/guides#contributing-guides)"
+    "[어떤 스킬을 사용할까](/ko/docs/guides#when-to-use-which-skill)",
+    "[시작 추천 방법](/ko/docs/guides#suggested-first-moves)",
+    "[기여 가이드](/ko/docs/guides#contributing-guides)"
   ]
 }

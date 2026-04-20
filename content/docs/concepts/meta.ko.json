@@ -1,10 +1,10 @@
 {
   "title": "주요 개념",
   "pages": [
-    "[에이전트 프롬프트](/docs/concepts#agent-prompts)",
-    "[스킬](/docs/concepts#skills)",
-    "[Codex 네이티브 훅](/docs/concepts#codex-native-hooks)",
-    "[팀 오케스트레이션](/docs/concepts#team-orchestration)",
-    "[.omx/ 디렉터리](/docs/concepts#the-omx-directory)"
+    "[에이전트 프롬프트](/ko/docs/concepts#agent-prompts)",
+    "[스킬](/ko/docs/concepts#skills)",
+    "[Codex 네이티브 훅](/ko/docs/concepts#codex-native-hooks)",
+    "[팀 오케스트레이션](/ko/docs/concepts#team-orchestration)",
+    "[.omx/ 디렉터리](/ko/docs/concepts#the-omx-directory)"
   ]
 }
