@@ -57,24 +57,21 @@ export function DocsSidebarFooter({
   languageLabel: string;
 }) {
   return (
-    <div className="docs-sidebar-footer">
+    <div className="flex items-center text-fd-muted-foreground empty:hidden">
+      <LanguageSelect aria-label={languageLabel}>
+        <LanguageIcon />
+      </LanguageSelect>
+
       <Link
         href={supportHref}
         aria-label={supportLabel}
-        className="docs-sidebar-footer__icon"
+        className="inline-flex items-center justify-center rounded-md p-1.5 text-sm font-medium transition-colors duration-100 hover:bg-fd-accent hover:text-fd-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fd-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:size-4.5"
       >
         <HelpIcon />
       </Link>
 
-      <LanguageSelect
-        aria-label={languageLabel}
-        className="docs-sidebar-footer__icon docs-sidebar-footer__lang"
-      >
-        <LanguageIcon />
-      </LanguageSelect>
-
       <ThemeSwitch
-        className="docs-sidebar-footer__theme"
+        className="ms-auto overflow-visible p-0"
         mode="light-dark"
       />
     </div>
