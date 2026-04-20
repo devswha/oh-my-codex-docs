@@ -11,19 +11,18 @@ function LanguageIcon() {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth={1.8}
+      strokeWidth={2}
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
       className="size-4"
     >
-      <path d="M4 5h9" />
-      <path d="M7 3v2" />
-      <path d="M8 5c0 4-2 7-5 9" />
-      <path d="M5 11c1.5 1 3 2.5 4 4" />
-      <path d="M14 7h6" />
-      <path d="m17 7-3 10" />
-      <path d="m20 17-3-10" />
+      <path d="m5 8 6 6" />
+      <path d="m4 14 6-6 2-3" />
+      <path d="M2 5h12" />
+      <path d="M7 2h1" />
+      <path d="m22 22-5-10-5 10" />
+      <path d="M14 18h6" />
     </svg>
   );
 }
