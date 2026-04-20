@@ -1,4 +1,4 @@
-# omx-docs
+# oh-my-codex-docs
 
 Official documentation site for [oh-my-codex](https://github.com/Yeachan-Heo/oh-my-codex), a multi-agent orchestration layer for OpenAI Codex CLI.
 
@@ -6,7 +6,7 @@ Official documentation site for [oh-my-codex](https://github.com/Yeachan-Heo/oh-
 - **Framework:** Next.js 16 + Fumadocs 16
 - **Languages:** English (default), 한국어, 中文, 日本語
 
-Unlike the docs-only OMC reference repo, this repository contains both the MDX content and the Next.js/Fumadocs site shell that renders it.
+This repository contains both the MDX content and the Next.js/Fumadocs site shell for oh-my-codex docs.
 
 ## Development
 

@@ -11,7 +11,7 @@
 ### OMC reference repo
 - content-only docs repo
 - 루트에 MDX/메타가 직접 존재
-- 사이트 렌더링 shell은 별도 website repo가 담당
+- 사이트 렌더링 shell은 별도 site-shell repo가 담당
 
 ### OMX target repo
 - Next.js/Fumadocs site shell + docs content를 함께 포함

@@ -13,7 +13,7 @@
   - `content/docs/support/index.mdx`
   - localized support pages
   - any deployment/env setup docs
-- [ ] Decide whether `Edit this page` should always point to the website repo or eventually move to a content-only repo model
+- [ ] Decide whether `Edit this page` should always point to the current docs repo or eventually move to a content-only repo model
 
 ## B. Support/report flow hardening
 
@@ -55,7 +55,7 @@
 - [ ] Decide whether to keep the current mixed site-shell + docs-content repo structure long term
 - [ ] If not, evaluate a future split into:
   - content-only docs repo
-  - website shell repo
+  - separate site-shell repo
 - [ ] If yes, document clearly why OMX intentionally differs from the OMC repo model
 - [ ] Optionally squash or reorganize the execution-heavy local history before external publication if cleaner history is preferred
 

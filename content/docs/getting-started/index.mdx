@@ -65,10 +65,10 @@ omx exec --skip-git-repo-check -C . "Reply with exactly OMX-EXEC-OK"
 
 ## First run
 
-Open a new Codex session and try the canonical autopilot skill:
+Open a new OMX session and try the canonical autopilot skill:
 
 ```
-codex
+omx
 > $autopilot build me a todo app in next.js
 ```
 
@@ -81,11 +81,13 @@ What happens under the hood:
 5. `$ultraqa` runs a QA iteration loop — test, verify, fix — until the acceptance criteria pass.
 6. `verifier` collects final evidence and confirms completion.
 
-You can also launch OMX directly with the recommended flags:
+If you already want the most aggressive autonomous mode, you can opt into it explicitly:
 
 ```bash
 omx --madmax --high
 ```
+
+Use `--madmax` intentionally: it bypasses Codex approvals and sandboxing.
 
 ## Next steps
 

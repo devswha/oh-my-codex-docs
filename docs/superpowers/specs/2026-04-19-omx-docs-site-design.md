@@ -22,7 +22,7 @@ Port the OMC docs site (Next.js 16 + Fumadocs 16 + 4-language i18n) into a new s
 | Q6 | Deploy to `omx.vibetip.help` on Vercel. | Parity with OMC (`omc.vibetip.help`). |
 | Q7 | Selectively copy OMC files into this repo (not full clone, not scaffold from scratch). | Keeps repo clean, no OMC history noise. |
 | Q8 | Landing page fully rewritten with OMX-real figures (33 agents, 37 skills). | Landing sets user expectation — must be truthful. |
-| Q9a | `package.json.name = "omx-docs"`. | Shorter, matches OMC convention (`omc-docs`). |
+| Q9a | `package.json.name = "oh-my-codex-docs"`. | Match the repository name and avoid temporary `omx-docs` shorthand drift. |
 | Q9b | Version badge auto-injected from OMX `package.json` at build time. | No manual drift. Falls back to bundled static if import fails. |
 | Q9c | Drop OMC legacy HTML assets (`index.html`, `docs/index.html`, `css/`). | Unused, GH-Pages relic. |
 | Q9d | Document `.omx/` directory on a dedicated `reference/omx-directory.mdx` page. | Distinctive OMX concept. |
@@ -68,7 +68,7 @@ oh-my-codex-docs/
 ├─ postcss.config.mjs
 ├─ eslint.config.mjs
 ├─ tsconfig.json
-├─ package.json                        # name: "omx-docs"
+├─ package.json                        # name: "oh-my-codex-docs"
 ├─ scripts/
 │  └─ inject-omx-version.mjs           # writes src/lib/version.ts from upstream package.json
 ├─ docs/superpowers/                   # specs and plans (this doc lives here)

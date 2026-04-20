@@ -5,7 +5,7 @@
 
 ## State
 
-`oh-my-codex-website` currently shares the Upstash Redis instance
+`oh-my-codex-docs` currently shares the Upstash Redis instance
 (`fitting-dassie-67293.upstash.io`) with `oh-my-claudecode-website`.
 Both projects' `report-form` rate-limit counters live in the same
 namespace.
@@ -21,7 +21,7 @@ namespace.
 
 ## When to split
 
-Split off a dedicated `omx-docs-kv` DB if any of these trigger:
+Split off a dedicated `oh-my-codex-docs-kv` DB if any of these trigger:
 
 - Rate-limit false positives reported by users.
 - Upstash dashboard shows commands >5k/day combined.
@@ -31,12 +31,12 @@ Split off a dedicated `omx-docs-kv` DB if any of these trigger:
 
 ## Split procedure (when needed)
 
-1. https://console.upstash.com/redis → Create Database (`omx-docs-kv`,
+1. https://console.upstash.com/redis → Create Database (`oh-my-codex-docs-kv`,
    Regional, same region as current).
 2. Copy `.env`-format block from the DB detail page.
 3. Replace the 5 `KV_*` / `REDIS_URL` values in Vercel env for
-   `oh-my-codex-website` project (production/preview/development).
+   `oh-my-codex-docs` project (production/preview/development).
 4. Update `.env.local` locally.
 5. Empty commit + push to trigger redeploy.
-6. Verify `report-form` submission against `devswha/oh-my-codex-website`
+6. Verify `report-form` submission against `devswha/oh-my-codex-docs`
    issues still works end-to-end.

@@ -77,6 +77,32 @@ function sanitizeIssueBody(raw: string): string {
   ].join('\n');
 }
 
+async function resolveExistingLabels(
+  octokit: Octokit,
+  owner: string,
+  repo: string,
+  requestedLabels: string[],
+): Promise<string[]> {
+  const labels: string[] = [];
+
+  for (const name of requestedLabels) {
+    try {
+      await octokit.rest.issues.getLabel({ owner, repo, name });
+      labels.push(name);
+    } catch (error: unknown) {
+      const status =
+        typeof error === 'object' && error !== null && 'status' in error
+          ? (error as { status?: number }).status
+          : undefined;
+      if (status !== 404) {
+        throw error;
+      }
+    }
+  }
+
+  return labels;
+}
+
 export async function POST(req: NextRequest) {
   let json: unknown;
   try {
@@ -160,6 +186,11 @@ export async function POST(req: NextRequest) {
 
   const octokit = new Octokit({ auth: token });
   try {
+    const labels = await resolveExistingLabels(octokit, owner, repo, [
+      `kind/${body.category}`,
+      'via/web',
+    ]);
+
     const issue = await octokit.rest.issues.create({
       owner,
       repo,
@@ -172,7 +203,7 @@ export async function POST(req: NextRequest) {
         `- Locale: ${body.locale}`,
         '- Submitted via: omx.vibetip.help',
       ].join('\n'),
-      labels: [`kind/${body.category}`, 'via/web'],
+      labels: labels.length > 0 ? labels : undefined,
     });
     return NextResponse.json({ ok: true, url: issue.data.html_url });
   } catch (e) {

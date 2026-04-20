@@ -31,7 +31,7 @@
 
 ```
 oh-my-codex-docs/
-├─ package.json                              # name: "omx-docs"
+├─ package.json                              # name: "oh-my-codex-docs"
 ├─ package-lock.json
 ├─ tsconfig.json
 ├─ eslint.config.mjs
@@ -102,7 +102,7 @@ oh-my-codex-docs/
 
 ```json
 {
-  "name": "omx-docs",
+  "name": "oh-my-codex-docs",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -157,7 +157,7 @@ Expected: `added N packages` with no errors. Creates `package-lock.json` and `no
 ```bash
 cd /home/devswha/workspace/oh-my-codex-docs
 git add package.json package-lock.json .gitignore
-git commit -m "feat(docs-site): initialize omx-docs Next.js scaffold"
+git commit -m "feat(docs-site): initialize oh-my-codex-docs Next.js scaffold"
 ```
 
 ---
@@ -1562,7 +1562,7 @@ git commit -m "chore(docs-site): add public asset placeholders"
 - [ ] **Step 1: Write README**
 
 ```md
-# omx-docs
+# oh-my-codex-docs
 
 Official documentation site for [oh-my-codex](https://github.com/Yeachan-Heo/oh-my-codex), a multi-agent orchestration layer for OpenAI Codex CLI.
 
@@ -1756,7 +1756,7 @@ Accept prompts: framework = Next.js, root = `.`.
 ```bash
 npx vercel@latest
 ```
-Expected: preview URL printed (e.g., `https://omx-docs-<hash>.vercel.app`).
+Expected: preview URL printed (e.g., `https://oh-my-codex-docs-<hash>.vercel.app`).
 
 - [ ] **Step 3: Visit preview URL and manually confirm**:
   - Landing loads in all four locales (`/`, `/ko`, `/zh`, `/ja`).

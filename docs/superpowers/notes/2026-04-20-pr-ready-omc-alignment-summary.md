@@ -46,7 +46,7 @@ OMC docs 레포의 상위 문서 흐름과 섹션 개요 패턴을 OMX 사이트
 ### 2) 문서 편집 링크를 실제 소스 위치로 수정
 - `src/app/[lang]/docs/[[...slug]]/page.tsx`
 - 기존: upstream repo 기준 경로 계산
-- 수정: 실제 docs source 위치인 `devswha/oh-my-codex-website/content/docs/...`로 링크
+- 수정: 실제 docs source 위치인 `devswha/oh-my-codex-docs/content/docs/...`로 링크
 
 ### 3) vote/report 계약 정리
 - `src/lib/report-schema.ts`
