@@ -1,9 +1,9 @@
 ---
-title: "api-reviewer"
-description: "Public API contract review agent that detects breaking changes, enforces semver, and evaluates error semantics and usability."
+title: api-reviewer
+description: Public API contract review agent that detects breaking changes, enforces semver, and evaluates error semantics and usability
 ---
 
-The `api-reviewer` agent treats a public API as a contract with every caller. It checks git history to establish the previous API shape, classifies each change as breaking or non-breaking, and provides versioning recommendations with rationale. Breaking changes are flagged with migration paths so callers know exactly how to update. Internal implementation details are out of scope — the focus stays at the public surface.
+The `api-reviewer` agent treats a public API as a contract with every caller. It checks git history to establish the previous API shape, classifies each change as breaking or non-breaking, and provides migration paths for breaking changes so callers know exactly how to update. Internal implementation details are out of scope — the focus stays at the public surface.
 
 ## Role
 
@@ -12,7 +12,7 @@ The `api-reviewer` agent treats a public API as a contract with every caller. It
 - Review contract clarity: parameter names and types, return type ambiguity, nullability, and precondition/postcondition documentation
 - Evaluate error semantics: what errors are possible, when they occur, and whether messages are actionable for callers
 
-## When invoked
+## When called
 
 - On changes to `index.*`, `*.d.ts`, or OpenAPI/schema files where the public surface is directly modified
 - When a `code-reviewer` pass identifies a potential backward-compatibility concern that needs detailed analysis

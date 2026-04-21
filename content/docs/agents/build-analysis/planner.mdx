@@ -3,7 +3,7 @@ title: "planner"
 description: "Task sequencing agent that turns a specification into an actionable, file-level execution plan with acceptance criteria."
 ---
 
-The `planner` agent converts an implementation request into a concrete, step-by-step work plan ready for immediate execution. It inspects the repository before asking questions, right-sizes the step count to actual scope, and produces acceptance criteria that are specific enough to drive verification. Planning and implementation are kept strictly separate — planner writes plans, not code.
+The `planner` agent converts an implementation request into a concrete, step-by-step work plan ready for immediate execution. It inspects the repository directly, right-sizes the step count to actual scope, and produces acceptance criteria specific enough to drive verification. Planning and implementation are kept strictly separate — planner writes plans, not code.
 
 ## Role
 
@@ -14,10 +14,12 @@ The `planner` agent converts an implementation request into a concrete, step-by-
 
 ## When invoked
 
-- By `$autopilot` and `$ralplan` after intent is gathered and before execution begins
-- By `$plan` when a user asks to plan a feature, refactor, or initiative
-- When the scope of a request is ambiguous and needs scoping before an executor is assigned
-- When a ralph loop stalls and needs a fresh sequencing pass
+| Situation | How it's triggered |
+|---|---|
+| Execution planning phase in `$autopilot` and `$ralplan` | Automatic |
+| Planning a feature, refactor, or initiative via `$plan` | Direct request |
+| When request scope is ambiguous and scoping is needed before assigning an executor | Direct request |
+| When a ralph loop stalls and sequencing needs to be reworked | Delegated from `ralph` |
 
 ## Inputs
 
@@ -27,8 +29,8 @@ The `planner` agent converts an implementation request into a concrete, step-by-
 
 ## Outputs
 
-- A plan file at `.omx/plans/{name}.md` with an adaptive step count, target files, and testable acceptance criteria
-- A brief plan summary confirming scope, estimated complexity, and key deliverables
+- A plan file at `.omx/plans/{name}.md` with an adaptive step count, target files, and acceptance criteria
+- A plan summary confirming scope, estimated complexity, and key deliverables
 - In consensus mode: RALPLAN-DR principles and drivers, ADR with alternatives and rationale
 
 ## Limits

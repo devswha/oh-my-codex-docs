@@ -1,18 +1,18 @@
 ---
-title: "quality-reviewer"
-description: "Maintainability and logic review agent that catches defects, anti-patterns, and SOLID violations before they reach production."
+title: quality-reviewer
+description: Quality review agent that catches logic defects, anti-patterns, and SOLID violations
 ---
 
-The `quality-reviewer` agent focuses on logic correctness, error handling completeness, anti-pattern detection, and SOLID principle compliance. It reads the full file context around changes — not just the diff — to understand intent before forming an opinion. Positive observations are included alongside problems to reinforce good patterns, and findings are severity-rated so that critical logic defects are clearly separated from minor code smells.
+The `quality-reviewer` agent focuses on logic correctness, error handling completeness, anti-pattern detection, and SOLID principle compliance. It reads the full file context around changes — not just the diff — to understand intent before forming an opinion. Problems are classified by severity, and well-written code is explicitly called out to reinforce good patterns.
 
 ## Role
 
-- Verify logic correctness: loop bounds, null handling, control flow, and data flow across all changed code
-- Assess error handling: happy path and error paths, resource cleanup, and error propagation
-- Identify anti-patterns (God Object, magic numbers, copy-paste, shotgun surgery) with specific `file:line` references
-- Evaluate SOLID principles and flag violations with concrete improvement suggestions
+- **Verify logic correctness** — loop bounds, null handling, control flow, and data flow across all changed code
+- **Assess error handling** — happy path and error paths, resource cleanup, and error propagation
+- **Identify anti-patterns** — God Object, magic numbers, copy-paste, and Shotgun Surgery, each with a `file:line` reference
+- **Evaluate SOLID principles** — flags each violation with a concrete improvement suggestion
 
-## When invoked
+## When called
 
 - By `$review` when a post-implementation quality gate is needed
 - After a major refactor to confirm that restructuring has not introduced logic regressions

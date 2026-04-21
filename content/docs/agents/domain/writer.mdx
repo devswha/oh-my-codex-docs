@@ -1,40 +1,63 @@
 ---
-title: "writer"
-description: "Authors technical documentation, migration notes, API guides, and README updates with verified examples."
+title: writer
+description: "A Domain agent that writes user documentation, migration notes, and change summaries."
 ---
 
-`writer` creates documentation that developers trust because every code example is tested and every command is verified before it ships. It matches the existing doc style and scope precisely — no more, no less — making sure the project's knowledge base stays accurate and readable.
+## Overview
 
-## Role
+The `writer` agent writes text, not code. User guides, API documentation, migration notes, and release change summaries are its main work. Once implementation is done, explaining it clearly is this agent's domain.
 
-- Write README files, API references, architecture docs, migration notes, and inline code comments
-- Verify every code example and shell command before including it in the output
-- Match existing documentation conventions: voice, structure, heading hierarchy, and formatting
-- Update existing docs when APIs, configs, or behaviors change — never leave stale content behind
+## When to use
 
-## When invoked
+- After a feature is implemented, when user documentation or API reference needs to be written
+- When a release with breaking changes needs a migration guide
+- When changes need to be organized in language that users can understand
+- When release note writing is needed in the `$release` skill
 
-- After a public API changes and the reference docs need updating
-- When a new feature lands and user-facing guidance is required
-- During release prep to author migration notes and changelog entries
-- Triggered by docs-gap reviews or when a `writer` task appears in a `$team` pipeline
+## Examples
+
+```text
+"Write a migration guide for these API changes"
+"Write a user guide for the new authentication feature"
+"Create migration notes for upgrading from v2 to v3"
+```
+
+## Scope of work
+
+| Item | Description |
+|---|---|
+| User guides | Feature descriptions, usage examples, configuration instructions |
+| API documentation | Endpoints, parameters, response examples |
+| Migration notes | Breaking change list, upgrade procedures |
+| Release notes | Change summary, key feature announcements |
+
+## Process
+
+1. Understand the feature or change to document.
+2. Confirm who the audience is (developers, end users, etc.).
+3. Write clear, practical content with usage examples.
+4. Use technical terms accurately and keep explanations concrete.
 
 ## Inputs
 
-Provide the exact documentation task (what to write or update), the relevant source files or module to document, and any existing doc files to use as style references. If examples need to be tested, include the environment or command needed to run them.
+- Description of the feature or change to document
+- Code or API spec implemented by `executor`
+- Target audience and documentation purpose
 
 ## Outputs
 
-New or updated documentation files with verified examples, a list of files created or modified, and a verification summary showing which code examples and commands were tested and confirmed working.
+- User guide or API reference document
+- Migration guide or release notes
+- Practical explanations with code examples
 
 ## Limits
 
-- Does not implement features or refactor code — defers all production code changes to `executor`
-- Does not decide information structure or navigation taxonomy — defers to `information-architect`
-- Does not make prioritization or scope decisions — defers to `product-manager`
+- Code implementation is handled by `executor`.
+- External documentation research is deferred to `researcher`.
+- Security or performance judgments use the relevant reviewer agents.
 
 ## Related agents
 
-- [`information-architect`](/docs/agents/domain/information-architect) — designs content taxonomy, navigation structure, and doc layout
-- [`product-manager`](/docs/agents/domain/product-manager) — determines scope and priority for documentation work
-- [`executor`](/docs/agents/build-analysis/executor) — implements code changes when writing reveals gaps in production code
+- [executor](/docs/agents/build-analysis/executor) — handles the implementation that writer documents.
+- [researcher](/docs/agents/domain/researcher) — researches external references and official docs to support writer.
+- [product-manager](/docs/agents/domain/product-manager) — determines the scope and direction of documentation work.

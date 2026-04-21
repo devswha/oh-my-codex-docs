@@ -1,23 +1,23 @@
 ---
 title: "CLI Bridges"
-description: "Cross-CLI bridge commands — `$ask-claude`, `$ask-gemini`, and the `$ccg` tri-model workflow for parallel model consultation."
+description: "Cross-CLI consultation via `$ask-claude`, `$ask-gemini`, and `$ccg`."
 ---
 
-CLI bridges are lightweight commands that let an OMX session reach outside itself to a different AI CLI or model. The three bridges — `$ask-claude`, `$ask-gemini`, and `$ccg` — cover the most common cross-CLI patterns: quick delegation, second opinions, and tri-model consensus.
+CLI bridges are lightweight commands that delegate questions to a different AI CLI or model outside the current OMX session. The three bridges — `$ask-claude`, `$ask-gemini`, and `$ccg` — cover the most common cross-CLI patterns.
 
 ## What it is
 
-Each bridge opens a fresh subprocess using a different CLI binary, sends your question or task, and returns the response into the current OMX session. Because each subprocess starts with no inherited context, bridge calls are clean-room queries — free from the noise of the active working context.
+Each bridge launches the target CLI binary as a fresh subprocess, sends the question or task, and returns the response into the current OMX session. Because each subprocess starts fresh with no inherited context, bridge calls are isolated from the active working context. That isolation is what makes them useful when you need an outside perspective without contaminating the current session.
 
-## How OMX uses it
+## The three bridges
 
-- **`$ask-claude`** — Spawns a Claude CLI process with the provided argument as the sole input. Useful for quick lookups, summarization, or tasks that benefit from Claude's reasoning without polluting the Codex context.
-- **`$ask-gemini`** — Spawns a Gemini CLI process. Particularly effective for large-context lookups and cases where Google's model provides a useful counterpoint.
-- **`$ccg`** — The tri-model workflow: fans out to Codex, Claude, and Gemini in parallel, then synthesizes the three responses into a single answer. Used by the `$ccg` skill and useful when you want broad coverage before committing to an approach.
+- **`$ask-claude`** — Sends the question directly to a Claude CLI subprocess. Use it for quick lookups, summarization, or fetching Claude's reasoning without touching the Codex context.
+- **`$ask-gemini`** — Launches a Gemini CLI subprocess. Especially useful for large-context lookups or when you want to compare with Google's model.
+- **`$ccg`** — Tri-model workflow: fans out to Codex, Claude, and Gemini in parallel, then synthesizes the three responses into one. Used inside the `$ccg` skill when you need broad coverage before committing to an approach.
 
 ## Example
 
-Single-model delegation:
+Single-model consultation:
 
 ```
 codex
@@ -36,7 +36,7 @@ codex
 > $ccg "design a rate-limiting strategy for a public REST API with 10k RPS"
 ```
 
-Shell-level invocation (bypassing the skill layer):
+Calling directly from a shell script without going through the skill layer:
 
 ```bash
 # Ask Claude directly from a shell script
@@ -45,7 +45,7 @@ echo "explain this error: $(cat error.log)" | claude --print
 
 ## Related
 
-- [ask-claude](/docs/skills/utility/ask-claude) — full skill reference for `$ask-claude`
-- [ask-gemini](/docs/skills/utility/ask-gemini) — full skill reference for `$ask-gemini`
+- [ask-claude](/docs/skills/utility/ask-claude) — `$ask-claude` skill reference
+- [ask-gemini](/docs/skills/utility/ask-gemini) — `$ask-gemini` skill reference
 - [MCP](/docs/integrations/mcp) — Model Context Protocol for structured tool invocation
 - [OpenClaw](/docs/integrations/openclaw) — event bridge for cross-session notifications

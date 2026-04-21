@@ -1,52 +1,45 @@
 ---
-title: "deep-interview"
-description: "Socratic requirements crystallization — surface ambiguities and align on intent before any planning or code is written."
+title: $deep-interview
+description: Skill that locks down scope with Socratic questions before requirements are clear
 ---
 
-Deep Interview is an intent-first clarification loop that turns vague ideas into execution-ready specifications. It asks one targeted question per round, scores ambiguity across multiple clarity dimensions after each answer, and keeps asking until the score drops below a configurable threshold. The result is a spec that explicitly captures intent, desired outcome, scope, non-goals, decision boundaries, and testable acceptance criteria — everything downstream tools like `$ralplan` and `$autopilot` need to work without guessing.
+## TL;DR
 
-## When to use
-
-- The request is broad, ambiguous, or missing concrete acceptance criteria
-- You say "deep interview", "interview me", "ask me everything", or "don't assume"
-- You want to avoid misaligned implementation caused by underspecified requirements
-- You are starting a new feature or project and want a grounded spec before planning begins
-- Autopilot or ralph redirects you here because the input was too vague to expand reliably
+When requirements are fuzzy, questions come before code. `$deep-interview` converses with you in a Socratic style to lock down scope before implementation begins.
 
 ## How to invoke
 
-Natural language triggers: "deep interview", "interview me", "ask me everything", "don't assume".
-
-Explicit slash: `$deep-interview`
-
-Depth flags (optional):
-- `--quick` — fast pre-PRD pass, up to 5 rounds, threshold 0.30
-- `--standard` — full interview (default), up to 12 rounds, threshold 0.20
-- `--deep` — high-rigor exploration, up to 20 rounds, threshold 0.15
-
 ```
-codex
-> deep interview "add user authentication to the API"
+$deep-interview "clarify the auth changes"
 ```
 
+Also activated by magic keywords `deep interview`, `interview me`, `gather requirements`, `don't assume`, `ouroboros`.
+
+## When to use it
+
+| Good fit | Avoid |
+|---|---|
+| Requirements not yet organized | Scope is clear and ready to implement |
+| Multiple stakeholders pulling in different directions | Exploration is the goal, like a prototype |
+| Need to pin down "what to build" first | |
+
+## Where it fits in the standard flow
+
 ```
-codex
-> $deep-interview --quick "refactor the payments module"
+$deep-interview "clarify auth change scope"   ← here
+$ralplan "approve the safest implementation path"
+$ralph "complete the approved plan all the way"
 ```
 
-## What happens
+`$deep-interview` always goes first. Once scope is confirmed, use `$ralplan` to plan.
 
-Deep Interview begins with a preflight context intake, loading or creating a snapshot at `.omx/context/{slug}-{timestamp}.md` so all later phases share the same grounding. It then classifies the project as greenfield or brownfield and, for brownfield targets, collects relevant codebase facts via `explore` before asking any questions about internals. Each interview round targets the weakest clarity dimension in priority order — intent and outcome before implementation detail — and displays a weighted ambiguity score alongside the question. After each answer, it applies pressure: it asks for a concrete example, probes hidden assumptions, or forces an explicit tradeoff rather than accepting a surface-level reply. Challenge modes (Contrarian, Simplifier, Ontologist) escalate the pressure at defined thresholds. The loop continues until the ambiguity score meets the threshold, non-goals and decision boundaries are both explicit, and at least one earlier answer has been revisited with a deeper follow-up. Deep Interview then writes a transcript to `.omx/interviews/{slug}-{timestamp}.md` and an execution-ready spec to `.omx/specs/deep-interview-{slug}.md`, and offers clear handoff options.
+## How it works
 
-## Outputs
-
-- `.omx/specs/deep-interview-{slug}.md` — execution-ready specification with intent, scope, non-goals, decision boundaries, constraints, and testable acceptance criteria
-- `.omx/interviews/{slug}-{timestamp}.md` — full interview transcript for traceability
-- `.omx/context/{slug}-{timestamp}.md` — grounded context snapshot reusable by downstream skills
-- Handoff options: `$ralplan`, `$autopilot`, `$ralph`, `$team`, or refine further
+- Generates follow-up questions as you answer each one.
+- Outputs a requirements summary once key assumptions become clear.
+- After confirming the summary, you can hand off to `$ralplan` or proceed straight to implementation.
 
 ## Related skills
 
-- [`$ralplan`](/docs/skills/workflow/ralplan) — recommended next step after deep-interview to get architectural consensus on the spec
-- [`$autopilot`](/docs/skills/workflow/autopilot) — full pipeline that accepts the deep-interview spec as its starting brief
-- [`$ralph`](/docs/skills/workflow/ralph) — persistent execution loop that uses the spec as its completion target
+- [`$ralplan`](/docs/skills/workflow/ralplan) — consensus planning from confirmed requirements
+- [`$ralph`](/docs/skills/workflow/ralph) — execute the plan

@@ -1,40 +1,64 @@
 ---
-title: "ux-researcher"
-description: "Uncovers user needs, usability risks, and accessibility gaps through heuristic evaluation and evidence synthesis."
+title: ux-researcher
+description: "A Domain agent that investigates user behavior and UX problems, providing evidence for interface improvements."
 ---
 
-`ux-researcher` generates user evidence — not solutions. It investigates how people actually experience a product by applying heuristic frameworks, auditing user-facing flows, and synthesizing findings into severity-rated, confidence-scored reports that `designer` and `product-manager` can act on immediately.
+## Overview
 
-## Role
+The `ux-researcher` agent analyzes interfaces and interactions from a user perspective. Its role is to find usability problems, document user scenarios, and build the rationale for improvement directions. Where `designer` handles visual design, `ux-researcher` provides the user data and scenarios that back those design decisions.
 
-- Conduct heuristic evaluations of CLI flows, UI screens, and error messages against Nielsen's 10 heuristics and WCAG 2.1 AA
-- Map user tasks to identify where the current structure causes confusion, friction, or failure
-- Frame usability problems with specific heuristic violations and confidence levels — never vague generalizations
-- Design interview and survey guides when qualitative research needs to be conducted with real users
+## When to use
 
-## When invoked
+- Before a UI change, when current interface usability problems need to be identified
+- When user scenarios and personas need to be documented to establish a design direction
+- When the impact of a feature change on real usage flows needs to be analyzed
+- When UX requirements need to be organized before handing off to `designer`
 
-- During pre-design phases, before `designer` begins implementation, to establish the problem space
-- When a feature shows onboarding drop-off or activation failure that needs usability diagnosis
-- Before a release when user-facing flows haven't been audited for accessibility compliance
-- When the team disagrees about user needs and evidence is needed to settle the debate
+## Examples
+
+```text
+"Find usability problems in the current onboarding flow"
+"Document the main user scenarios for this feature"
+"Analyze how the updated settings screen affects existing usage flows"
+```
+
+## Analysis scope
+
+| Item | Description |
+|---|---|
+| Usability analysis | Identify friction points and sources of confusion in the interface |
+| User scenarios | Document main usage flows and edge cases |
+| Personas | Define representative user types and their goals |
+| Impact analysis | Assess how changes affect existing usage patterns |
+
+## Process
+
+1. Identify the screen or flow to analyze.
+2. Document key scenarios and problem points from a user perspective.
+3. Build rationale for improvement directions and hand off to `designer` or `product-manager`.
+4. Review the impact on usage flows after changes are made.
 
 ## Inputs
 
-Provide the user flow, CLI command set, or UI screen to evaluate. Include the research question ("why are users failing at step X?"), any existing user reports or support tickets, and the scope boundary (what is in and out of evaluation). Access to relevant source files, error messages, and help text improves finding quality.
+- Description of the UI or feature to analyze
+- Existing user feedback or metrics (if available)
+- Product goals and target user information
 
 ## Outputs
 
-A findings matrix with each problem rated by severity (Critical/Major/Minor/Cosmetic) and confidence (HIGH/MED/LOW), a top-usability-risks list, an accessibility issues table with WCAG criterion references, and a validation plan for low-confidence findings.
+- List of usability problems with priorities
+- Key user scenario and persona documents
+- Summary of rationale for improvement directions
+- UX requirements that `designer` or `product-manager` can act on
 
 ## Limits
 
-- Identifies problems only — never recommends UI solutions (that is `designer`'s domain)
-- Does not build prototypes or implement UI changes — defers to `designer` and `executor`
-- Does not own business prioritization of findings — defers to `product-manager`
+- Visual design and component layout are handled by `designer`.
+- Collecting actual user data is outside the scope of ux-researcher.
+- Implementation is done by `executor`.
 
 ## Related agents
 
-- [`designer`](/docs/agents/domain/designer) — takes usability findings and designs the solutions
-- [`product-analyst`](/docs/agents/domain/product-analyst) — adds quantitative measurement context to qualitative usability findings
-- [`information-architect`](/docs/agents/domain/information-architect) — addresses findability and navigation structure issues surfaced by research
+- [designer](/docs/agents/domain/designer) — translates UX requirements organized by ux-researcher into visual design.
+- [product-manager](/docs/agents/domain/product-manager) — incorporates UX research findings into product decisions.
+- [analyst](/docs/agents/build-analysis/analyst) — converts UX requirements into concrete acceptance criteria.

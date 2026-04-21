@@ -1,46 +1,41 @@
 ---
-title: "cancel"
-description: "End any active OMX execution mode — autopilot, ralph, ultrawork, team, or ultraqa — and optionally clear all session state."
+title: $cancel
+description: A utility skill that stops the currently active OMX execution mode
 ---
 
-cancel is the clean exit for OMX execution modes. When autopilot, ralph, ultrawork, team, or ultraqa is running, cancel signals the active mode to stop, completes any in-flight writes, and returns control to you. With the `--force` flag it also wipes all session state so the next command starts fresh.
+Invoke with `$cancel`.
 
-## Purpose
+Stops active execution modes such as `$ralph`, `$autopilot`, and `$team`. Use it when a task is heading in the wrong direction or no further progress is needed.
 
-Long-running OMX modes accumulate state: plans, context snapshots, team task lists, and loop counters. cancel gives you a predictable, safe way to exit those modes without leaving orphaned state or half-written files behind. Use it when a task is done and verified, when you want to redirect effort, or when a loop is blocked.
+## When to use
 
-## How to invoke
+- When `$ralph` is looping and you need to stop it
+- When `$autopilot` is going in an unexpected direction
+- When you need to stop a specific `$team` lane
+- When a task is done or requirements have changed and there's no reason to continue
 
-Natural language triggers: "cancel", "stop", "halt", "exit autopilot", "stop ralph".
+## When to avoid
 
-Explicit slash: `$cancel`
+- If you want to start a completely different task rather than pause — just call a new skill
+- If a task is still in progress, it's better to wait for it to finish than cancel early
 
+## Commands
+
+```bash
+$cancel
+$cancel --force
 ```
-codex
-> cancel
-```
 
-```
-codex
-> cancel --force
-```
+`--force` resets all active state. In most cases, running without arguments is enough.
 
-## What it does
+## How it works
 
-- Detects which execution mode is currently active (autopilot, ralph, ultrawork, team, ultraqa)
-- Signals the mode to stop at the next safe checkpoint
-- Waits for any in-flight file writes or agent completions before exiting
-- Clears active mode state from `.omx/state/`
-- With `--force`: removes all session state including plans, context snapshots, and task lists
+Reads the state of the current active execution mode and sends a stop signal. In-progress agent tasks finish their current step before halting. Partially completed files are left as-is.
 
-## Outputs
+To resume after `$cancel`, call the skill again from where it left off.
 
-- Confirmation that the active mode has exited
-- With `--force`: confirmation that `.omx/state/` has been cleared
-- No source code changes
+## Related docs
 
-## Related
-
-- [`$hud`](/docs/skills/utility/hud) — check which mode is active before cancelling
-- [`$ralph`](/docs/skills/workflow/ralph) — ralph exits cleanly via cancel when its loop is satisfied
-- [`$autopilot`](/docs/skills/workflow/autopilot) — the primary mode cancel is used to stop
+- [`$ralph`](/docs/skills/workflow/ralph) — repeating execution mode
+- [`$autopilot`](/docs/skills/workflow/autopilot) — full end-to-end execution
+- [`$team`](/docs/skills/workflow/team) — parallel lane execution

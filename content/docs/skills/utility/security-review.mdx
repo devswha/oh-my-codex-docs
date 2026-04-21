@@ -1,47 +1,36 @@
 ---
-title: "security-review"
-description: "Dispatch the security-reviewer agent for an OWASP-aligned sweep covering authn, authz, injection, and trust boundaries."
+title: $security-review
+description: "A skill that reviews security vulnerabilities and trust boundaries."
 ---
 
-security-review routes your changed code to a security-specialist agent that applies an OWASP-aligned checklist. It looks for authentication and authorisation gaps, injection vectors, insecure data handling, secrets in code, and trust boundary violations — the issues that are easy to miss in a general code review.
+## Overview
 
-## Purpose
+`$security-review` delegates security-focused code review to the `security-reviewer` agent. It examines vulnerabilities, trust boundaries, authentication/authorization flows, and input validation. The focus is on security threats rather than general code quality.
 
-Security concerns require a different lens than correctness concerns. security-review uses an agent trained on vulnerability patterns: it does not just check whether the code works, it checks whether it can be abused. Use it before merging any change that touches auth flows, external input handling, permissions, or sensitive data.
+## Example
 
-## How to invoke
-
-Natural language triggers: "security review", "security check", "check for vulnerabilities", "OWASP review".
-
-Explicit slash: `$security-review`
-
-```
-codex
-> security review the new OAuth flow I just implemented
+```text
+$security-review
+$security-review "security review the auth middleware changes"
+$security-review "review the entire payment processing module"
 ```
 
-```
-codex
-> security-review src/api/upload.ts — it handles user file uploads
-```
+Running without arguments reviews the current changes (based on git diff).
 
-## What it does
+## When to use
 
-- Identifies changed files and their security-relevant surface area
-- Applies an OWASP Top 10 checklist adapted to the language and framework in use
-- Checks authentication: token validation, session management, and credential handling
-- Checks authorisation: permission checks, privilege escalation paths, and IDOR risks
-- Flags injection vectors, insecure deserialization, and secrets committed to source
-- Reports findings with severity (critical, high, medium, low) and remediation guidance
+- After changing authentication or authorization logic
+- When code that handles external input is added or changed
+- After implementing payment, personal data, or permission-related features
+- When you need a pre-check before a security audit
 
-## Outputs
+## When to avoid
 
-- Security review report with findings grouped by severity and OWASP category
-- Specific file and line references for each finding
-- Remediation guidance for critical and high severity issues
+- General code quality review → use `$review`
+- Build or type errors → use `$build-fix`
+- Refactoring unrelated to security → `$review` is sufficient
 
-## Related
+## Related agent
 
-- [`$review`](/docs/skills/utility/review) — composite router that includes security-review as one of its passes
-- [`$code-review`](/docs/skills/utility/code-review) — correctness and API contract review to run alongside security
-- [`$analyze`](/docs/skills/utility/analyze) — root-cause investigation if a security finding points to a deeper bug
+- [security-reviewer](/docs/agents/review/security-reviewer) — detailed description of the agent this skill delegates to
+- [$review](/docs/skills/utility/review) — general code review outside of security

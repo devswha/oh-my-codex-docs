@@ -1,9 +1,9 @@
 ---
-title: "information-architect"
-description: "Designs content taxonomy, navigation models, sitemap structure, and naming consistency for documentation and product surfaces."
+title: information-architect
+description: Designs content taxonomy, navigation models, sitemap structure, and naming consistency for documentation and product UI.
 ---
 
-`information-architect` owns structure and findability. It maps current content, identifies where the taxonomy breaks user mental models, proposes MECE category structures with migration paths, and validates every proposed change against real user tasks — not just aesthetic preferences.
+`information-architect` owns structure and findability. It maps current content, identifies where the taxonomy breaks user mental models, proposes MECE category structures with migration paths, and validates every proposed change against real user tasks — not aesthetic preferences.
 
 ## Role
 
@@ -12,12 +12,12 @@ description: "Designs content taxonomy, navigation models, sitemap structure, an
 - Propose naming conventions that stay consistent across CLI help text, docs, error messages, and UI labels
 - Validate taxonomy proposals with task-based findability mapping before recommending changes
 
-## When invoked
+## When called
 
 - During documentation reorganizations or site restructuring when content has grown past its original taxonomy
 - When a new major feature must be placed in an existing navigation model without breaking discoverability
 - After `ux-researcher` identifies findability failures in a heuristic audit
-- When naming inconsistencies accumulate across a product surface (CLI vs docs vs UI disagree on the same concept)
+- When naming inconsistencies accumulate across product surfaces (CLI, docs, and UI disagree on the same concept)
 
 ## Inputs
 
@@ -35,6 +35,8 @@ An IA map showing current structure vs proposed structure, a task-to-location ma
 
 ## Related agents
 
-- [`writer`](/docs/agents/domain/writer) — authors the content once the structure is finalized
-- [`designer`](/docs/agents/domain/designer) — implements the visual navigation components and layout
-- [`ux-researcher`](/docs/agents/domain/ux-researcher) — provides user evidence and findability research that drives structural decisions
+| Agent | Relationship |
+|---|---|
+| [`writer`](/docs/agents/domain/writer) | Authors the content once the structure is finalized |
+| [`designer`](/docs/agents/domain/designer) | Implements the visual navigation components and layout |
+| [`ux-researcher`](/docs/agents/domain/ux-researcher) | Provides user evidence and findability research that drives structural decisions |

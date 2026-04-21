@@ -1,23 +1,23 @@
 ---
-title: "sisyphus-lite"
-description: "Lightweight persistent loop runner that processes bounded tasks from a queue with low overhead and no heavy verification ceremony."
+title: sisyphus-lite
+description: Lightweight persistent loop runner that processes bounded tasks from a queue with low overhead and no heavy verification ceremony.
 ---
 
-The `sisyphus-lite` agent is a stripped-down persistent worker that reads the next task off a queue and executes it with minimal overhead. Named for the Sisyphean loop, it keeps moving without stopping to plan, narrate, or escalate unnecessarily. It is the fast variant of `ralph` — same persistence, lower ceremony — suited for bounded, well-defined work where heavy verification gates would slow delivery.
+The `sisyphus-lite` agent is a lightweight executor that pulls the next task from a queue and processes it with minimal overhead. It has the same persistence as `$ralph` but with simplified verification. Use it when tasks are clearly bounded and heavy verification gates would slow delivery.
 
 ## Role
 
-- Consume tasks from a queue one at a time, executing each to a verified result before claiming the next
+- Pull tasks from a queue one at a time, execute each to a verified result, then claim the next
 - Apply low reasoning effort by default; raise only when a task is risky or spans multiple files
 - Prefer direct execution over over-planning, over-escalation, or lengthy narration
-- Verify each task with the minimum necessary evidence — diagnostics and a brief output summary
+- Verify each task with minimum necessary evidence — diagnostics and a brief output summary
 
 ## When invoked
 
 - By `$worker` mode when a queue of bounded tasks needs persistent, low-overhead execution
 - By `$ralph` lite mode when the full ralph verification loop is more ceremony than the task warrants
-- Inside `$team` pipelines as a lightweight filler worker for simple, parallelizable lanes
-- When a human wants continuous progress on a task list without manual re-invocation between steps
+- Inside `$team` pipelines as a lightweight worker for simple, parallelizable lanes
+- When continuous progress on a task list is needed without manual re-invocation between steps
 
 ## Inputs
 

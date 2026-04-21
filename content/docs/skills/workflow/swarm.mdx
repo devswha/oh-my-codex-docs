@@ -1,46 +1,40 @@
 ---
-title: "swarm"
-description: "Parallel agent fan-out for embarrassingly-parallel work — partitions a task list and spawns N ephemeral workers that execute simultaneously."
+title: $swarm
+description: Skill that distributes work to multiple agents in parallel (legacy variant of $team)
 ---
 
-`$swarm` is the parallel fan-out primitive of the OMX skill set. When your work decomposes into independent subtasks that share no ordering dependency, swarm partitions them and fires all workers at once rather than waiting for each to finish before starting the next. It is a compatibility facade over `$team`, routing all invocations through the team staged pipeline.
+## TL;DR
 
-## When to use
-
-- Your task list contains multiple items that do not depend on each other
-- You want faster wall-clock time by running work in parallel rather than serially
-- You are fanning out identical operations across many files, modules, or endpoints
-- You explicitly say "swarm" or want N agents working concurrently on independent slices
-- The individual subtasks are small enough that spinning up a dedicated worker per task is not wasteful
+`$swarm` distributes tasks to multiple agents simultaneously. Since `$team` now handles the same role, `$team` is recommended for new work.
 
 ## How to invoke
 
-Natural language triggers: "swarm", "fan out", "parallel agents", "run in parallel".
-
-Explicit slash: `$swarm`
-
 ```
-codex
-> swarm 4:executor "add JSDoc to every exported function across all packages"
+$swarm "implement frontend, backend, and tests in parallel"
 ```
 
-```
-codex
-> $swarm "translate all 20 API route handlers to use the new middleware signature"
-```
+Also activated by magic keywords `swarm`, `team`, `coordinated team`.
 
-## What happens
+## `$swarm` vs `$team`
 
-Swarm receives the task description and an optional worker count prefix (e.g. `4:executor`). It partitions the work into N roughly equal slices, spawns N ephemeral agent workers via the team pipeline, and fires all of them simultaneously. Each worker claims its slice, executes it, commits results, and reports back. Swarm aggregates the completed results and surfaces any failures or conflicts for resolution. Because swarm delegates to the `$team` skill's staged pipeline, it inherits team's state persistence, task lifecycle management, and mailbox-based coordination. When all workers report completion, swarm emits a summary of what was done and flags any slices that errored out.
+| Item | `$swarm` | `$team` |
+|---|---|---|
+| Status | Legacy / variant | Current standard |
+| Capabilities | Parallel agent execution | Parallel lanes + stage routing |
+| Recommended | Existing workflow compatibility | New work |
 
-## Outputs
+`$team` supports stage-aware routing (plan → exec → verify → fix). Use `$team` for new work.
 
-- Completed subtask artifacts from all workers (code changes, files, reports — depends on task)
-- `.omx/state/team/{name}/tasks/` — task state files for each worker slice
-- Console summary with per-worker status and any failure details
+## When to use it
+
+| Good fit | Avoid |
+|---|---|
+| Parallel tasks that split independently | Requirements still unclear |
+| Need to maintain existing `$swarm` workflows | When lanes might conflict |
+
+For work that needs a single owner over parallelization, `$ralph` is safer.
 
 ## Related skills
 
-- [`$team`](/docs/skills/workflow/team) — the full staged pipeline that swarm delegates to
-- [`$ultrawork`](/docs/skills/workflow/ultrawork) — parallel execution engine with model-tier routing
-- [`$worker`](/docs/skills/workflow/worker) — the individual worker protocol each swarm agent runs
+- [`$team`](/docs/skills/workflow/pipeline) — current standard parallel execution
+- [`$ralph`](/docs/skills/workflow/ralph) — single-owner repeat execution

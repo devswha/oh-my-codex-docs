@@ -1,23 +1,20 @@
 ---
-title: "wiki"
-description: "Persistent markdown knowledge base that compounds across sessions — add, query, lint, and ingest project knowledge stored under .omx/wiki/."
+title: $wiki
+description: Project knowledge base that accumulates across sessions — stored as markdown pages under .omx/wiki/ with search, add, and lint capabilities
 ---
 
-`$wiki` maintains a self-organising markdown knowledge base under `.omx/wiki/`. Each page is a plain markdown file with tags and a category. The wiki compounds over time: discoveries made in one session become searchable context in future sessions, reducing the cost of re-exploring the same parts of a codebase.
+`$wiki` maintains a markdown knowledge base under `.omx/wiki/`. Each page is a plain markdown file with tags and categories. Discoveries made in one session become searchable context in future sessions, reducing the cost of re-exploring the same parts of a codebase.
 
-## When to use
+## When to use it
 
-- You want to record an architectural decision, debugging finding, or recurring pattern for future sessions
-- You want to query what the project wiki already knows about a topic before starting an investigation
-- You want to ingest external content — docs, specs, research — into the project knowledge base
-- You want to lint the wiki to find broken links, missing tags, or stale pages
-- You say "wiki add", "wiki query", "wiki lint", "add to wiki", or "what does the wiki say about"
+- When saving architecture decisions, debugging findings, or recurring patterns for future sessions
+- When checking what the project wiki already knows before starting an investigation
+- When ingesting external docs, specs, or research into the project knowledge base
+- When checking for broken links, missing tags, or stale pages
+
+Trigger keywords: "wiki add", "wiki query", "wiki lint", "add to wiki", "search wiki"
 
 ## How to invoke
-
-Natural language triggers: "wiki add", "wiki query", "wiki lint", "add to wiki", "search wiki".
-
-Explicit slash: `$wiki`
 
 ```
 codex
@@ -34,9 +31,17 @@ codex
 > $wiki lint
 ```
 
-## What happens
+## How it works
 
-Wiki exposes five core operations. `wiki_add` creates a new page with a title, content, tags, and a category chosen from the standard set: architecture, decision, pattern, debugging, environment, session-log, reference, or convention. `wiki_query` performs keyword and tag matching across all pages and returns ranked results — there are no vector embeddings, so queries work best with specific terms. `wiki_ingest` accepts bulk content such as external docs or spec files and splits it into categorised pages. `wiki_lint` scans the wiki for broken `[[page-name]]` cross-references, missing required tags, and pages that have not been updated recently. `wiki_read`, `wiki_list`, and `wiki_delete` provide direct page management. All pages live under `.omx/wiki/` as plain markdown files with a shared index at `.omx/wiki/index.md`, keeping the knowledge base fully portable and inspectable without tooling.
+Provides 5 core operations.
+
+- `wiki_add` — creates a new page with title, content, tags, and a category. Categories: architecture, decision, pattern, debugging, environment, session-log, reference, convention.
+- `wiki_query` — searches pages by keyword and tag matching and returns ranked results. No vector embeddings, so specific terms yield the best results.
+- `wiki_ingest` — accepts external docs or spec files and splits them into categorized pages.
+- `wiki_lint` — checks for broken `[[page-name]]` internal links, missing required tags, and stale pages.
+- `wiki_read`, `wiki_list`, `wiki_delete` — direct page management.
+
+All pages are stored as markdown files under `.omx/wiki/`, with a shared index maintained at `.omx/wiki/index.md`. Fully portable and inspectable without tooling, travels with the repository.
 
 ## Outputs
 
@@ -47,5 +52,5 @@ Wiki exposes five core operations. `wiki_add` creates a new page with a title, c
 
 ## Related skills
 
-- [`$deepsearch`](/docs/skills/workflow/deepsearch) — exhaustive codebase search whose findings are worth capturing in the wiki
-- [`$trace`](/docs/skills/workflow/trace) — session execution trace that can be ingested as a session-log wiki page
+- [`$deepsearch`](/docs/skills/workflow/deepsearch) — deep codebase search whose findings are worth saving in the wiki
+- [`$trace`](/docs/skills/workflow/trace) — session execution record that can be ingested as a session-log wiki page

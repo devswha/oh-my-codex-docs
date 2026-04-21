@@ -1,46 +1,40 @@
 ---
-title: "analyze"
-description: "Debugger-dispatch shortcut — root-cause investigation for bugs, regressions, and unexpected behavior."
+title: $analyze
+description: A utility skill focused on reading and analyzing a codebase without modifying it
 ---
 
-Analyze is a thin routing skill that delegates to the Debugger agent the moment you describe a problem. Instead of manually spinning up a debugger sub-agent, you describe the symptom and analyze dispatches it with the right context, model tier, and evidence-gathering protocol already configured.
+Invoke with `$analyze`.
 
-## Purpose
+A skill focused on understanding a codebase without touching it. Use it when you need to trace a bug's origin, map dependencies, or understand architecture — any time you need to read first and act later.
 
-Analyze exists so you never have to remember the agent name or construct the delegation prompt yourself. It maps "analyze", "debug", and "investigate" triggers directly to a structured root-cause workflow that reads logs, traces call paths, isolates the regression boundary, and reports a precise diagnosis.
+## When to use
 
-## How to invoke
+- When you need to find where a bug is coming from before fixing anything
+- When you need to check the blast radius of a change before making it
+- When you need to gather context before explaining or reviewing code for a teammate
+- When something behaves unexpectedly and you don't know where to look
 
-Natural language triggers: "analyze", "debug", "investigate", "what's wrong with", "why is X failing".
+## When to avoid
 
-Explicit slash: `$analyze`
+- If the goal is to make a fix, use `$build-fix` or an executor agent directly — it's faster
+- If you need to write a plan first, use `$ralplan`
 
+## Commands
+
+```bash
+$analyze "find out why the redirect fails after login"
+$analyze "map all dependencies for the auth module"
+$analyze --scope src/api "summarize error handling patterns in this directory"
 ```
-codex
-> analyze why the auth middleware is returning 403 on valid tokens
-```
 
-```
-codex
-> debug the memory leak in the job processor
-```
+## How it works
 
-## What it does
+`$analyze` calls the debugger agent. It does not modify code — it explores files, searches symbols, and traces references to summarize the cause and structure, then returns the findings as text.
 
-- Dispatches a Debugger agent at the appropriate model tier
-- Reads logs, stack traces, and relevant source files to build an evidence base
-- Traces call paths to isolate the regression boundary or root cause
-- Distinguishes symptoms from causes and reports the precise failure point
-- Suggests a concrete fix or the next investigative step
+To analyze and fix in one go, use `$ralph`.
 
-## Outputs
+## Related docs
 
-- Root-cause report identifying the failure point and evidence trail
-- Reproduction steps or a minimal reproducer when discoverable
-- Recommended fix or next investigative action
-
-## Related
-
-- [`$trace`](/docs/skills/workflow/trace) — causal trace for multi-step system flows
-- [`$build-fix`](/docs/skills/utility/build-fix) — targeted fix for CI reds and type errors
-- [`$deep-dive`](/docs/skills/workflow/deep-interview) — two-stage pipeline for complex, multi-system investigations
+- [debugger agent](/docs/agents/build-analysis/debugger) — handles root-cause analysis
+- [`$ralph`](/docs/skills/workflow/ralph) — analyze then fix in a continuous run
+- [Utility skills list](/docs/skills/utility)

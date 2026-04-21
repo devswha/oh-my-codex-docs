@@ -1,31 +1,27 @@
 ---
 title: "Lifecycle Events"
-description: "The seven hook phases OMX listens to: PreToolUse, PostToolUse, Stop, SessionStart, PreCompact, Notification, and UserPromptSubmit."
+description: "The seven events Codex CLI emits and what OMX does at each point."
 ---
 
-OMX hooks are keyed to Codex CLI lifecycle events. Each event fires at a defined point in a Codex session and carries a typed payload. Understanding which event fires when helps you predict what OMX will do — and where to add your own plugin logic.
-
-## What it is
-
-Codex CLI exposes a fixed set of named events that external hook handlers can subscribe to. OMX maps its own runtime concerns — state persistence, keyword detection, stop-gating, context injection — onto these events. The same event vocabulary is exposed to `.omx/hooks/*.mjs` plugin files so custom logic can slot in at the right phase without duplicating OMX internals.
+Codex CLI emits events at fixed points in a session. OMX hooks attach to these events to do their work. Knowing which event fires when lets you trace why OMX intervened at a given moment and slot your own `.omx/hooks/*.mjs` plugins into the right place.
 
 ## Events
 
-| Event | Fires when | Typical OMX use |
+| Event | Fires when | What OMX does |
 |---|---|---|
-| `SessionStart` | Codex session initialises | Restore startup context, seed wiki summary, ensure `.omx/` is gitignored |
+| `SessionStart` | Codex session initialises | Restore state, seed wiki summary, verify `.omx/` is gitignored |
 | `UserPromptSubmit` | User sends a prompt | Keyword detection, skill routing, deep-interview input lock |
-| `PreToolUse` | Before any tool call executes | Bash safety checks, inline `git commit` format guard |
+| `PreToolUse` | Before a tool call executes | Bash safety checks, inline `git commit` format guard |
 | `PostToolUse` | After a tool call completes | Command-not-found guidance, non-zero output review |
-| `Stop` | Model finishes a turn | Ralph/autopilot/ultrawork/ultraqa continuation, auto-nudge on stalls |
-| `PreCompact` | Context window nears limit | Reserved; wiki compaction deferred to v2 |
-| `Notification` | System notification emitted | Notification routing to Discord/Slack/Telegram via notify-hook |
+| `Stop` | Model finishes a turn | Ralph / autopilot / ultrawork / ultraqa continuation, auto-nudge on stalls |
+| `PreCompact` | Context window nears limit | Reserved — wiki compaction deferred to v2 |
+| `Notification` | System notification emitted | Routing to Discord / Slack / Telegram via notify-hook |
 
-Native Codex hook coverage is partial. `PreToolUse` and `PostToolUse` currently intercept Bash only; non-Bash tool interception falls back to runtime paths. See [Codex-Native Hooks](/docs/hooks/codex-native-hooks) for the full mapping matrix.
+`PreToolUse` and `PostToolUse` currently intercept Bash only. Non-Bash tool interception falls back to runtime paths. See [Codex-Native Hooks](/docs/hooks/codex-native-hooks) for the full coverage matrix.
 
-## Example
+## Subscribing to events in a plugin
 
-A plugin that reacts to `post-tool-use` events:
+An example plugin that reacts to `post-tool-use` events:
 
 ```js
 // .omx/hooks/my-plugin.mjs
@@ -35,7 +31,7 @@ export async function onHookEvent(event, sdk) {
 }
 ```
 
-The envelope always includes `schema_version`, `event`, `timestamp`, `source` (`native` or `derived`), and `context`.
+The event envelope always includes `schema_version`, `event`, `timestamp`, `source` (`native` or `derived`), and `context`.
 
 ## Related
 

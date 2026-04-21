@@ -10,14 +10,16 @@ The `explore` agent answers "where does X live?" before any other agent touches 
 - Map files, directories, and module boundaries relevant to a query
 - Locate symbols (functions, classes, types) and trace their cross-file relationships
 - Identify entry points, dependency chains, and import graphs
-- Cross-validate findings across multiple search tools (Glob, Grep, AST search, LSP) to eliminate false positives
+- Cross-validate findings across Glob, Grep, AST search, and LSP to eliminate false positives
 
 ## When invoked
 
-- Automatically at the start of `$autopilot`, `$deep-interview`, and `$deepsearch` workflows to orient subsequent agents
-- When a user types "explore X", "find where Y lives", or "which files touch Z"
-- As a pre-flight step before `planner` or `executor` so they receive concrete file paths rather than assumptions
-- During debugging sessions when the root file for a symptom is unknown
+| Situation | How it's triggered |
+|---|---|
+| At the start of `$autopilot`, `$deep-interview`, and `$deepsearch` | Automatic |
+| "Find where X lives", "which files touch Y" | Direct request |
+| When `planner` or `executor` needs concrete file paths | Parent agent request |
+| During debugging when the source location of a symptom is unknown | Delegated from `debugger` |
 
 ## Inputs
 
@@ -27,7 +29,7 @@ The `explore` agent answers "where does X live?" before any other agent touches 
 
 ## Outputs
 
-- An in-session markdown report listing absolute file paths, matched symbols, and relationship summaries
+- An in-session report listing absolute file paths, matched symbols, and relationship summaries
 - For deep-search runs, findings may be persisted to `.omx/research/<topic>.md` for downstream agents to reference
 - A `next_steps` section indicating which agent should act on the findings
 

@@ -1,51 +1,40 @@
 ---
-title: "plan"
-description: "Strategic planning with optional interview workflow — gathers context, produces a quality-gated work plan, and supports consensus and review modes."
+title: $plan
+description: Skill for planning first without implementation
 ---
 
-`$plan` transforms a vague idea or detailed brief into a structured, quality-gated work plan before any code is written. It auto-detects whether your request needs interactive requirements gathering or can go straight to a plan, and supports a consensus mode that iterates a Planner, Architect, and Critic in a deliberation loop until all three agree.
+## TL;DR
 
-## When to use
-
-- You want to plan before implementing — "plan this", "plan the", "let's plan"
-- Your request is broad or vague and needs scoping before execution starts
-- You want an existing plan reviewed with `--review`
-- You want multi-perspective consensus validation with `--consensus`
-- You prefer structured acceptance criteria and risk mitigations over ad-hoc coding
+Use `$plan` when you want to create a plan without executing anything. If you need consensus-based planning, `$ralplan` is a better fit.
 
 ## How to invoke
 
-Natural language triggers: "plan this", "plan the", "let's plan", "ralplan" (activates `--consensus`).
-
-Explicit slash: `$plan`
-
 ```
-codex
-> plan the migration from REST to GraphQL for the user service
+$plan "plan the introduction of a new auth system"
 ```
 
-```
-codex
-> $plan --consensus add real-time notifications via WebSocket to the dashboard
-```
+Also activated by magic keywords `plan this`, `plan the`, `let's plan`.
 
-```
-codex
-> $plan --review   # evaluates an existing plan in .omx/plans/
-```
+## `$plan` vs `$ralplan`
 
-## What happens
+| Item | `$plan` | `$ralplan` |
+|---|---|---|
+| Agents | planner alone | planner + architect + critic |
+| Consensus process | None | Yes (iterative review) |
+| Speed | Fast | Slower but more stable |
+| Good fit | Need a quick draft | Direction consensus matters |
 
-Plan first classifies the request: broad or vague inputs trigger interview mode, which asks one focused question at a time and spawns an explore agent to answer codebase questions before asking the user. Specific inputs skip the interview and generate a plan directly. In consensus mode (`--consensus`), the skill runs a Planner, Architect, and Critic in sequence — Architect steelmans the alternative options, Critic verifies testable criteria and rejects vague risks — iterating up to five rounds until the Critic approves. The final plan is written to `.omx/plans/` with an ADR section documenting the decision, drivers, alternatives considered, and consequences. Plans meet a quality bar of 80% file-cited claims and 90% testable acceptance criteria before being considered complete.
+Use `$ralplan` for large scope or when the cost of mistakes is high.
 
-## Outputs
+## When to use it
 
-- `.omx/plans/{slug}.md` — approved work plan with requirements, acceptance criteria, implementation steps, risks, and verification steps
-- In consensus mode: RALPLAN-DR summary (principles, decision drivers, viable options) and ADR section
-- In deliberate consensus mode: pre-mortem with three failure scenarios and an expanded unit, integration, e2e, and observability test plan
+| Good fit | Avoid |
+|---|---|
+| Need a quick draft plan | Work requiring stakeholder consensus |
+| Small features, short-term tasks | Work involving architecture decisions |
 
 ## Related skills
 
-- [`$ralplan`](/docs/skills/workflow/ralplan) — alias for `$plan --consensus` with deliberation options
-- [`$deep-interview`](/docs/skills/workflow/deep-interview) — deeper Socratic interview for highly ambiguous briefs
-- [`$autopilot`](/docs/skills/workflow/autopilot) — end-to-end execution that uses plan internally
+- [`$ralplan`](/docs/skills/workflow/ralplan) — consensus-based planning
+- [`$ralph`](/docs/skills/workflow/ralph) — execute the plan
+- [`$deep-interview`](/docs/skills/workflow/deep-interview) — clarify requirements before planning

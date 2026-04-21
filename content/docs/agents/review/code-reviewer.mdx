@@ -1,20 +1,20 @@
 ---
-title: "code-reviewer"
-description: "Comprehensive review agent that verifies spec compliance, logic correctness, and API contracts with severity-rated findings."
+title: code-reviewer
+description: Comprehensive review agent that verifies spec compliance, logic correctness, and API contracts with severity-rated findings
 ---
 
-The `code-reviewer` agent is the primary gatekeeper before changes reach production. It runs a strict two-stage review: spec compliance first, then code quality. Every finding is rated by severity (CRITICAL, HIGH, MEDIUM, LOW) and includes a concrete fix suggestion. The agent never approves code with CRITICAL or HIGH severity issues and never skips to style nitpicks before confirming the implementation actually satisfies the request.
+The `code-reviewer` agent is the primary gatekeeper before changes reach production. It runs a strict two-stage review: spec compliance first, then code quality. Every finding is rated by severity (CRITICAL / HIGH / MEDIUM / LOW) and includes a concrete fix suggestion. The agent never approves code with CRITICAL or HIGH severity issues and never skips to style nitpicks before confirming the implementation actually satisfies the request.
 
 ## Role
 
 - Verify that the implementation covers all requirements and solves the right problem (Stage 1)
-- Run `lsp_diagnostics` on every modified file and flag type errors before issuing a verdict
-- Rate each finding by severity and provide a specific, actionable fix suggestion (Stage 2)
+- Run `lsp_diagnostics` on every modified file and flag type errors before issuing a verdict (Stage 2)
+- Rate each finding by severity and provide a specific, actionable fix suggestion
 - Issue a clear verdict: APPROVE, REQUEST CHANGES, or COMMENT
 
-## When invoked
+## When called
 
-- By `$code-review` when a developer requests a comprehensive review before merging
+- By `$code-review` when a comprehensive review before merging is requested
 - By `$autopilot` at designated review checkpoints after an executor completes a task
 - On pull requests that touch API contracts, authentication, or data handling
 - When a `verifier` pass surfaces correctness questions that require deeper inspection
@@ -34,7 +34,7 @@ The `code-reviewer` agent is the primary gatekeeper before changes reach product
 
 ## Limits
 
-- Read-only — Write and Edit tools are not available during review
+- Read-only — Write and Edit tools are not used during review
 - Does not approve any change with a CRITICAL or HIGH severity finding outstanding
 - Does not skip Stage 1 (spec compliance) to prioritize style feedback
 

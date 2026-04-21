@@ -1,13 +1,15 @@
 ---
 title: "Magic Keywords"
-description: "Phrases the keyword-detector hook recognises to auto-route prompts to OMX skills — autopilot, ralph, team, ralplan, ulw, and more."
+description: "Phrases the keyword-detector hook recognises and which OMX skill each phrase routes to."
 ---
 
-Magic keywords are phrases that trigger OMX skill routing without requiring an explicit slash command. The keyword-detector hook scans every `UserPromptSubmit` event for these phrases and writes skill activation state before the model sees the prompt. The model then finds its skill instructions ready to execute.
+Magic keywords are phrases that activate OMX skills without an explicit `$skill` invocation. The keyword-detector hook scans every `UserPromptSubmit` event for these phrases and writes skill activation state to `.omx/state/` before the model sees the prompt. The model then starts with its skill instructions already in place.
 
-## What it is
+## How it works
 
-The keyword registry (`src/hooks/keyword-registry.ts`) defines a priority-ordered list of phrase-to-skill mappings. Detection supports both explicit `$skill` invocations (matched left-to-right) and implicit phrase matching with word-boundary guards. Some keywords — `team`, `ralph`, `parallel` — require additional intent context to avoid firing on incidental prose.
+Detection logic is defined as a priority-ordered phrase-to-skill mapping in `src/hooks/keyword-registry.ts`. It supports both explicit `$skill` calls (matched left-to-right) and implicit phrase matching with word-boundary guards.
+
+Keywords like `team`, `ralph`, and `parallel` have additional intent context conditions to avoid firing on incidental prose.
 
 ## Keyword table
 
@@ -21,25 +23,25 @@ The keyword registry (`src/hooks/keyword-registry.ts`) defines a priority-ordere
 | `ultraqa` | `ultraqa` | 8 |
 | `team`, `swarm`, `coordinated team` | `team` | 8 |
 | `plan this`, `plan the`, `let's plan` | `plan` | 8 |
+| `analyze`, `investigate` | `analyze` | 7 |
 | `code review`, `review code` | `code-review` | 6 |
 | `tdd`, `test first` | `tdd` | 6 |
 | `fix build`, `type errors` | `build-fix` | 6 |
-| `analyze`, `investigate` | `analyze` | 7 |
 | `wiki query`, `wiki add`, `wiki lint` | `wiki` | 5 |
 | `cancel`, `stop`, `abort` | `cancel` | 5 |
 
-Higher priority wins when multiple keywords match. Explicit `$skill` references always beat implicit phrase matches.
+When multiple keywords match, the higher priority wins. Explicit `$skill` references always beat implicit phrase matches.
 
 ## Example
 
-Implicit trigger — the phrase alone routes to autopilot:
+Implicit trigger — the phrase alone activates autopilot:
 
 ```
 codex
 > build me a REST API for bookstore inventory in TypeScript
 ```
 
-Explicit invocation — use `$` prefix to force a specific skill:
+Explicit invocation — use the `$` prefix to specify a skill directly:
 
 ```
 codex

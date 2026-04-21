@@ -1,23 +1,20 @@
 ---
-title: "trace"
-description: "Display the agent flow trace — chronological timeline and aggregate statistics showing how hooks, skills, agents, and tools interacted in this session."
+title: $trace
+description: Investigation tool that shows the agent execution flow of the current session as a chronological timeline and statistics
 ---
 
-`$trace` surfaces the execution trace for the current session. It calls the `trace_timeline` and `trace_summary` MCP tools to show a chronological event log and aggregate statistics, making it easy to understand how a keyword triggered a skill, how agents were delegated, and which tools created bottlenecks.
+`$trace` surfaces the execution record of the current session. It calls the `trace_timeline` and `trace_summary` MCP tools to output a chronological event log and aggregate statistics. You can see which skill a keyword triggered, how agent delegation worked, and which tool was the bottleneck.
 
-## When to use
+## When to use it
 
-- You want to understand what happened during a complex multi-agent session
-- You are debugging an unexpected skill activation or mode transition
-- You want to identify slow tools or agents that are bottlenecking execution
-- You are auditing which hooks fired and in what order
-- You say "trace", "show trace", "what ran", or "how did that work"
+- When you want to understand what happened during a complex multi-agent session
+- When debugging an unexpected skill activation or mode transition
+- When finding slow tools or agents to eliminate bottlenecks
+- When auditing what order hooks fired in
+
+Trigger keywords: "trace", "show trace", "what happened", "flow trace", "session trace"
 
 ## How to invoke
-
-Natural language triggers: "trace", "show trace", "what happened", "flow trace", "session trace".
-
-Explicit slash: `$trace`
 
 ```
 codex
@@ -29,19 +26,23 @@ codex
 > $trace
 ```
 
-## What happens
+## How it works
 
-Trace calls `trace_timeline` with no arguments to retrieve the chronological event log for the latest session. The timeline shows each event — hook fire, keyword detection, skill activation, agent delegation, mode transition, and tool call — in the order it occurred. It then calls `trace_summary` to produce aggregate statistics: how many times each hook fired, which keywords were detected, which skills activated, what mode transitions occurred, and which tools were slowest. The output presents the timeline first, followed by the summary. Mode transitions are highlighted to show how execution moved between states. Bottlenecks — tools or agents that consumed disproportionate time — are called out explicitly. Flow patterns such as keyword-to-skill-to-agent chains are surfaced to make the session's causal structure legible.
+Calls `trace_timeline` with no arguments to retrieve the chronological event log for the latest session. The timeline shows hook fires, keyword detections, skill activations, agent delegations, mode transitions, and tool calls in the order they occurred.
+
+Then calls `trace_summary` to produce aggregate statistics: how many times each hook fired, which keywords were detected, which skills activated, what mode transitions occurred, and which tools were slowest.
+
+Output shows the timeline first followed by the summary. Mode transitions are highlighted, and tools and agents that consumed the most time are flagged as bottlenecks. The causal structure of keyword → skill → agent is also summarized.
 
 ## Outputs
 
-- Chronological event timeline for the current session
-- Aggregate statistics: hook fire counts, keywords detected, skills activated, mode transitions
+- Chronological event timeline of the current session
+- Aggregate stats: hook fire counts, keyword detections, skill activations, mode transitions
 - Bottleneck report identifying the slowest tools and agents
-- Flow pattern summary showing keyword-to-skill-to-agent chains
+- Keyword → skill → agent causal flow summary
 
 ## Related skills
 
-- [`$deep-interview`](/docs/skills/workflow/deep-interview) — Socratic interview whose execution flow can be inspected via this skill
+- [`$deep-interview`](/docs/skills/workflow/deep-interview) — interview workflow whose execution flow can be reviewed with this skill
 - [`$ralplan`](/docs/skills/workflow/ralplan) — consensus planning whose agent sequence appears in the trace
-- [`$wiki`](/docs/skills/workflow/wiki) — knowledge base where trace insights can be captured for future sessions
+- [`$wiki`](/docs/skills/workflow/wiki) — knowledge base for saving insights from a trace for future sessions

@@ -1,42 +1,33 @@
 ---
-title: "note"
-description: "Append a timestamped note to the OMX notepad for later retrieval by agents or by you."
+title: $note
+description: "A skill for saving and retrieving session notes."
 ---
 
-note is a fast capture tool. It appends your text to `.omx/notepad.md` with a timestamp so nothing gets lost between sessions. Agents that run later in the same worktree can read the notepad, making note a lightweight way to pass context forward without editing a plan file.
+## Overview
 
-## Purpose
+`$note` saves notes to the current session. Use it to record decisions, progress, and temporary context you'll want to reference later. Saved notes can be referenced by agents within the same session.
 
-Ideas, decisions, and reminders that surface mid-session often get lost when the context window scrolls away. note persists them immediately to a file that survives session boundaries. The notepad is also readable by OMX agents — you can leave instructions for a future ralph or autopilot run by writing a note now.
+## Example
 
-## How to invoke
-
-Direct invocation with your text:
-
-```
-codex
-> $note remember to add rate limiting to the /export endpoint before launch
+```text
+$note "auth refactor confirmed to use JWT approach"
+$note "users table migration currently on hold"
+$note
 ```
 
-```
-codex
-> note: the DB migration requires a maintenance window — coordinate with ops first
-```
+Running without arguments prints the list of saved notes.
 
-## What it does
+## When to use
 
-- Appends the provided text to `.omx/notepad.md` with a UTC timestamp
-- Creates the notepad file if it does not yet exist
-- Does not overwrite existing notes — every entry is additive
-- Makes the note immediately available to any agent that reads the notepad in this worktree
-- Prints a confirmation with the timestamp used
+- When you don't want to lose a mid-session decision during a long session
+- When you need to leave context to share between agents during `$ralph` or `$team` runs
+- When you need a temporary note to come back to later
 
-## Outputs
+## When to avoid
 
-- Updated `.omx/notepad.md` with the new entry appended
-- Confirmation message showing the timestamp and first line of the note
+- Content that needs to be permanent — session notes are session-scoped. For long-term records, write to `.omx/notepad.md` or project documentation.
+- Code changes — modify the actual files rather than leaving a note.
 
 ## Related
 
-- [`$wiki`](/docs/skills/workflow/wiki) — structured knowledge base for longer, categorised reference material
-- [`$omx-setup`](/docs/skills/utility/omx-setup) — creates the `.omx/` directory that the notepad lives in
+- [State and sessions](/docs/concepts) — how OMX manages session context

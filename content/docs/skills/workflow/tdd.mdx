@@ -1,23 +1,20 @@
 ---
-title: "tdd"
-description: "Test-first workflow that enforces red-green-refactor — writes a failing test before any production code, then drives implementation to green."
+title: $tdd
+description: Workflow that enforces the red-green-refactor cycle by writing tests first and attaching implementation after
 ---
 
-`$tdd` activates a strict test-driven development discipline. No production code may be written before a failing test exists. The skill enforces the red-green-refactor cycle, routes complex test strategy questions to a test-engineer agent, and exits each cycle only when the new test passes and all prior tests remain green.
+`$tdd` enforces the rule that a failing test must exist before any production code is written. It runs the red-green-refactor cycle stage by stage, consults the test-engineer agent for complex test strategies, and only exits a cycle when the new test passes and the entire existing test suite is green.
 
-## When to use
+## When to use it
 
-- You want to build a feature with tests first and production code second
-- You say "tdd", "test first", "red green refactor", or "write the test before the code"
-- You are working on critical domain logic where correctness is non-negotiable
-- You want a systematic approach to coverage rather than retrofitting tests after implementation
-- You are onboarding to a codebase and want tests to document expected behaviour as you go
+- When you want to write tests first and attach implementation after
+- When working on critical domain logic where correctness matters
+- When you need systematic coverage instead of adding tests after implementation
+- When learning a new codebase and want to document expected behavior with tests
+
+Trigger keywords: "tdd", "test first", "red green", "write tests before code"
 
 ## How to invoke
-
-Natural language triggers: "tdd", "test first", "red green", "write tests before code".
-
-Explicit slash: `$tdd`
 
 ```
 codex
@@ -29,19 +26,25 @@ codex
 > $tdd implement the password-strength checker with edge cases covered
 ```
 
-## What happens
+## How it works
 
-TDD mode activates the iron law: no production code without a failing test first. Each cycle begins with a RED phase — the skill writes a test for the next unit of functionality and runs the test suite to confirm the new test fails. If the test passes on the first run, it is considered wrong and must be rewritten to fail. The GREEN phase follows: the minimal production code needed to make the test pass is written, nothing more. The test suite runs again and must go fully green. The REFACTOR phase then cleans up code quality while keeping the suite green, running tests after every change. For complex domain logic or unfamiliar testing patterns, the skill consults a test-engineer agent for strategy validation before writing tests. The cycle repeats with the next unit of functionality until the feature is complete.
+**RED** — Write tests for the next unit of functionality and run them. If they pass on the first run, the test is considered wrong and must be rewritten.
+
+**GREEN** — Write only the minimum production code needed to make the tests pass. The entire test suite must be green before moving on.
+
+**REFACTOR** — Improve code quality while keeping tests green. Run tests after every change.
+
+For complex domain logic or unfamiliar test patterns, the test-engineer agent reviews strategy before tests are written. Repeat the cycle until the feature is complete.
 
 ## Outputs
 
-- Failing tests written before implementation (RED phase artifacts)
-- Minimal production code that makes each test pass (GREEN phase artifacts)
-- Refactored source with the full test suite green at every step
-- Per-cycle progress output showing RED failure, GREEN pass, and REFACTOR result
+- Failing tests written in the RED phase
+- Minimal production code written in the GREEN phase
+- Refactored source with the entire test suite green
+- Per-cycle log of RED failure → GREEN pass → REFACTOR result
 
 ## Related skills
 
-- [`$autopilot`](/docs/skills/workflow/autopilot) — full autonomous execution that can apply TDD discipline internally
-- [`$ultraqa`](/docs/skills/workflow/ultraqa) — QA cycling for fixing a broken test suite after implementation
+- [`$autopilot`](/docs/skills/workflow/autopilot) — full execution pipeline that applies TDD discipline internally
+- [`$ultraqa`](/docs/skills/workflow/ultraqa) — QA cycle for fixing a broken test suite after implementation
 - [`$ralplan`](/docs/skills/workflow/ralplan) — consensus planning that includes an expanded test plan in deliberate mode

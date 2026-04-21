@@ -1,46 +1,36 @@
 ---
-title: "review"
-description: "Composite review router — dispatches code, security, and quality reviewer agents as appropriate for the changed files."
+title: $review
+description: "A skill that delegates code review to the code-reviewer agent."
 ---
 
-review is the single command for a complete pre-merge review. Rather than deciding which reviewer to run, you invoke review and it inspects the changes, determines which reviewer types are warranted, and dispatches them in parallel. The result is a consolidated report covering correctness, security posture, and code quality in one pass.
+## Overview
 
-## Purpose
+`$review` delegates code review to the `code-reviewer` agent. It reviews comprehensively — logic defects, maintainability, API contracts, and backward compatibility. Use it when you need an independent review step after implementation is complete.
 
-Individual review skills (code-review, security-review) are precise but require you to know in advance which concerns apply. review removes that decision: it reads the diff, identifies the relevant risk areas, and routes accordingly. A change touching authentication always gets a security pass; a change adding a public API always gets a contract review; all changes get a quality pass.
+## Example
 
-## How to invoke
-
-Natural language triggers: "review", "review this", "full review", "pre-merge review", "review plan".
-
-Explicit slash: `$review`
-
-```
-codex
-> review the changes in the auth module
+```text
+$review
+$review "review the auth module changes"
+$review "review all of PR #42"
 ```
 
-```
-codex
-> full review before I open the PR
-```
+Running without arguments reviews the current changes (based on git diff).
 
-## What it does
+## When to use
 
-- Reads the diff (staged, branch, or specified path) to identify change types
-- Dispatches code-reviewer for all changes: logic, contracts, edge cases, backward compatibility
-- Dispatches security-reviewer when changes touch auth, input handling, secrets, or trust boundaries
-- Dispatches quality-reviewer for all changes: redundancy, abstraction quality, maintainability
-- Consolidates findings into a single report ordered by severity
+- When you need an independent review after finishing implementation with `$executor` or `$ralph`
+- As a quality check step before opening a PR
+- When there are API changes and you need to verify backward compatibility
+- For general code quality checks unrelated to security
 
-## Outputs
+## When to avoid
 
-- Unified review report with findings from all dispatched reviewers
-- Each finding tagged with its source (code/security/quality) and severity
-- Recommended actions for blocking and important issues
+- Security-focused review → use `$security-review`
+- Build or type error fixes → use `$build-fix`
+- Design review before implementation → the critic stage in `$ralplan` is more appropriate
 
-## Related
+## Related agent
 
-- [`$code-review`](/docs/skills/utility/code-review) — standalone code-reviewer dispatch when you only need a logic review
-- [`$security-review`](/docs/skills/utility/security-review) — standalone security-reviewer dispatch for an OWASP-focused pass
-- [`$ai-slop-cleaner`](/docs/skills/utility/ai-slop-cleaner) — deletion pass to act on quality findings the review surfaces
+- [code-reviewer](/docs/agents/review/code-reviewer) — detailed description of the agent this skill delegates to
+- [$security-review](/docs/skills/utility/security-review) — security-focused review

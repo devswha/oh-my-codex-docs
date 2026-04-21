@@ -1,44 +1,37 @@
 ---
 title: "explore-harness"
-description: "Evidence-driven tracer that manages competing hypotheses with for/against evidence, uncertainty scores, and next-probe recommendations."
+description: "Wrapper agent that caches explore results and constrains the scope of exploration."
 ---
 
-The `explore-harness` agent goes beyond surface-level exploration by maintaining a structured set of competing hypotheses, each with explicit supporting and contradicting evidence and a tracked uncertainty score. Rather than converging prematurely on the first plausible explanation, it proposes the next targeted probe needed to reduce uncertainty, then keeps narrowing until one hypothesis is clearly supported by the evidence. This makes it the right tool for deep causal investigations where the root cause is genuinely ambiguous.
+`explore-harness` acts as a wrapper around the `explore` agent rather than calling it directly — it caches exploration results and restricts the scope of each search. When multiple agents repeatedly explore the same repository, it eliminates redundant work, and by keeping scope explicit, it reduces noise.
 
 ## Role
 
-- Maintain multiple competing hypotheses simultaneously, each with for/against evidence and an uncertainty score
-- Propose concrete next-probe steps (specific files, commands, or tests) that would most efficiently reduce overall uncertainty
-- Update hypothesis scores as new evidence arrives and retire hypotheses that are definitively disproved
-- Produce a structured investigation summary that shows the reasoning trail, not just the conclusion
+- Cache `explore` results within a session to avoid repeated exploration cost
+- Constrain exploration to specific directories, file patterns, or symbol sets
+- Manage per-hypothesis exploration results separately during multi-hypothesis investigations
+- Coordinate parallel explorations when `debugger` or `planner` needs to explore multiple paths simultaneously
 
 ## When invoked
 
-- By `$trace` when a causal chain is unclear and multiple explanations are plausible
-- During deep investigations where the `debugger` circuit breaker has triggered and a wider evidence sweep is needed
-- When a system exhibits intermittent or environment-dependent behavior that resists simple reproduction
-- When an architect or planner needs rigorous causal grounding before committing to a design recommendation
+| Situation | How it's triggered |
+|---|---|
+| When `debugger` is tracking multiple hypotheses in parallel | Delegated from `debugger` |
+| When repeated exploration of a large repository must be avoided | Orchestrator request |
+| When exploration scope must be explicitly narrowed to a specific module | Direct request |
 
-## Inputs
+## Difference from `explore`
 
-- An initial failure description or causal question
-- Repository access for shell inspection and read-only code analysis
-- Optional: prior debugger findings, stack traces, or existing hypothesis notes
-
-## Outputs
-
-- A structured investigation report listing each hypothesis with evidence, confidence level, and current status (active, confirmed, or retired)
-- Ranked next-probe recommendations with rationale for why each probe would reduce uncertainty
-- A final causal summary once one hypothesis reaches sufficient confidence
+`explore` is a single agent that searches a repository broadly. `explore-harness` wraps that search and adds **scope limiting** and **result reuse**. For straightforward lookups, `explore` alone is sufficient. `explore-harness` earns its keep in complex investigation scenarios that require repeated or parallel exploration.
 
 ## Limits
 
-- Read-only — does not write, edit, or modify any files in the repository
-- Does not collapse to a single hypothesis before evidence justifies the conclusion
-- Not suited for straightforward lookups; use `explore` for simple read-only repository queries
+- Does not create, modify, or delete any files
+- Does not make architectural judgments or modification recommendations
+- Cache is valid only within the current session
 
 ## Related agents
 
-- [explore](/docs/agents/build-analysis/explore) — lightweight read-only lookup for simpler repository questions
-- [debugger](/docs/agents/build-analysis/debugger) — handles standard root-cause analysis before escalating to explore-harness
-- [critic](/docs/agents/review/critic) — provides adversarial challenge when a hypothesis appears too strong too quickly
+- [explore](/docs/agents/build-analysis/explore) — the underlying discovery agent that `explore-harness` wraps
+- [debugger](/docs/agents/build-analysis/debugger) — uses `explore-harness` during multi-hypothesis investigations
+- [planner](/docs/agents/build-analysis/planner) — sequences tasks based on exploration results

@@ -1,18 +1,18 @@
 ---
-title: "git-master"
-description: "Manages git operations, commit history hygiene, atomic commits, rebase strategy, and conflict resolution."
+title: git-master
+description: Keeps git history clean. Atomic commits, rebase strategy, conflict resolution, and PR preparation.
 ---
 
-`git-master` keeps the git history clean and intentional. It crafts atomic commits, rewrites messy histories into logical sequences, resolves conflicts without data loss, and prepares branches for review — so the commit log tells the story of what changed and why, not just what happened to be staged.
+`git-master` keeps the git history clean and intentional. It crafts atomic commits, restructures messy histories into logical sequences, resolves conflicts without data loss, and prepares branches for review — so the commit log tells the story of what changed and why, not just what happened to be staged.
 
 ## Role
 
-- Author atomic commits with precise scope: one logical change per commit, clear subject line, imperative mood
-- Plan and execute rebase strategies: squash noise commits, reorder for clarity, split oversized commits
+- Author atomic commits — one logical change per commit, clear subject line, imperative mood
+- Plan and execute rebase strategies — squash noise commits, reorder for clarity, split oversized commits
 - Resolve merge and rebase conflicts, explaining each resolution decision
-- Prepare branches for PR: clean history, up-to-date with base, no debug commits or fixup noise
+- Prepare branches for PR — clean history, up-to-date with base, no debug commits or fixup noise
 
-## When invoked
+## When called
 
 - Before opening a pull request when the branch history needs cleanup (squash, reorder, or reword)
 - During conflict resolution when a merge or rebase produces non-trivial conflicts
@@ -35,5 +35,7 @@ A clean branch with the requested history shape, a summary of operations perform
 
 ## Related agents
 
-- [`executor`](/docs/agents/build-analysis/executor) — makes the code changes that git-master then commits and organizes
-- [`build-fixer`](/docs/agents/domain/build-fixer) — resolves build failures that surface after a rebase or merge
+| Agent | Relationship |
+|---|---|
+| [`executor`](/docs/agents/build-analysis/executor) | Makes the code changes that git-master then commits and organizes |
+| [`build-fixer`](/docs/agents/domain/build-fixer) | Resolves build failures that surface after a rebase or merge |

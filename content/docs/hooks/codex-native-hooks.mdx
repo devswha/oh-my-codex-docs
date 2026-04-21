@@ -1,15 +1,22 @@
 ---
 title: "Codex-Native Hooks"
-description: "How OMX wires directly into Codex CLI's native hook surface instead of a shell wrapper, and which lifecycle events are covered natively versus via runtime fallback."
+description: "How OMX uses the Codex CLI native hook interface directly, and the boundary between native coverage and runtime fallback."
 ---
 
-Codex CLI exposes a native hook surface: when `[features] codex_hooks = true` is set in `.codex/config.toml`, Codex invokes external handlers at defined lifecycle points by reading registrations from `.codex/hooks.json`. OMX uses this surface directly rather than wrapping the Codex binary in a shell script.
+Codex CLI reads registrations from `.codex/hooks.json` and invokes external handlers at defined lifecycle points when `[features] codex_hooks = true` is set in `.codex/config.toml`. OMX uses this interface directly rather than wrapping the Codex binary in a shell script.
 
-## What it is
+## Installation structure
 
-`omx setup` writes two files: `.codex/config.toml` (enabling `codex_hooks`) and `.codex/hooks.json` (registering the OMX handler command `dist/scripts/codex-native-hook.js`). The setup preserves any user-managed hook entries already in `.codex/hooks.json`. `omx uninstall` removes only the OMX-managed entries; user hooks stay in place. The alternative — a shell wrapper around the Codex binary — is still supported via `omx tmux-hook` but is not the primary path for native events.
+`omx setup` writes two files.
 
-## Native vs. runtime-fallback coverage
+- `.codex/config.toml` — enables `codex_hooks`
+- `.codex/hooks.json` — registers the OMX handler `dist/scripts/codex-native-hook.js`
+
+User-managed hook entries already present in `.codex/hooks.json` are preserved during installation. `omx uninstall` removes only the OMX-managed entries and leaves user hooks in place.
+
+The shell wrapper around the Codex binary is still supported via `omx tmux-hook`, but it is not the primary path for native events.
+
+## Coverage matrix
 
 | OMX concern | Codex event | Status |
 |---|---|---|
@@ -24,15 +31,15 @@ Codex CLI exposes a native hook surface: when `[features] codex_hooks = true` is
 
 "Native-partial" means the native path handles the common case; edge cases fall back to the notify-hook or tmux runtime path.
 
-## Example
+## How to verify
 
-Verify that native hooks are installed and shaped correctly:
+Check that hooks are installed correctly:
 
 ```bash
 omx doctor
 ```
 
-Run a smoke test to confirm the native hook path executes end-to-end:
+Smoke test that the native hook path executes end-to-end:
 
 ```bash
 omx exec --skip-git-repo-check -C . "Reply with exactly OMX-EXEC-OK"

@@ -1,46 +1,35 @@
 ---
-title: "deepsearch"
-description: "Exhaustive codebase search — broad exact-match sweep followed by import-graph traversal and a structured report of primary locations, consumers, and usage patterns."
+title: $deepsearch
+description: Skill for deep exploration of the codebase or external context
 ---
 
-`$deepsearch` performs a thorough, multi-pass search of the codebase for a query, pattern, or concept. It goes beyond a simple grep by following imports and exports to map the full dependency graph, synthesising findings into a structured report that covers where the concept is implemented, what consumes it, and how it is used.
+## TL;DR
 
-## When to use
-
-- You need to find every place a concept, pattern, or symbol is used across a large codebase
-- You are investigating an unfamiliar codebase and want a map before making changes
-- A symbol has many aliases or re-exports and you need to trace them all
-- You say "deepsearch", "find everywhere", "codebase search", or "where is X used"
-- You want more than file names — you want context, patterns, and gotchas
+Use `$deepsearch` when you need deeper exploration than a simple grep. Multiple agents analyze structure, patterns, and dependencies in parallel and aggregate the results.
 
 ## How to invoke
 
-Natural language triggers: "deepsearch", "find everywhere", "search the codebase", "where is X", "codebase search".
-
-Explicit slash: `$deepsearch`
-
 ```
-codex
-> deepsearch useAuth hook
+$deepsearch "find everywhere the auth middleware is used and how"
 ```
 
-```
-codex
-> $deepsearch RateLimiter class and all its consumers
-```
+## When to use it
 
-## What happens
+| Good fit | Avoid |
+|---|---|
+| Need to understand impact scope before making changes | Exploring a single file or function |
+| Finding patterns in legacy code | Work with already-clear scope |
+| Dependency analysis spanning multiple modules | |
 
-Deepsearch begins with a broad sweep: it searches for exact matches of the query, then expands to related terms, synonyms, and common variations, checking standard locations such as components, utils, services, and hooks directories. For each file with matches it reads the relevant sections and follows the import and export graph — who imports this module, and what does this module import — building a dependency map. It then synthesises the results into four structured sections: primary locations (the main implementations), related files (dependencies and consumers), usage patterns (how the concept appears across the codebase), and key insights (conventions, gotchas, and non-obvious relationships). All findings cite file paths and line numbers so you can navigate directly to each location.
+## How it works
 
-## Outputs
+1. An explore agent builds a file and symbol map.
+2. Relevant areas are explored in parallel.
+3. Results are synthesized into a summary and file list.
 
-- **Primary Locations** — main implementations with file paths and line numbers
-- **Related Files** — dependencies and consumers connected via the import graph
-- **Usage Patterns** — how the concept is used, including variations and edge cases
-- **Key Insights** — conventions, naming patterns, and gotchas discovered during traversal
+Output can be fed directly as context into `$ralplan` or `$ralph`.
 
 ## Related skills
 
-- [`$wiki`](/docs/skills/workflow/wiki) — knowledge base where deepsearch findings can be persisted for reuse
-- [`$trace`](/docs/skills/workflow/trace) — session execution trace (deepsearch for runtime behaviour rather than source)
+- [`$ralplan`](/docs/skills/workflow/ralplan) — continue from search results into a plan
+- [`$ralph`](/docs/skills/workflow/ralph) — execute with the scope understood

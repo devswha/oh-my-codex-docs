@@ -3,33 +3,66 @@ title: "executor"
 description: "Implementation agent that writes code, runs tests, and commits changes from a concrete plan."
 ---
 
-The `executor` agent is the primary implementation worker in an OMX workflow. It takes a concrete, file-level plan and carries it to a verified, committed result — writing code, running diagnostics, fixing failures, and marking tasks complete. It keeps going until the task is fully resolved rather than stopping at partial progress.
-
-## Role
-
-- Implement code changes described in a plan, keeping diffs as small as correctness allows
-- Run `lsp_diagnostics` on every modified file and resolve all reported errors before finishing
-- Execute the relevant test suite and fix failures in production code (not in the tests)
-- Commit completed work with a meaningful message and update `.omx/state/` task records
+The `executor` agent is the primary implementation worker in an OMX workflow. It takes a concrete, file-level plan and carries it through to a verified result — writing code, running diagnostics, fixing failures, and marking tasks complete. It does not stop at partial progress; it keeps going until the task is fully resolved.
 
 ## When invoked
 
-- By `$autopilot`, `$ralph`, `$team`, and `$ralplan` once a plan exists and execution should begin
-- When a `planner` or `ralplan` output lists specific files to touch, tests to add, and a commit message
-- For targeted fixes when `build-fixer` or `debugger` has identified the root cause and a repair strategy
-- As the worker in `$ultrawork` parallel pipelines handling independent task branches
+| Situation | How it's triggered |
+|---|---|
+| Execution phase in `$autopilot`, `$ralph`, `$team`, and `$ralplan` | Automatic |
+| When `planner` completes a plan with target files and expected outcomes | Automatic |
+| When `build-fixer` or `debugger` has narrowed down the root cause and repair strategy | Delegated from parent agent |
+| Handling independent task branches in a `$ultrawork` parallel pipeline | Automatic |
+
+## Example prompts
+
+```text
+"Implement based on the files listed in this plan"
+"Translate the approved auth refactor into actual code"
+"Finish this failing plan step through to completion"
+```
+
+## Task classification
+
+| Class | Criteria |
+|---|---|
+| trivial | Single file, clearly scoped change |
+| scoped | 2–5 files, boundaries are clear but verification is needed |
+| complex | Touches multiple systems, full verification is critical |
+
+This classification determines the depth of exploration and verification.
+
+## Work process
+
+1. Confirm target files and expected outcomes from the plan
+2. Explore the repository first if needed to understand existing patterns
+3. Implement with a small diff
+4. Run diagnostics on every modified file
+5. Run tests and build to confirm they actually pass
+6. Reflect results in state and commit
+
+Small and precise to completion takes priority over large and clever.
+
+## Verification criteria
+
+Before claiming completion, confirm at minimum:
+
+- Zero diagnostic errors on modified files
+- Relevant tests and build actually pass
+- No debug code or temporary TODOs remain
+- No significant deviation from existing codebase patterns
 
 ## Inputs
 
-- A plan document (from `planner` or `ralplan`) specifying tasks, target files, and expected outcomes
+- A plan document from `planner` or `ralplan` (tasks, target files, expected outcomes)
 - Active `.omx/state/` session context indicating which tasks are pending
-- Optional: LSP diagnostics output, test failure logs, or prior `explore` results as grounding context
+- Optional: LSP diagnostics output, test failure logs, or prior `explore` results
 
 ## Outputs
 
 - Code changes across the files named in the plan
-- Passing test results and clean LSP diagnostics as inline verification evidence
-- One or more git commits with descriptive messages
+- Inline verification evidence such as passing tests and clean LSP diagnostics
+- One or more descriptive git commits
 - Updated `.omx/state/` entries marking completed tasks
 
 ## Limits
@@ -42,5 +75,5 @@ The `executor` agent is the primary implementation worker in an OMX workflow. It
 
 - [planner](/docs/agents/build-analysis/planner) — produces the task plan that `executor` consumes
 - [verifier](/docs/agents/build-analysis/verifier) — independently confirms that the executor's output meets acceptance criteria
-- [build-fixer](/docs/agents/build-analysis/build-fixer) — handles stubborn build or type errors that block the executor
+- [build-fixer](/docs/agents/domain/build-fixer) — handles stubborn build or type errors that block the executor
 - [debugger](/docs/agents/build-analysis/debugger) — performs root-cause analysis when executor hits an unexpected failure

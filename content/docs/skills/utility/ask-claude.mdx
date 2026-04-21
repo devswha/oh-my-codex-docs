@@ -1,43 +1,40 @@
 ---
-title: "ask-claude"
-description: "CLI bridge that delegates a sub-question or sub-task to a Claude CLI process and returns the answer."
+title: $ask-claude
+description: A bridge skill that delegates sub-questions to Claude from within the current OMX session
 ---
 
-ask-claude is a lightweight bridge between the current OMX session and the Claude CLI. When you need a second opinion, a quick lookup, or want to run a parallel query without context pollution, ask-claude opens a fresh Claude CLI process, sends your question, and pipes the response back into the conversation.
+Invoke with `$ask-claude`.
 
-## Purpose
+A bridge for sending sub-questions to Claude without leaving the current Codex session. Delegated calls run in a separate Claude context, so you get answers that are isolated from the current working flow.
 
-Some questions benefit from a clean context rather than one already loaded with implementation detail. ask-claude spawns an isolated Claude session so the sub-question is answered without the noise of the current working context. It is also useful for parallelising lookups — you can ask-claude and ask-gemini simultaneously and compare answers.
+## When to use
 
-## How to invoke
+- When you want Claude to handle a reasoning-heavy question that Codex isn't well-suited for
+- When you need a summary or analysis that's independent of the current context
+- When comparing perspectives from different models alongside Gemini
+- When you have a short, well-scoped sub-question to resolve quickly
 
-Direct invocation with a quoted argument:
+## When to avoid
 
+- Questions that require the current session's codebase context → handle directly in Codex
+- Complex implementation tasks → use `$ralph` or an executor agent
+
+## Commands
+
+```bash
+$ask-claude "What's the safest retry strategy for idempotent HTTP endpoints?"
+$ask-claude --print "summarize this log in five lines"
+$ask-claude --agent-prompt writer "turn this note into release notes"
 ```
-codex
-> $ask-claude "What is the recommended way to handle pagination — cursor vs offset?"
-```
 
-```
-codex
-> ask-claude "summarize the differences between JWT and session-based auth in two paragraphs"
-```
+## How it works
 
-## What it does
+Opens a new Claude context, sends the question, and pipes the response back into the current session. It does not inherit files or state from the current working session.
 
-- Opens a fresh Claude CLI process with no inherited context
-- Sends the quoted question or task as the sole input
-- Returns the response inline in the current OMX session
-- Closes the subprocess cleanly after the response is received
-- Can be run in parallel with `$ask-gemini` for multi-model comparison
+Use it intentionally for problems where Claude's perspective genuinely adds value — not as a default workflow.
 
-## Outputs
+## Related docs
 
-- The Claude CLI response, printed inline in the current session
-- No side effects on the current session context
-
-## Related
-
-- [`$ask-gemini`](/docs/skills/utility/ask-gemini) — same bridge pattern targeting the Gemini CLI
-- [`$ccg`](/docs/skills/workflow/worker) — tri-model fan-out: Claude, Codex, and Gemini answer simultaneously
-- [`$external-context`](/docs/skills/workflow/worker) — parallel document-specialist agents for web and doc lookups
+- [`$ask-gemini`](/docs/skills/utility/ask-gemini) — same bridge pattern targeting Gemini
+- [Ask Claude tool](/docs/tools/ask-claude) — internal implementation details
+- [CLI Bridges](/docs/integrations/cli-bridges) — overview of cross-CLI advisory patterns

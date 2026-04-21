@@ -1,46 +1,38 @@
 ---
-title: "ralph-init"
-description: "Kick off a ralph loop with a structured PRD wired from scratch — requirements, acceptance criteria, and verifier linkage in one command."
+title: $ralph-init
+description: Skill that resets state before running ralph
 ---
 
-`$ralph-init` turns a brief feature description or interactive interview into a machine-readable Product Requirements Document that `$ralph` can use as its definition of done. It writes the PRD, initialises a progress ledger, and leaves the session ready for ralph to pick up immediately.
+## TL;DR
 
-## When to use
-
-- You are starting a new feature or project and want execution grounded in testable acceptance criteria
-- You prefer to iterate on requirements before committing to implementation
-- Your description is vague enough that you want structured requirements gathering before coding starts
-- You want `$ralph` to have an explicit, checkable goal rather than a free-form prompt
-- A previous ralph session ended without a PRD and you want to formalise it retroactively
+`$ralph-init` resets state before starting a `$ralph` loop. Use it first when ralph is behaving strangely by carrying over state from a previous session.
 
 ## How to invoke
 
-Natural language triggers: "ralph init", "create PRD", "init ralph", "write requirements".
-
-Explicit slash: `$ralph-init`
-
 ```
-codex
-> ralph-init "multi-tenant auth service with RBAC and JWT refresh tokens"
+$ralph-init
 ```
 
+## When to use it
+
+- When `$ralph` is misbehaving by inheriting state from a previous task
+- When starting a new session and want to cleanly initialize the ralph loop
+- When a ralph loop stopped mid-way or state got corrupted
+
+## How it works
+
+1. Cleans ralph-related state files from `.omx/state/`.
+2. Resets loop counter and completion evidence tracking.
+3. After initialization, ready to run `$ralph`.
+
+## Typical sequence
+
 ```
-codex
-> $ralph-init build me a CLI habit tracker with streak counting
+$ralph-init
+$ralph "complete the approved plan all the way through"
 ```
-
-## What happens
-
-`$ralph-init` first decides whether the supplied description is specific enough to plan directly or broad enough to warrant an interactive interview. For broad requests it asks one focused question at a time, gathers codebase facts via an explore agent before asking the user about them, and stops interviewing once requirements are clear. It then writes a structured PRD to `.omx/plans/prd-{slug}.md` covering problem statement, goals and non-goals, testable acceptance criteria, technical constraints, and phased implementation steps. A progress ledger is initialised at `.omx/state/{scope}/ralph-progress.json` so ralph can track which criteria have been satisfied. Finally the skill prints the next command so you can launch ralph against the PRD immediately.
-
-## Outputs
-
-- `.omx/plans/prd-{slug}.md` — canonical PRD with acceptance criteria that ralph uses as its completion target
-- `.omx/state/{scope}/ralph-progress.json` — progress ledger initialised with all criteria in pending state
-- Console summary of the PRD and the exact `$ralph` command to start execution
 
 ## Related skills
 
-- [`$ralph`](/docs/skills/workflow/ralph) — persistent execution loop that consumes the PRD
-- [`$ralplan`](/docs/skills/workflow/ralplan) — consensus planning alternative that adds Architect and Critic review passes
-- [`$plan`](/docs/skills/workflow/plan) — strategic planning with optional interview workflow
+- [`$ralph`](/docs/skills/workflow/ralph) — repeat execution until complete
+- [`$cancel`](/docs/skills/utility/cancel) — force-stop active mode

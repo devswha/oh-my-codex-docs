@@ -1,46 +1,41 @@
 ---
-title: "ai-slop-cleaner"
-description: "Regression-safe, deletion-first workflow that strips AI-generated noise from changed files."
+title: $ai-slop-cleaner
+description: A utility skill that removes typical AI-generated text patterns
 ---
 
-AI-generated code often carries a layer of noise: redundant comments, over-explained variable names, unnecessary abstractions, and verbose scaffolding that was never needed. The ai-slop-cleaner skill runs a structured reviewer pass on changed files, deletes everything that does not earn its place, and re-runs verification to confirm nothing broke.
+Invoke with `$ai-slop-cleaner`.
 
-## Purpose
+A skill that strips repetitive boilerplate from AI-generated text. Use it to clean up documents, code comments, PR descriptions, and any other text that carries visible AI fingerprints.
 
-ai-slop-cleaner enforces a deletion-first discipline on AI-authored output. Rather than polishing slop, it removes it. The skill targets recently changed files, applies a quality-reviewer pass with an explicit anti-slop checklist, makes edits, and validates with a regression run before declaring the result clean.
+## When to use
 
-## How to invoke
+- When code comments or docs are full of AI-style phrasing ("This enables a more enhanced experience...")
+- When PR descriptions, commit messages, or READMEs read like they were written by a bot
+- When you want to make an OMX-generated doc draft read like it was written by a human
 
-Natural language triggers: "deslop", "anti-slop", "clean up the AI noise", "remove slop".
+## When to avoid
 
-Explicit slash: `$ai-slop-cleaner`
+- If the code logic itself needs changing → `$build-fix` or edit directly
+- If the problem is factual accuracy, not style → `$analyze` or `$code-review`
 
+## Commands
+
+```bash
+$ai-slop-cleaner "clean up this PR description"
+$ai-slop-cleaner --file README.md
 ```
-codex
-> deslop the last set of changes
-```
 
-```
-codex
-> anti-slop pass on src/api/
-```
+## What gets removed
 
-## What it does
+| Pattern | Example |
+|---|---|
+| Inflated adverbs | "highly efficiently", "significantly improved" |
+| Redundant summaries | "In summary, ..." appended to every paragraph |
+| Unnecessary preamble | "In this document, we will explore..." |
+| Filler connectives | overuse of "Furthermore", "Additionally", "This enables" |
+| Excessive emphasis | **bolding** every other sentence |
 
-- Identifies recently changed or staged files as the target set
-- Applies a quality-reviewer checklist focused on redundancy, over-abstraction, and unnecessary verbosity
-- Deletes or rewrites every line that does not serve a clear purpose
-- Re-runs the project's test and lint suite to confirm regression safety
-- Optionally runs in reviewer-only mode to report findings without making edits
+## Related docs
 
-## Outputs
-
-- Modified source files with slop removed
-- Reviewer report listing each issue found and the action taken
-- Fresh test and lint output confirming no regressions introduced
-
-## Related
-
-- [`$code-review`](/docs/skills/utility/code-review) — full code-reviewer pass for correctness and maintainability
-- [`$review`](/docs/skills/utility/review) — composite router that includes quality and security passes
-- [`$ralph`](/docs/skills/workflow/ralph) — ralph runs a mandatory deslop pass before exiting
+- [Utility skills list](/docs/skills/utility)
+- [writer agent](/docs/agents/domain/writer) — handles document drafting

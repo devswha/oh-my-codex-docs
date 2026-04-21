@@ -1,20 +1,24 @@
 ---
 title: "MCP"
-description: "Model Context Protocol integration — how OMX invokes MCP servers from skills and hooks, and how to configure known servers."
+description: "How OMX discovers and invokes Model Context Protocol servers from skills and hooks."
 ---
 
-Model Context Protocol (MCP) is an open standard that lets AI assistants call external tools through a common interface. OMX can act as an MCP client, invoking registered MCP servers from within skills, hooks, and agent workflows to reach file systems, APIs, and specialized services without leaving the session.
+Model Context Protocol (MCP) is an open standard that lets AI clients call external tools through a common interface. OMX acts as an MCP client, invoking registered MCP servers from within skills, hooks, and agent workflows to reach file systems, APIs, and specialized services.
 
 ## What it is
 
-MCP defines a client-server protocol where the AI client (OMX/Codex) sends structured tool-call requests and receives structured responses. Each MCP server exposes a named set of tools. OMX discovers configured servers at startup and makes their tools available as first-class actions inside skills and hooks.
+MCP is a client-server protocol where the MCP client (OMX/Codex) sends structured tool-call requests and receives structured responses. Each MCP server exposes a named set of tools. OMX discovers configured servers at startup and calls their tools directly from within skills and hooks.
 
 ## How OMX uses it
 
-- **Skill-level tool calls** — Skills like `$wiki`, `$trace`, and `$team` invoke MCP tools (`wiki_add`, `state_read`, `TeamCreate`, etc.) as part of their normal execution path.
-- **Hook-level integration** — Hook scripts can call MCP tools to read or write state before and after OMX operations.
-- **Known MCP servers** — OMX ships with support for: `filesystem` (read/write local files), `github` (issues, PRs, code search), `context7` (library documentation lookup), and the OMX plugin server (`oh-my-claudecode_t`) which exposes state, notepad, wiki, LSP, AST, and team tools.
-- **Configuration** — MCP servers are registered in the Claude Code settings file (typically `~/.claude/settings.json`) under the `mcpServers` key. Each entry specifies a `command`, optional `args`, and optional `env` overrides.
+- **Skill-level tool calls** — Skills like `$wiki`, `$trace`, and `$team` invoke MCP tools (`wiki_add`, `state_read`, `TeamCreate`, etc.) during normal execution.
+- **Hook-level integration** — Hook scripts call MCP tools to read or write state before and after OMX operations.
+- **Supported servers** — OMX recognizes the following servers out of the box:
+  - `filesystem` — read and write local files
+  - `github` — issues, PRs, code search
+  - `context7` — library documentation lookup
+  - `oh-my-claudecode_t` — the OMX plugin server, which exposes state, notepad, wiki, LSP, AST, and team tools
+- **Configuration** — MCP servers are registered under the `mcpServers` key in the Claude Code settings file (`~/.claude/settings.json`). Each entry specifies a `command`, optional `args`, and optional `env` overrides.
 
 ## Example
 
@@ -40,7 +44,7 @@ Registering the filesystem and GitHub MCP servers:
 }
 ```
 
-After registration, tools from those servers are callable directly in skills:
+Once registered, tools from those servers are callable directly inside skills:
 
 ```
 codex

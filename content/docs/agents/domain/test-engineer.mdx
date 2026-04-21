@@ -1,40 +1,67 @@
 ---
-title: "test-engineer"
-description: "Designs test strategies, authors unit/integration/e2e tests, hardens flaky suites, and drives TDD workflows."
+title: test-engineer
+description: "A Domain agent responsible for designing test strategies, analyzing coverage, and resolving flaky tests."
 ---
 
-`test-engineer` is the agent responsible for all things testing. It designs test pyramids, writes tests at every layer, diagnoses flaky failures, and enforces the red-green-refactor TDD cycle. It never implements production features — if code changes are needed to make tests pass, it flags them for `executor` rather than making them itself.
+## Overview
 
-## Role
+The `test-engineer` agent designs how tests should be written. It establishes strategy from unit tests through integration and e2e, and finds the root cause of flaky tests to stabilize them. Writing tests directly is included, but the primary role is deciding what to test and how.
 
-- Design test strategies covering unit (70%), integration (20%), and e2e (10%) layers
-- Author tests with names that describe expected behavior ("returns empty array when no users match filter")
-- Diagnose and fix flaky tests by identifying root causes: timing, shared state, hardcoded dates, environment coupling
-- Enforce TDD: write the failing test first, run to confirm RED, then hand off or implement the minimal code to go GREEN
+## When to use
 
-## When invoked
+- When a test strategy for a new feature needs to be designed from scratch
+- When flaky tests are failing repeatedly and the cause needs to be identified
+- When gaps in current test coverage need to be found and filled
+- In `$tdd` mode, when tests need to be written before implementation
+- When the test foundation that `verifier` depends on needs to be strengthened
 
-- Triggered by the `$tdd` keyword or `$ultraqa` workflow
-- After a feature is implemented and coverage gaps need filling
-- When CI shows intermittent failures that need root-cause analysis
-- Before a release when a full regression sweep is required
+## Examples
+
+```text
+"Design a test strategy for this API endpoint"
+"Find the cause of this intermittently failing test"
+"Identify and fill gaps in the authentication module's test coverage"
+```
+
+## Scope of work
+
+| Item | Description |
+|---|---|
+| Test strategy | Set unit/integration/e2e boundaries, decide what to test at each level |
+| Coverage analysis | Identify gaps in existing tests and plan how to fill them |
+| Flaky test resolution | Analyze non-deterministic failures and stabilize them |
+| Test writing | Write actual test code according to the strategy |
+
+## Process
+
+1. Understand the behavior boundaries of the target feature or module.
+2. Determine the strategy — what cases to validate at which level.
+3. For flaky tests, analyze failure patterns to narrow down the root cause.
+4. Write or update tests and confirm they pass consistently.
 
 ## Inputs
 
-Provide the feature or module to test, existing test files for pattern reference, and any acceptance criteria or expected behaviors. If triggering TDD, provide the function signature or interface before implementation exists.
+- Description of the feature or module to test
+- Existing test code and failure logs
+- Plans or implementation results from `planner` or `executor`
+- Coverage reports
 
 ## Outputs
 
-New or updated test files that pass, a coverage gap report with risk levels, flaky-test diagnoses with applied fixes, and a fresh test run output as verification evidence.
+- Test strategy document by level
+- Actual test code
+- Flaky test root cause analysis and fix results
+- Coverage improvement plan
 
 ## Limits
 
-- Does not implement production code — recommends changes and defers to `executor`
-- Does not set CI/CD pipeline configuration — defers to `build-fixer`
-- Does not write performance benchmarks — defers to `quality-reviewer`
+- Manual validation of runtime behavior is handled by `qa-tester`.
+- Completion evidence verdicts are deferred to `verifier`.
+- Build problems unrelated to tests, such as build failures, are handled by `build-fixer`.
 
 ## Related agents
 
-- [`qa-tester`](/docs/agents/domain/qa-tester) — runtime interactive validation complementing automated tests
-- [`verifier`](/docs/agents/build-analysis/verifier) — completion evidence and claim validation
-- [`executor`](/docs/agents/build-analysis/executor) — implements production code when tests reveal gaps
+- [verifier](/docs/agents/build-analysis/verifier) — determines completion based on the test foundation designed by test-engineer.
+- [qa-tester](/docs/agents/domain/qa-tester) — handles interactive runtime validation that test-engineer doesn't cover.
+- [executor](/docs/agents/build-analysis/executor) — proceeds with implementation alongside tests written by test-engineer.
+- [debugger](/docs/agents/build-analysis/debugger) — supports complex root cause analysis for flaky tests.

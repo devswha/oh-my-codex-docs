@@ -1,48 +1,58 @@
 ---
-title: "ralph"
-description: "Self-referential persistence loop — keep working until a verifier confirms the task is genuinely complete."
+title: $ralph
+description: Loop skill that repeats execution until completion evidence appears
 ---
 
-Ralph is a persistence loop that drives a task to full verified completion. Where a one-shot executor does its best and stops, Ralph keeps iterating: it executes work in parallel, runs verification with fresh evidence, and loops back to fix any failures until an architect-level review approves the result. The phrase "the boulder never stops" captures the contract — Ralph does not quit on partial progress.
+## TL;DR
 
-## When to use
-
-- The task requires guaranteed completion, not a best-effort attempt
-- You say "ralph", "don't stop", "must complete", "finish this", or "keep going until done"
-- Work may need multiple retry rounds and you want automatic persistence across them
-- You want parallel execution with mandatory architect sign-off before the loop exits
-- You are following up after `$ralplan` approved a plan and want sequential execution pressure
+`$ralph` keeps executing a task until completion evidence is confirmed. Use it for work that might not finish in one shot or could get stuck in the middle.
 
 ## How to invoke
 
-Natural language triggers: "ralph", "don't stop", "must complete", "keep going until done", "finish this".
-
-Explicit slash: `$ralph`
-
 ```
-codex
-> ralph implement the caching layer from the approved plan
+$ralph "complete the approved plan all the way through"
 ```
 
+Also activated by magic keywords `ralph`, `don't stop`, `must complete`, `keep going`.
+
+## When to use it
+
+| Good fit | Avoid |
+|---|---|
+| Have a plan and need to push it to the end | Requirements still unclear |
+| Need to automatically fix build/test failures | Work that needs direction consensus first |
+| Tasks that require multiple attempts | Parallel work that can be split into lanes |
+
+## How it works
+
+1. Records task state in `.omx/state/`.
+2. Repeats execute → verify → fix on failure → re-execute.
+3. Exits the loop when verifier confirms completion evidence.
+
+Completion evidence is typically a passing build, passing tests, or existence of a specified artifact.
+
+## Where it fits in the standard flow
+
 ```
-codex
-> don't stop until the auth module passes all tests
+$deep-interview "..."      ← confirm requirements
+$ralplan "..."             ← plan consensus
+$ralph "..."               ← execute here
 ```
 
-## What happens
+## `$ralph` vs `$team`
 
-Ralph begins with a pre-context intake: it loads or creates a context snapshot at `.omx/context/{slug}-{timestamp}.md` so every iteration shares the same grounded brief. It then reviews any in-progress TODO items and picks up where the last iteration left off. Independent tasks are delegated simultaneously to specialist agents at appropriate tiers — simple lookups at LOW, standard work at STANDARD, and complex analysis at THOROUGH — so parallel work runs concurrently rather than sequentially. Long operations like builds and test suites run in the background. Once all tasks are complete, Ralph collects fresh verification evidence: it runs tests, builds, and lint checks, then reads the output rather than assuming success. An architect agent reviews the result at STANDARD tier minimum; for large or security-sensitive changes the tier rises to THOROUGH. If the architect rejects, Ralph fixes the issues and re-verifies. After architect approval, a mandatory deslop pass cleans AI-generated noise from all changed files, followed by a regression re-run to confirm the pass did not break anything. Only then does Ralph exit cleanly with `/cancel`.
+Both are execution skills but with different approaches.
 
-## Outputs
+| Item | `$ralph` | `$team` |
+|---|---|---|
+| Execution style | Single owner, repeat loop | Multiple lanes in parallel |
+| Good fit | When context must be maintained end-to-end | When work splits into independent units |
+| Conflict risk | Low | Higher if lane design is wrong |
 
-- Source code changes implementing the assigned task
-- `.omx/context/{slug}-{timestamp}.md` — context snapshot used across all iterations
-- Fresh test, build, and lint output as verification evidence
-- Architect approval on record before exit
-- Clean state via `/cancel` on successful completion
+If requirements are unclear or lanes might conflict, `$ralph` is safer.
 
 ## Related skills
 
-- [`$ralplan`](/docs/skills/workflow/ralplan) — consensus planning to produce a clear brief before ralph starts
-- [`$autopilot`](/docs/skills/workflow/autopilot) — full pipeline including ralph as the execution phase
-- [`$team`](/docs/skills/workflow/team) — parallel coordinated workers when a task needs multiple simultaneous lanes
+- [`$ralph-init`](/docs/skills/workflow/ralph-init) — reset state before starting ralph
+- [`$ralplan`](/docs/skills/workflow/ralplan) — plan consensus before running ralph
+- [`$team`](/docs/skills/workflow/team) — parallel lane execution

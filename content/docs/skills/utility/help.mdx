@@ -1,51 +1,28 @@
 ---
-title: "help"
-description: "Top-level help router — skill listing, agent catalog, quick-command reference, and OMX orientation for new users."
+title: $help
+description: "A skill that prints available skills and commands."
 ---
 
-help is the entry point for discovering what OMX can do. It lists available skills, summarises the agent catalog, and explains how to invoke any command. Whether you are new to OMX or just need a quick reminder of a trigger phrase, help surfaces the right information without opening documentation.
+## Overview
 
-## Purpose
+`$help` prints the skills, agents, and key commands available in the current OMX session. Use it when you don't know what skills exist or want to quickly check how a specific skill is used.
 
-OMX has dozens of skills and agents. help provides a fast, in-session reference so you never have to leave the terminal to find a command. It adapts its output to what you ask: a bare `$help` gives a full overview, while `$help <topic>` narrows to the relevant skill or agent.
+## Example
 
-## How to invoke
-
-Natural language triggers: "help", "what can you do", "list skills", "show commands", "OMX commands".
-
-Explicit slash: `$help`
-
-```
-codex
-> help
+```text
+$help
+$help ralph
+$help team
 ```
 
-```
-codex
-> help ralplan
-```
+Running without arguments prints the full skill list. Providing a skill name prints that skill's description and usage.
 
-```
-codex
-> what skills are available?
-```
+## When to use
 
-## What it does
+- When first starting with OMX and you want to see what skills are available
+- When you've forgotten the exact invocation for a specific skill
+- When you want to check the list of currently installed skills
 
-- Lists all available skills grouped by category: workflow, utility, and analysis
-- Summarises the agent catalog with one-line descriptions and model tiers
-- Shows trigger phrases for each skill so you know the natural-language shortcuts
-- Accepts a topic argument to show detailed help for a specific skill or agent
-- Links to relevant documentation pages for deeper reading
+## Note
 
-## Outputs
-
-- Formatted skill and agent listing in the current session
-- Detailed help card when a specific topic is provided
-- No source code changes or file writes
-
-## Related
-
-- [`$omx-setup`](/docs/skills/utility/omx-setup) — run this first if OMX is not yet installed or configured
-- [`$skill`](/docs/skills/utility/skill) — manage, add, and edit skills in your local install
-- [`$doctor`](/docs/skills/utility/doctor) — diagnose install issues if skills are not triggering as expected
+The full skill reference is also available in the [skills documentation](/docs/skills).

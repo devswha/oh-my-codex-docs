@@ -1,22 +1,18 @@
 ---
 title: "Configuration"
-description: "OMX configuration files, CLI flags, and hook registration — a complete reference for `.codex/config.toml`, `.codex/hooks.json`, and common launch flags."
+description: "Reference for `.codex/config.toml`, `.codex/hooks.json`, and CLI flags"
 ---
 
-OMX reads configuration from files in `~/.codex/` (user-level) and `.codex/` (project-level). Project-level files take precedence over user-level files for overlapping keys. Configuration controls model selection, hook registrations, custom prompts, and feature flags.
+OMX reads configuration from `~/.codex/` (user-level) and `.codex/` (project-level). When the same key appears in both, the project-level value takes precedence.
 
 ## `.codex/config.toml`
 
-The primary configuration file. Key fields:
-
 | Field | Type | Description |
 |---|---|---|
-| `model` | string | Default model for Codex sessions (e.g. `"gpt-4.1"`, `"o3"`). |
-| `codex_hooks` | bool | Enable the OMX hooks extension pipeline. Set `true` to activate skills, team, and OpenClaw. |
-| `custom-prompts` | string | Path to a directory containing custom prompt files that override or extend OMX defaults. |
-| `approval_policy` | string | Tool-call approval policy: `"suggest"`, `"auto-edit"`, or `"full-auto"`. |
-
-Example:
+| `model` | string | Default model (e.g. `"gpt-4.1"`, `"o3"`) |
+| `codex_hooks` | bool | Enable the OMX hook pipeline. Set to `true` to activate skills, team, and OpenClaw. |
+| `custom-prompts` | string | Path to a directory that extends or overrides OMX default prompts |
+| `approval_policy` | string | Tool-call approval policy: `"suggest"`, `"auto-edit"`, or `"full-auto"` |
 
 ```toml
 model = "gpt-4.1"
@@ -27,9 +23,7 @@ approval_policy = "auto-edit"
 
 ## `.codex/hooks.json`
 
-Registers hook handlers that OMX calls at specific lifecycle points. Each entry maps a hook name to a handler command or MCP tool. See the [hooks extension docs](https://github.com/Yeachan-Heo/oh-my-codex) for the full hook catalog.
-
-Example registering a post-session-end shell handler:
+Registers hook handlers that run at each lifecycle point. Each entry maps a hook name to a command or MCP tool.
 
 ```json
 {
@@ -41,14 +35,16 @@ Example registering a post-session-end shell handler:
 }
 ```
 
-## Common CLI flags
+For the full hook catalog, see the [upstream repository](https://github.com/Yeachan-Heo/oh-my-codex).
+
+## CLI Flags
 
 | Flag | Description |
 |---|---|
 | `--madmax` | Maximum parallelism mode — spawns the full team pipeline automatically. |
 | `--high` | High-effort mode — uses the highest-tier model available. |
 | `--skip-git-repo-check` | Suppresses the error when launching outside a git repository. |
-| `--spark` | Routes team workers through the spark worker tier for lighter tasks. |
+| `--spark` | Routes team workers through the spark worker tier. |
 | `--madmax-spark` | Combines `--madmax` with spark worker routing. |
 
 ## Related

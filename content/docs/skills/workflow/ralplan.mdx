@@ -1,51 +1,57 @@
 ---
-title: "ralplan"
-description: "Iterative consensus planning — Planner, Architect, and Critic loop until all three agree on an approach before any code is written."
+title: $ralplan
+description: Planning skill that loops until planner, architect, and critic all agree
 ---
 
-Ralplan runs a structured planning loop before execution begins. A Planner agent drafts the initial plan, an Architect reviews it for soundness, and a Critic challenges it for quality and testability. If either reviewer finds issues, the loop repeats with a revised plan until the Critic returns an approval or five iterations are exhausted. The result is a plan that three independent perspectives have signed off on, stored on disk for `$ralph` or `$team` to execute.
+## TL;DR
 
-## When to use
-
-- The task is large enough that a wrong approach would waste significant execution time
-- You say "ralplan", "consensus plan", "plan this before coding", or "plan the"
-- You want planner, architect, and critic to agree before any implementation starts
-- You are following `$deep-interview` and need architectural validation before handing off to `$ralph` or `$team`
-- The request is underspecified and you want the gate to redirect to planning automatically
+`$ralplan` has planner, architect, and critic — three agents — iteratively review a plan until they all agree. It's the step that locks in tradeoffs right before implementation.
 
 ## How to invoke
 
-Natural language triggers: "ralplan", "consensus plan", "plan this", "plan the".
-
-Explicit slash: `$ralplan`
-
-Flags:
-- `--interactive` — pause for user review after the draft and after approval
-- `--deliberate` — add a pre-mortem (3 failure scenarios) and expanded test planning; auto-enables for auth, migrations, destructive changes, and public API work
-
 ```
-codex
-> ralplan "add OAuth2 login to the existing auth module"
+$ralplan "approve the safest implementation path"
 ```
 
+Also activated by magic keywords `ralplan`, `consensus plan`.
+
+## When to use it
+
+| Good fit | Avoid |
+|---|---|
+| Work involving architecture decisions | Work that only needs a quick draft |
+| When the wrong direction is expensive | Small features, short-term tasks |
+| Need to explicitly review multiple tradeoffs | |
+
+## Internal flow
+
+1. **planner** — drafts implementation steps and order.
+2. **architect** — reviews boundaries and interfaces from a system design perspective.
+3. **critic** — flags risks and missing pieces.
+4. If there are objections, revise and review again. When all agree, finalize the plan.
+
+## Where it fits in the standard flow
+
 ```
-codex
-> ralplan --deliberate "migrate the users table to a new schema"
+$deep-interview "..."      ← confirm requirements
+$ralplan "..."             ← consensus here
+$ralph "..."               ← execute
 ```
 
-## What happens
+## `--deliberate` option
 
-Ralplan starts with a pre-context intake that loads or creates a grounded snapshot at `.omx/context/{slug}-{timestamp}.md`. The Planner agent then drafts a plan and a compact decision-record summary covering principles, decision drivers, and at least two viable options with tradeoff notes. The Architect reviews the draft next, providing a steelman counterargument and at least one concrete tradeoff tension. The Critic evaluates the plan against quality criteria — principle consistency, fair alternatives, risk mitigation, testable acceptance criteria, and concrete verification steps — and returns either `APPROVE` or `ITERATE`. Any non-approval verdict sends the plan back through the full Architect and Critic loop; this repeats up to five times. When the Critic approves, the final plan is written to `.omx/plans/` with an Architecture Decision Record, staffing guidance, and explicit launch hints for both `$ralph` and `$team`. If `--interactive` is set, you choose the execution path; otherwise the plan is output and ralplan stops.
+For high-risk work, add `--deliberate`. It adds a pre-mortem, unit/integration/e2e test plans, and operational impact analysis.
 
-## Outputs
+```
+$ralplan --deliberate "plan replacement of legacy auth system"
+```
 
-- `.omx/plans/{date}-{topic}.md` — consensus-approved implementation plan with ADR
-- `.omx/context/{slug}-{timestamp}.md` — grounded context snapshot
-- Explicit staffing roster and reasoning-level guidance per execution lane
-- Launch hints for `$ralph` (sequential) and `$team` (parallel) execution
+## Difference from `$plan`
+
+`$plan` has the planner alone quickly draft a plan. `$ralplan` reaches consensus through three agents. When stability matters more than speed, use `$ralplan`.
 
 ## Related skills
 
-- [`$deep-interview`](/docs/skills/workflow/deep-interview) — clarify requirements before ralplan runs
-- [`$ralph`](/docs/skills/workflow/ralph) — sequential persistent execution of the approved plan
-- [`$team`](/docs/skills/workflow/team) — parallel coordinated execution of the approved plan
+- [`$deep-interview`](/docs/skills/workflow/deep-interview) — clarify requirements before planning
+- [`$ralph`](/docs/skills/workflow/ralph) — execute the consensus plan
+- [`$plan`](/docs/skills/workflow/plan) — solo planning (quick draft)

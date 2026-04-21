@@ -1,23 +1,20 @@
 ---
-title: "visual-verdict"
-description: "Screenshot-to-reference visual QA — compares a generated UI screenshot against reference images and returns a structured JSON verdict with score, differences, and actionable suggestions."
+title: $visual-verdict
+description: Visual QA tool that compares a generated UI screenshot against a reference image and returns score, differences, and fix suggestions as JSON
 ---
 
-`$visual-verdict` performs a deterministic visual comparison between your generated UI and one or more reference images. It returns a strict JSON verdict with a 0-100 score, a pass/revise/fail status, a list of concrete differences, and actionable suggestions tied to each difference. Any score below 90 means the iteration should continue; the verdict drives the next round of edits.
+`$visual-verdict` performs a deterministic comparison between a generated UI and a reference image. It returns JSON containing a 0-100 score, a pass/revise/fail verdict, a list of concrete differences, and fix suggestions for each difference. Below 90 means iteration should continue.
 
-## When to use
+## When to use it
 
-- You have a generated screenshot and at least one reference image to compare against
-- Your task has visual fidelity requirements — layout, spacing, typography, or component styling
-- You need a deterministic pass/fail gate before merging or shipping UI changes
-- You are inside a `$ralph` or `$web-clone` loop and need a scorable quality signal
-- You say "visual verdict", "compare to reference", "check the screenshot", or "does it match"
+- When you need to compare a generated screenshot against a reference image
+- When visual accuracy requirements exist for layout, spacing, typography, or component styling
+- When you need a definitive pass/fail gate before merging or deploying UI changes
+- When a score-based quality signal is needed inside a `$ralph` or `$web-clone` loop
+
+Trigger keywords: "visual verdict", "compare screenshot", "visual QA", "check if it matches"
 
 ## How to invoke
-
-Natural language triggers: "visual verdict", "compare screenshot", "visual QA", "check if it matches".
-
-Explicit slash: `$visual-verdict`
 
 ```
 codex
@@ -29,9 +26,13 @@ codex
 > visual verdict — compare current screenshot against designs/header-spec.png
 ```
 
-## What happens
+## How it works
 
-The skill loads the reference image(s) and the generated screenshot, then performs a structured multi-dimensional comparison covering layout structure, spacing and padding, typography (font families, weights, sizes), colour values, and visual hierarchy. It produces a single JSON object with a numeric score from 0 to 100. A score of 90 or above is a pass; anything lower is a revise. The `differences` array lists concrete mismatches such as "top nav spacing is tighter than reference by 8px". The `suggestions` array contains actionable edits tied one-to-one to each difference. When diagnosing hard-to-see mismatches, pixel-level diff tooling can be used as a secondary debug aid to localise hotspots, but visual-verdict remains the authoritative decision. The verdict is persisted to `.omx/state/{scope}/ralph-progress.json` when running inside ralph so the loop can act on it.
+Loads the reference image(s) and generated screenshot and performs a multi-dimensional comparison. Items compared are layout structure, spacing and padding, typography (font family, weight, size), color values, and visual hierarchy.
+
+Result comes as a single JSON object. 90 or above is pass, below is revise. The `differences` array lists concrete mismatches like "top navigation spacing is 8px narrower than reference." The `suggestions` array contains corresponding fix methods for each difference.
+
+Pixel-level diff tools can be used as secondary aids when diagnosing hard-to-spot mismatches, but visual-verdict is the authoritative decision. When run inside a ralph loop, the verdict is recorded in `.omx/state/{scope}/ralph-progress.json` so the loop acts on that result.
 
 ## Outputs
 
@@ -49,5 +50,5 @@ The skill loads the reference image(s) and the generated screenshot, then perfor
 ## Related skills
 
 - [`$frontend-ui-ux`](/docs/skills/workflow/frontend-ui-ux) — UI creation skill that uses visual-verdict as its iteration gate
-- [`$ultraqa`](/docs/skills/workflow/ultraqa) — QA cycling loop that can incorporate visual-verdict as a quality goal
-- [`$web-clone`](/docs/skills/workflow/web-clone) — URL-driven cloning workflow that uses visual-verdict for fidelity scoring
+- [`$ultraqa`](/docs/skills/workflow/ultraqa) — QA cycle that can include visual-verdict as a quality goal
+- [`$web-clone`](/docs/skills/workflow/web-clone) — cloning workflow that uses visual-verdict for visual accuracy scoring

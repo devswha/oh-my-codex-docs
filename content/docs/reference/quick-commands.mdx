@@ -1,9 +1,9 @@
 ---
 title: "Quick Commands"
-description: "Cheat sheet of the most-used OMX CLI commands for setup, diagnostics, session management, and team operations."
+description: "Frequently used OMX commands for setup, diagnostics, session management, and team operations"
 ---
 
-A reference card for the commands you reach for most often. All commands assume `omx` is on your PATH. If it is not, use `npx oh-my-codex` or the full path to the installed binary.
+A reference for the OMX commands you reach for most often. If `omx` is not on your PATH, use `npx oh-my-codex` or the full path to the installed binary.
 
 ## Setup and health
 
@@ -12,8 +12,8 @@ A reference card for the commands you reach for most often. All commands assume 
 | `omx setup` | Install or refresh OMX prompts, skills, and config. Run after upgrading or on a new machine. |
 | `omx setup --scope user` | Install to user-level config (`~/.codex/`). |
 | `omx setup --scope project` | Install to project-level config (`.codex/`). |
-| `omx doctor` | Check OMX installation health — missing files, config issues, hook pipeline status. |
-| `omx doctor --team` | Additional team-pipeline health checks. |
+| `omx doctor` | Check installation health — missing files, config issues, and hook pipeline status. |
+| `omx doctor --team` | Run additional diagnostics for the team/swarm runtime. |
 
 ## Session management
 
@@ -23,9 +23,9 @@ A reference card for the commands you reach for most often. All commands assume 
 | `omx --madmax` | Start with maximum-parallelism team pipeline. |
 | `omx --madmax --high` | Start with max parallelism and the highest-tier model. |
 | `omx --skip-git-repo-check` | Start outside a git repository without errors. |
-| `omx cancel` | Cancel the current active OMX execution mode (ralph, autopilot, ultrawork). |
+| `omx cancel` | Cancel the current active execution mode (ralph, autopilot, ultrawork, etc.). |
 
-## Help and reference
+## Help
 
 | Command | Description |
 |---|---|
@@ -36,16 +36,16 @@ A reference card for the commands you reach for most often. All commands assume 
 
 | Command | Description |
 |---|---|
-| `omx team api list-tasks --json` | List current team tasks in machine-readable JSON. |
+| `omx team api list-tasks --json` | List current team tasks in JSON. |
 | `omx team api read-task --json` | Read the current active task. |
 | `omx team api get-summary --json` | Get a summary of team state. |
-| `omx team await` | Block until a wakeable team event occurs. |
+| `omx team await` | Block until a team event occurs. |
 
 ## Agents init
 
 | Command | Description |
 |---|---|
-| `omx agents-init [path]` | Bootstrap an `AGENTS.md` for the project at `path` (defaults to current directory). |
+| `omx agents-init [path]` | Create an `AGENTS.md` at `path` (defaults to the current directory). |
 
 ## Related
 

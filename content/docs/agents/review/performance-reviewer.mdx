@@ -1,9 +1,9 @@
 ---
-title: "performance-reviewer"
-description: "Hot-path analysis agent that identifies algorithmic complexity issues, memory patterns, and I/O bottlenecks with quantified impact estimates."
+title: performance-reviewer
+description: Hot-path analysis agent that identifies algorithmic complexity issues, memory patterns, and I/O bottlenecks with quantified impact estimates
 ---
 
-The `performance-reviewer` agent focuses on code that runs frequently or on large data sets. It does not flag micro-optimizations in cold code — instead, it quantifies findings by complexity class and estimated real-world impact, distinguishes "measure first" recommendations from "obviously fix now" ones, and notes explicitly when current performance is acceptable. An O(n²) loop in a hot path is a finding; a 5 ms startup cost is not.
+The `performance-reviewer` agent focuses on code that runs frequently or on large data sets. It does not flag micro-optimizations in cold code — instead, it quantifies findings by complexity class and estimated real-world impact, distinguishes "fix now" from "measure first" recommendations, and notes explicitly when current performance is acceptable. An O(n²) loop in a hot path is a finding; a 500 ms startup cost is not.
 
 ## Role
 
@@ -12,7 +12,7 @@ The `performance-reviewer` agent focuses on code that runs frequently or on larg
 - Review I/O patterns: blocking calls on hot paths, N+1 query patterns, unbatched network requests, unnecessary serialization
 - Surface caching and parallelism opportunities, and provide a profiling plan for non-obvious concerns
 
-## When invoked
+## When called
 
 - When load-test regressions are reported and the bottleneck has not yet been located
 - On changes to hot-path code where performance is a stated requirement

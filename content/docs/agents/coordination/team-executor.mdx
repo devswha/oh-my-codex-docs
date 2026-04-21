@@ -1,34 +1,36 @@
 ---
-title: "team-executor"
-description: "Single Codex worker inside a supervised team run — claims tasks from the orchestrator, implements them, and reports verified evidence back."
+title: team-executor
+description: Implementation worker inside a $team run — claims tasks from the orchestrator, implements them, and reports verified evidence back.
 ---
 
-The `team-executor` agent is the implementation worker inside a `$team` run. It claims a single task from the orchestrator's queue, executes the smallest correct change, verifies with diagnostics and tests, commits to its own branch, and reports concrete evidence back to the leader. It keeps coordination overhead low by staying within assigned scope and reporting blockers immediately rather than speculating.
+The `team-executor` agent is the implementation worker inside a `$team` run. It claims a single task from the orchestrator's queue, executes the smallest correct change, verifies with diagnostics and tests, commits to its own branch, and reports concrete evidence back to the leader. It stays within assigned scope and reports blockers immediately rather than guessing.
 
 ## Role
 
 - Claim one assigned task from the orchestrator and execute it to a verified, committed result
-- Implement the minimal correct change within the assigned file boundary; avoid scope creep
-- Verify with `lsp_diagnostics` on every modified file and run relevant tests before reporting done
+- Implement the minimal correct change within the assigned file boundary; do not expand scope unilaterally
+- Run `lsp_diagnostics` on every modified file and pass relevant tests before reporting done
 - Report concrete evidence (file paths, test output, diagnostic results) back to the orchestrator
 
 ## When invoked
 
 - By `$team` workflow when the orchestrator assigns a task lane to this worker instance
 - As one of N parallel workers handling independent lanes of a decomposed larger task
-- When the orchestrator detects a task is unclaimed and routes it to an available executor slot
+- When the orchestrator detects an unclaimed task and routes it to an available executor slot
 
 ## Inputs
 
-- Task assignment from `team-orchestrator` specifying the target files and expected outcome
+- Task assignment from `team-orchestrator` specifying target files and expected outcome
 - Active `.omx/state/` session context with the task record and any prior worker findings
 - Optional: prior `explore` results or LSP diagnostics as grounding context for the assigned lane
 
 ## Outputs
 
-- Code changes within the assigned files, committed to the worker's branch
-- Verification evidence: clean LSP diagnostics, passing test output, or documented pre-existing failures
-- Task completion update in `.omx/state/` with evidence attached for orchestrator review
+| Item | Content |
+|---|---|
+| Code changes | Changes within the assigned file boundary, committed to the worker's branch |
+| Verification evidence | Clean LSP diagnostics, passing test output, or documented pre-existing failures |
+| Status update | Completion record in `.omx/state/` with evidence attached for orchestrator review |
 
 ## Limits
 

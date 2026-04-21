@@ -1,45 +1,31 @@
 ---
-title: "ecomode"
-description: "Low-token, low-cost execution mode — routes tasks to cheaper models and prunes context aggressively to reduce spend."
+title: $ecomode
+description: "Switch to low-cost mode to reduce token usage."
 ---
 
-ecomode switches the active session to a cost-optimised profile. It re-routes all subsequent agent dispatches to lower-tier models, enables aggressive context pruning, and disables high-context features like deep research passes. Use it when you want results at minimal token cost and can accept a modest quality trade-off.
+## Overview
 
-## Purpose
+`$ecomode` switches the active OMX session to a low-cost profile. Instead of heavy multi-agent pipelines, it works with a single agent and uses lighter models wherever possible. Turn it on when execution cost matters more than depth of exploration or analysis.
 
-Not every task needs opus-tier reasoning or a full context window. ecomode makes the trade-off explicit: you accept slightly lower fidelity in exchange for significantly lower spend. It is particularly useful for repetitive tasks, bulk file operations, or exploratory work where you expect to iterate anyway.
+## When to use
 
-## How to invoke
+- When a large task is already designed and only execution remains
+- For repetitive small edits that don't need parallel agents
+- In environments where API costs need to be controlled
 
-Natural language triggers: "ecomode", "eco mode", "low cost", "cheap mode", "save tokens".
+## When to avoid
 
-Explicit slash: `$ecomode`
+- Tasks that require design or architecture judgment — ecomode reduces analysis depth and isn't suited for these.
+- Complex changes that touch multiple systems simultaneously
 
+## Example
+
+```text
+$ecomode
 ```
-codex
-> ecomode
-```
 
-```
-codex
-> enable ecomode for this session
-```
+After invoking, subsequent runs default to lightweight agents and a single execution path.
 
-## What it does
+## Note
 
-- Sets the default model tier to haiku or the cheapest available model
-- Enables aggressive context pruning: removes prior conversation turns beyond a short window
-- Disables high-cost features: deep research, consensus planning, and multi-reviewer passes
-- Applies through the rest of the session or until you explicitly disable it
-- Reports the estimated cost impact when switching modes
-
-## Outputs
-
-- Confirmation that ecomode is active with the current model tier shown
-- Updated HUD indicator reflecting the reduced cost profile
-- No source code changes
-
-## Related
-
-- [`$hud`](/docs/skills/utility/hud) — monitor token usage and active model tier in real time
-- [`$cancel`](/docs/skills/utility/cancel) — exit the current mode to return to default tier settings
+ecomode applies to the current session only. Restarting the session returns to the default mode.

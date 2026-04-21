@@ -1,40 +1,64 @@
 ---
-title: "vision"
-description: "Frames long-range product direction, north-star alignment, and strategic narrative for roadmaps and discovery phases."
+title: vision
+description: "A Domain agent that analyzes images and screenshots to validate visual output and provide UI feedback."
 ---
 
-`vision` operates at the longest time horizon. It synthesizes current capabilities, user needs, and market context into a coherent north-star narrative — articulating where the product is going, why it matters, and what it will not become. It prevents short-term tactical decisions from drifting away from the original purpose.
+## Overview
 
-## Role
+The `vision` agent reads images and screenshots to analyze visual output. Its role is to confirm whether rendered results differ from expectations, whether layouts are broken, and whether design specs match the actual implementation. It is used to catch visual regressions that text-based code review misses.
 
-- Articulate a north-star narrative: what the product must become and the problem it will uniquely solve
-- Frame long-range product bets and the assumptions they depend on, making those assumptions explicit and testable
-- Align roadmap initiatives to the north-star, identifying which items accelerate toward it and which create drift
-- Identify strategic gaps: capabilities the product must develop to reach its intended destination
+## When to use
 
-## When invoked
+- After a UI change, when the actual rendering result needs to be validated via screenshot
+- When a design mockup needs to be compared against the implementation result
+- When visual bugs like broken layouts, color mismatches, or text clipping need to be found
+- When visual QA verdicts are needed in the `$visual-verdict` skill
 
-- During discovery phases when a product initiative needs framing before planning begins
-- When drafting a roadmap and ensuring quarterly bets connect to the long-range direction
-- When a sequence of tactical decisions has accumulated and alignment to original purpose needs reassessment
-- Before major architecture decisions that lock in constraints for years rather than months
+## Examples
+
+```text
+"Find layout problems in this screenshot"
+"Compare the design mockup against the actual implementation"
+"Confirm the rendering result is correct after switching to dark mode"
+```
+
+## Analysis scope
+
+| Item | Description |
+|---|---|
+| Layout validation | Check component position, spacing, and alignment |
+| Visual regression | Detect rendering differences before and after changes |
+| Design match | Compare mockup vs actual implementation |
+| UI bugs | Text clipping, color mismatches, overlapping elements, etc. |
+
+## Process
+
+1. Receive the image or screenshot to analyze.
+2. Compare against the reference (design mockup, previous screenshot, or spec).
+3. Record differences and problems in specific terms.
+4. If fixes are needed, hand off to `designer` or `executor`.
 
 ## Inputs
 
-Provide the product's current state (capabilities, users, known problems), any existing mission or strategy documents, the time horizon for the vision exercise (6 months, 2 years, 5 years), and the decisions the vision output will inform. Constraints (non-negotiables, regulatory context, competitive landscape) sharpen the output.
+- Screenshot or image file to analyze
+- Design mockup or previous screenshot as a reference baseline
+- Specific items to check, if any
 
 ## Outputs
 
-A north-star narrative (what the product uniquely does, for whom, and why it matters), a set of explicit strategic bets with named assumptions, a roadmap alignment map showing which current initiatives move toward or away from the north-star, and a list of strategic gaps with investment priority signals.
+- List of visual problems found and their locations
+- Comparison summary of expected vs actual results
+- PASS / FAIL / PARTIAL verdict
+- Specific descriptions of items that need fixing
 
 ## Limits
 
-- Does not make tactical implementation decisions — defers execution planning to `planner` and `architect`
-- Does not define specific metrics or experiment designs — defers measurement design to `product-analyst`
-- Does not replace user research — vision hypotheses about user needs require validation by `ux-researcher`
+- Code changes are handled by `executor`.
+- UX strategy judgments are deferred to `ux-researcher` and `designer`.
+- Performance measurement is handled by `performance-reviewer`.
 
 ## Related agents
 
-- [`product-manager`](/docs/agents/domain/product-manager) — translates vision into scoped, sequenced roadmap items
-- [`architect`](/docs/agents/build-analysis/architect) — ensures system design decisions align with long-range product direction
-- [`critic`](/docs/agents/build-analysis/critic) — challenges vision assumptions and surfaces strategic blind spots
+- [designer](/docs/agents/domain/designer) — resolves visual problems found by vision from a design perspective.
+- [qa-tester](/docs/agents/domain/qa-tester) — validates UI runtime behavior alongside vision.
+- [executor](/docs/agents/build-analysis/executor) — fixes the visual bugs that vision identifies.
