@@ -1,6 +1,37 @@
 ---
-title: "Changelog（翻訳ドラフト）"
-description: "OMX release notes, mirrored from upstream `CHANGELOG.md`."
+title: "変更ログ"
+description: "OMX リリース履歴 — 最新リリース要約とアップストリーム CHANGELOG リンク"
 ---
 
-OMX release notes, mirrored from upstream `CHANGELOG.md`.
+完全な changelog はアップストリームの [`CHANGELOG.md`](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/CHANGELOG.md) で管理されています。このページは最近のリリースを要約したものです。
+
+## 最新リリース — v0.13.1
+
+detached interactive Codex startup を復元する hotfix です。
+
+**修正内容:**
+- detached tmux startup が Codex の stdin を失わなくなりました。detached leader wrapper がバックグラウンド化の過程でも stdin を保持するため、`omx --madmax --high` のような interactive detached launch が起動直後に終了しなくなります。
+- CLI リグレッションテストで Codex child の stdin が開いているか、leader cleanup semantics が保持されているかを検証します。
+
+## v0.13.0
+
+team worker の改善、hook pipeline の安定化、model routing のアップデートを含むメジャーリリースです。詳細は[完全なリリースノート](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/docs/release-notes-0.13.0.md)を参照してください。
+
+## v0.12.x シリーズ
+
+team pipeline の改善、spark worker routing、OpenClaw gateway の安定性、notifier verbosity control を扱ったシリーズです。
+
+- [v0.12.6](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/docs/release-notes-0.12.6.md)
+- [v0.12.5](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/docs/release-notes-0.12.5.md)
+- [v0.12.4](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/docs/release-notes-0.12.4.md)
+
+## 全履歴
+
+v0.7.x から現在までのすべてのリリースはアップストリームリポジトリで確認できます。
+
+[https://github.com/Yeachan-Heo/oh-my-codex/blob/main/CHANGELOG.md](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/CHANGELOG.md)
+
+## 関連ドキュメント
+
+- [マイグレーション](/ja/docs/reference/migration) — バージョン間の breaking change とアップグレード手順
+- [クイックコマンド](/ja/docs/reference/quick-commands) — よく使う CLI コマンドの要約

@@ -1,32 +1,39 @@
 ---
 title: "上下文钩子"
-description: "通过 system-reminder 标签将项目记忆、指令、提醒和 notepad 内容注入 Codex 提示的钩子。"
+description: "通过 system-reminder 标签将项目记忆、会话提醒、wiki 摘要和模式状态注入 Codex 提示的钩子"
 ---
 
-上下文钩子是 OMX 钩子中负责用结构化知识丰富下一个提示的子集。它们不修改用户消息，而是发出 Codex 作为注入上下文读取的 `<system-reminder>` 标签。这样既保持用户消息的整洁，又确保模型始终能看到当前的项目记忆、活动指令和 notepad 条目。
-
-## 概述
-
-当上下文钩子触发时，它会读取一个或多个知识来源——`.omx/state/`、`.omx/wiki/` 中的 wiki、项目记忆或 notepad——并将相关内容格式化为附加到提示上下文的 `<system-reminder>` 块。模型将此内容视为权威背景，而非用户指令，这使其适合用于应影响每个轮次的持久事实、约束和提醒。
+上下文钩子是 OMX 钩子中负责将结构化知识插入下一个提示的子集。它们不直接修改用户消息，而是发出 Codex 读取的 `<system-reminder>` 标签。这样既保持用户消息原样，又确保模型始终携带最新的项目记忆和活动指令启动。
 
 ## 注入的来源
 
-- **项目记忆** — 通过 `project_memory_write` 或 `project_memory_add_directive` 写入的关键事实和指令。在 `SessionStart` 时注入，当指令处于活动状态时也会在后续轮次中选择性注入。
-- **会话提醒** — 通过 `notepad_write_working` 或 `notepad_write_priority` 写入的短期备注。注入直至过期或被清除。
-- **Wiki 摘要** — 当 wiki 页面存在时，在 `SessionStart` 时显示的 `.omx/wiki/` 简短摘录。写密集操作（摄入、重建）被推迟，以避免阻塞钩子路径。
-- **模式状态** — 当检测到活动工作流模式（ralph、team、ultrawork）时，包含其当前阶段和继续指令，以便模型从正确的点恢复。
+**项目记忆**
 
-## 示例
+通过 `project_memory_write` 或 `project_memory_add_directive` 写入的核心事实和指令。在 `SessionStart` 时注入，当指令处于活动状态时也会在后续轮次中选择性注入。
 
-注入所有提交必须包含尾注的永久指令：
+**会话提醒**
+
+通过 `notepad_write_working` 或 `notepad_write_priority` 写入的短期备注。持续注入直至过期或被清除。
+
+**Wiki 摘要**
+
+当 wiki 页面存在时，在 `SessionStart` 时显示 `.omx/wiki/` 的简短摘录。收集、重建等写密集型操作被延迟处理，以避免阻塞钩子路径。
+
+**模式状态**
+
+当检测到 ralph、team、ultrawork 等活动工作流模式时，一并注入当前阶段和继续指令，使模型能从中断点正确恢复。
+
+## 使用示例
+
+注册要求所有提交包含尾注的永久指令：
 
 ```bash
 omx memory add-directive "All git commits must include Co-authored-by: OmX <omx@oh-my-codex.dev>"
 ```
 
-下次会话启动时，此指令将自动显示在 `<system-reminder>` 块中。
+下次会话启动时，此指令会自动作为 `<system-reminder>` 块注入。
 
-读取当前 notepad 中的内容：
+查看当前 notepad 内容：
 
 ```bash
 cat .omx/notepad.md

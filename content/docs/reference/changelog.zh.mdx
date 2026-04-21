@@ -1,6 +1,37 @@
 ---
-title: "Changelog（翻译草稿）"
-description: "OMX release notes, mirrored from upstream `CHANGELOG.md`."
+title: "变更日志"
+description: "OMX 发布历史 — 最新版本摘要与上游 CHANGELOG 链接"
 ---
 
-OMX release notes, mirrored from upstream `CHANGELOG.md`.
+完整 changelog 在上游 [`CHANGELOG.md`](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/CHANGELOG.md) 中维护。本页汇总最近的发布信息。
+
+## 最新版本 — v0.13.1
+
+修复 detached interactive Codex 启动的 hotfix。
+
+**修复内容：**
+- detached tmux startup 不再丢失 Codex 的 stdin。detached leader wrapper 在后台化过程中保持 stdin，因此 `omx --madmax --high` 等 interactive detached launch 不再在启动后立即退出。
+- CLI 回归测试验证 Codex child 的 stdin 是否打开，以及 leader cleanup semantics 是否保留。
+
+## v0.13.0
+
+包含 team worker 改进、hook pipeline 稳定化、model routing 更新的主要版本。详情参阅[完整发布说明](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/docs/release-notes-0.13.0.md)。
+
+## v0.12.x 系列
+
+涵盖 team pipeline 改进、spark worker routing、OpenClaw gateway 稳定性、notifier verbosity control 的系列。
+
+- [v0.12.6](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/docs/release-notes-0.12.6.md)
+- [v0.12.5](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/docs/release-notes-0.12.5.md)
+- [v0.12.4](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/docs/release-notes-0.12.4.md)
+
+## 完整历史
+
+v0.7.x 至今所有版本均可在上游仓库查看。
+
+[https://github.com/Yeachan-Heo/oh-my-codex/blob/main/CHANGELOG.md](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/CHANGELOG.md)
+
+## 相关文档
+
+- [迁移](/zh/docs/reference/migration) — 版本间 breaking change 与升级步骤
+- [快速命令](/zh/docs/reference/quick-commands) — 常用 CLI 命令摘要

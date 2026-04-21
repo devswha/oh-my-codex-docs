@@ -1,6 +1,51 @@
 ---
-title: "CLI Bridges（翻訳ドラフト）"
-description: "`$ask-claude` and `$ask-gemini` and the tri-model (ccg-style) workflow."
+title: "CLI Bridges"
+description: "`$ask-claude`、`$ask-gemini`、`$ccg` を使ったクロス CLI 自問フロー。"
 ---
 
-`$ask-claude` and `$ask-gemini` and the tri-model (ccg-style) workflow.
+CLI bridge は、OMX セッション外の別の AI CLI やモデルに質問を委譲する軽量コマンドです。`$ask-claude`、`$ask-gemini`、`$ccg` の 3 つが、最も一般的なクロス CLI パターンを担当します。
+
+## 概要
+
+各 bridge は対象の CLI binary を fresh subprocess として起動し、質問やタスクを送り、レスポンスを現在の OMX セッションに返します。subprocess は現在のコンテキストを引き継がず新たに起動するため、bridge 呼び出しはアクティブな working context から隔離された clean-room query になります。現在のコンテキストを汚染せずに外部の視点が必要なときに有効な理由です。
+
+## 3 つの bridge
+
+- **`$ask-claude`** — Claude CLI subprocess に質問をそのまま送ります。素早い参照、要約、Codex コンテキストを触らずに Claude の推論を取得したいときに使います。
+- **`$ask-gemini`** — Gemini CLI subprocess を起動します。大量コンテキストの参照や Google モデルの視点を比較するときに特に有効です。
+- **`$ccg`** — Codex、Claude、Gemini の 3 モデルに並列 fan-out した後、レスポンスを一つに合成する tri-model ワークフローです。`$ccg` skill の内部で使われ、特定のアプローチを選ぶ前に幅広い coverage が必要なときに使います。
+
+## 例
+
+単一モデルへの自問:
+
+```
+codex
+> $ask-claude "what is the recommended retry strategy for idempotent HTTP endpoints?"
+```
+
+```
+codex
+> $ask-gemini "summarize the tradeoffs between RSA and ECDSA for JWT signing"
+```
+
+tri-model consensus:
+
+```
+codex
+> $ccg "design a rate-limiting strategy for a public REST API with 10k RPS"
+```
+
+skill レイヤーを経由せずシェルから直接呼び出す方法:
+
+```bash
+# Ask Claude directly from a shell script
+echo "explain this error: $(cat error.log)" | claude --print
+```
+
+## 関連ドキュメント
+
+- [ask-claude](/ja/docs/skills/utility/ask-claude) — `$ask-claude` skill リファレンス
+- [ask-gemini](/ja/docs/skills/utility/ask-gemini) — `$ask-gemini` skill リファレンス
+- [MCP](/ja/docs/integrations/mcp) — 構造化された tool invocation のための Model Context Protocol
+- [OpenClaw](/ja/docs/integrations/openclaw) — クロスセッション通知のためのイベント bridge

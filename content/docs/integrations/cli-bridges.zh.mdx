@@ -1,6 +1,51 @@
 ---
-title: "CLI Bridges（翻译草稿）"
-description: "`$ask-claude` and `$ask-gemini` and the tri-model (ccg-style) workflow."
+title: "CLI Bridges"
+description: "通过 `$ask-claude`、`$ask-gemini`、`$ccg` 实现的跨 CLI 自问流程。"
 ---
 
-`$ask-claude` and `$ask-gemini` and the tri-model (ccg-style) workflow.
+CLI bridge 是将问题委托给 OMX 会话之外的其他 AI CLI 或模型的轻量命令。`$ask-claude`、`$ask-gemini`、`$ccg` 三个命令覆盖了最常见的跨 CLI 模式。
+
+## 概述
+
+每个 bridge 以 fresh subprocess 启动目标 CLI binary，发送问题或任务，将响应返回当前 OMX 会话。subprocess 不继承当前上下文，全新启动，因此 bridge 调用是与 active working context 隔离的 clean-room query。这正是在不污染当前上下文的情况下需要外部视角时的用武之地。
+
+## 三种 bridge
+
+- **`$ask-claude`** — 将问题直接发送给 Claude CLI subprocess。适用于快速查询、摘要，以及在不影响 Codex 上下文的情况下获取 Claude 推理结果。
+- **`$ask-gemini`** — 启动 Gemini CLI subprocess。特别适合大上下文查询或比较 Google 模型的视角。
+- **`$ccg`** — 向 Codex、Claude、Gemini 三个模型并行 fan-out 后将响应合成为一个的 tri-model 工作流。在 `$ccg` skill 内部使用，适用于在确定具体方案前需要更广泛覆盖的场景。
+
+## 示例
+
+单模型自问：
+
+```
+codex
+> $ask-claude "what is the recommended retry strategy for idempotent HTTP endpoints?"
+```
+
+```
+codex
+> $ask-gemini "summarize the tradeoffs between RSA and ECDSA for JWT signing"
+```
+
+tri-model consensus：
+
+```
+codex
+> $ccg "design a rate-limiting strategy for a public REST API with 10k RPS"
+```
+
+不经过 skill 层，直接从 shell 调用的方式：
+
+```bash
+# Ask Claude directly from a shell script
+echo "explain this error: $(cat error.log)" | claude --print
+```
+
+## 相关文档
+
+- [ask-claude](/zh/docs/skills/utility/ask-claude) — `$ask-claude` skill 参考
+- [ask-gemini](/zh/docs/skills/utility/ask-gemini) — `$ask-gemini` skill 参考
+- [MCP](/zh/docs/integrations/mcp) — 用于结构化 tool invocation 的 Model Context Protocol
+- [OpenClaw](/zh/docs/integrations/openclaw) — 用于跨会话通知的事件 bridge
