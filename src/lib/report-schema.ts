@@ -20,8 +20,8 @@ export const reportSchema = z.discriminatedUnion('kind', [
   z.object({
     kind: z.literal('report'),
     category: z.enum(['bug', 'question', 'suggestion']),
-    title: z.string().min(10).max(120),
-    body: z.string().min(20).max(8000),
+    title: z.string().min(1),
+    body: z.string().min(1),
     path: pathShape.optional(),
     locale: z.string().min(2).max(5),
     turnstileToken: z.string().min(1),

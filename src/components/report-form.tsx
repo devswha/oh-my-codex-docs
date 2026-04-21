@@ -12,8 +12,8 @@ const COPY = {
     bug: 'Bug',
     question: 'Question',
     suggestion: 'Suggestion',
-    titlePlaceholder: 'Short summary (10–120 chars)',
-    bodyPlaceholder: 'Describe the issue. Markdown allowed. (20–8000 chars)',
+    titlePlaceholder: 'Short summary',
+    bodyPlaceholder: 'Describe the issue. Markdown allowed.',
     submit: 'Submit',
     submitting: 'Submitting...',
     success: 'Thanks! Tracked as',
@@ -29,8 +29,8 @@ const COPY = {
     bug: '버그',
     question: '질문',
     suggestion: '제안',
-    titlePlaceholder: '간단한 제목 (10–120자)',
-    bodyPlaceholder: '내용을 적어주세요. 마크다운 지원. (20–8000자)',
+    titlePlaceholder: '간단한 제목',
+    bodyPlaceholder: '내용을 적어주세요. 마크다운 지원.',
     submit: '제출',
     submitting: '제출 중...',
     success: '감사합니다! 이슈로 등록되었습니다:',
@@ -46,8 +46,8 @@ const COPY = {
     bug: 'バグ',
     question: '質問',
     suggestion: '提案',
-    titlePlaceholder: '短い概要（10〜120文字）',
-    bodyPlaceholder: '詳細を記入してください。Markdown可。（20〜8000文字）',
+    titlePlaceholder: '短い概要',
+    bodyPlaceholder: '詳細を記入してください。Markdown可。',
     submit: '送信',
     submitting: '送信中...',
     success: 'ありがとうございます。Issueとして登録されました:',
@@ -63,8 +63,8 @@ const COPY = {
     bug: 'Bug',
     question: '提问',
     suggestion: '建议',
-    titlePlaceholder: '简短摘要（10-120 字符）',
-    bodyPlaceholder: '请描述详情。支持 Markdown。（20-8000 字符）',
+    titlePlaceholder: '简短摘要',
+    bodyPlaceholder: '请描述详情。支持 Markdown。',
     submit: '提交',
     submitting: '提交中...',
     success: '感谢！已记录为 Issue：',
@@ -200,8 +200,6 @@ function ReportFormInner() {
       <input
         type="text"
         required
-        minLength={10}
-        maxLength={120}
         placeholder={copy.titlePlaceholder}
         value={title}
         onChange={(e) => setTitle(e.target.value)}
@@ -210,8 +208,6 @@ function ReportFormInner() {
 
       <textarea
         required
-        minLength={20}
-        maxLength={8000}
         rows={8}
         placeholder={copy.bodyPlaceholder}
         value={body}
