@@ -31,26 +31,61 @@ npm i -g oh-my-codex
 omx setup
 ```
 
-### 4단계 — OMX를 실행하고 `$autopilot` 사용해보기
-
-먼저 OMX 세션을 시작합니다:
+### 4단계 — 첫 세션 스모크 테스트 실행
 
 ```bash
-omx
+omx doctor
+codex login status
+omx exec --skip-git-repo-check -C . "Reply with exactly OMX-EXEC-OK"
 ```
 
-그다음 세션 안에서 다음을 입력합니다:
+### 5단계 — 추천 방식으로 OMX 실행
+
+```bash
+omx --madmax --high
+```
+
+그다음 세션 안에서 기본 워크플로를 시도해 보세요:
 
 ```
-$autopilot build me a todo app in next.js
+$deep-interview "인증 변경 사항을 명확히 해줘"
+$ralplan "가장 안전한 구현 경로를 승인해줘"
+$ralph "승인된 계획을 끝까지 완료해줘"
 ```
 
-암시적 키워드 트리거를 쓰고 싶다면 `autopilot build me a todo app in next.js`처럼 `$` 없이 입력해도 동작합니다.
+승인된 계획에 조율된 병렬 실행이 필요하다면 `$ralph` 대신 `$team 3:executor "승인된 계획을 병렬로 실행해줘"`를 사용하세요.
 
-## 다음 단계
+## 문서 구조
 
-- [시작하기](./getting-started) — 전체 설치 및 첫 실행
-- [주요 개념](./concepts) — 에이전트, 스킬, 훅, 팀
-- [에이전트](./agents) — 33개의 에이전트 프롬프트
-- [스킬](./skills) — 37개의 자동화 스킬
-- [통합](./integrations) — OpenClaw, MCP, CLI 간 브릿지
+<Cards>
+  <Card title="Getting Started" href="/ko/docs/getting-started">
+    설치, 설정 검증, 그리고 좋은 첫 OMX 세션
+  </Card>
+  <Card title="Core Concepts" href="/ko/docs/concepts">
+    에이전트, 스킬, 훅, `.omx/` 런타임 상태
+  </Card>
+  <Card title="Guides" href="/ko/docs/guides">
+    계획, 실행, QA, 디버깅을 위한 권장 워크플로우
+  </Card>
+  <Card title="Agents" href="/ko/docs/agents">
+    33개의 role-specific 프롬프트 표면 레퍼런스
+  </Card>
+  <Card title="Skills" href="/ko/docs/skills">
+    워크플로우/유틸리티 스킬, 호출 규칙, 사용 가이드
+  </Card>
+  <Card title="Hooks" href="/ko/docs/hooks">
+    Codex 생명주기 통합, 키워드 라우팅, 훅 동작
+  </Card>
+  <Card title="Tools" href="/ko/docs/tools">
+    State, HUD, Wiki, Visual, provider bridge 같은 런타임 capability surface
+  </Card>
+  <Card title="Integrations" href="/ko/docs/integrations">
+    OpenClaw, Clawhip, MCP, 교차 CLI 상호운용
+  </Card>
+  <Card title="Reference" href="/ko/docs/reference">
+    설정, 퀵 커맨드, 환경 변수, 계약
+  </Card>
+  <Card title="Support" href="/ko/docs/support">
+    FAQ, 이슈 제보, 지원 채널
+  </Card>
+</Cards>

@@ -1,10 +1,9 @@
 {
-  "title": "주요 개념",
+  "title": "Core Concepts",
   "pages": [
-    "[에이전트 프롬프트](/ko/docs/concepts#agent-prompts)",
-    "[스킬](/ko/docs/concepts#skills)",
-    "[Codex 네이티브 훅](/ko/docs/concepts#codex-native-hooks)",
-    "[팀 오케스트레이션](/ko/docs/concepts#team-orchestration)",
-    "[.omx/ 디렉터리](/ko/docs/concepts#the-omx-directory)"
+    "[에이전트](/ko/docs/concepts#에이전트란)",
+    "[스킬](/ko/docs/concepts#스킬이란)",
+    "[훅](/ko/docs/concepts#훅이란)",
+    "[상태 관리](/ko/docs/concepts#상태-관리-개요)"
   ]
 }

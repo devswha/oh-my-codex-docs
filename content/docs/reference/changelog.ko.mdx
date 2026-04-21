@@ -1,6 +1,37 @@
 ---
-title: "Changelog (번역 초안)"
-description: "OMX release notes, mirrored from upstream `CHANGELOG.md`."
+title: "변경 로그"
+description: "OMX 릴리스 이력 — 최신 릴리스 요약과 업스트림 CHANGELOG 링크"
 ---
 
-OMX release notes, mirrored from upstream `CHANGELOG.md`.
+전체 changelog는 업스트림 [`CHANGELOG.md`](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/CHANGELOG.md)에서 관리됩니다. 이 페이지는 최근 릴리스를 요약합니다.
+
+## 최신 릴리스 — v0.13.1
+
+detached interactive Codex startup을 복구하는 hotfix입니다.
+
+**수정 사항:**
+- detached tmux startup이 Codex stdin을 잃지 않습니다. detached leader wrapper가 backgrounding 과정에서도 stdin을 유지하므로, `omx --madmax --high` 같은 interactive detached launch가 시작 직후 종료되지 않습니다.
+- CLI regression test에서 Codex child의 stdin이 열려 있는지, leader cleanup semantics가 보존되는지 검증합니다.
+
+## v0.13.0
+
+team worker 개선, hook pipeline 안정화, model routing 업데이트를 포함한 주요 릴리스입니다. 자세한 내용은 [전체 릴리스 노트](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/docs/release-notes-0.13.0.md)를 참고하세요.
+
+## v0.12.x 시리즈
+
+team pipeline 개선, spark worker routing, OpenClaw gateway 안정성, notifier verbosity control을 다룬 시리즈입니다.
+
+- [v0.12.6](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/docs/release-notes-0.12.6.md)
+- [v0.12.5](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/docs/release-notes-0.12.5.md)
+- [v0.12.4](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/docs/release-notes-0.12.4.md)
+
+## 전체 이력
+
+v0.7.x부터 현재까지 모든 릴리스는 업스트림 저장소에서 확인할 수 있습니다.
+
+[https://github.com/Yeachan-Heo/oh-my-codex/blob/main/CHANGELOG.md](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/CHANGELOG.md)
+
+## 관련 문서
+
+- [마이그레이션](/ko/docs/reference/migration) — 버전 간 breaking change와 업그레이드 절차
+- [퀵 커맨드](/ko/docs/reference/quick-commands) — 자주 쓰는 CLI 명령 요약

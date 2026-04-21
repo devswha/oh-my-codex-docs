@@ -1,9 +1,7 @@
 {
   "title": "시작하기",
   "pages": [
-    "[사전 요건](/ko/docs/getting-started#prerequisites)",
-    "[설치](/ko/docs/getting-started#install)",
-    "[첫 실행](/ko/docs/getting-started#first-run)",
-    "[다음 단계](/ko/docs/getting-started#next-steps)"
+    "[설치 방법](/ko/docs/getting-started#설치-방법)",
+    "[첫 세션 시작하기](/ko/docs/getting-started#첫-세션-시작하기)"
   ]
 }
