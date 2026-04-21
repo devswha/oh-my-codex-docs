@@ -37,3 +37,7 @@ social-preview-1x.png
 .sisyphus/
 .omx/
 .codex/
+**/.omc/state/
+**/.omc/logs/
+**/.omc/state
+**/.omc/logs
