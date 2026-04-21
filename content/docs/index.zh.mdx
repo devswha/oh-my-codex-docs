@@ -31,26 +31,61 @@ npm i -g oh-my-codex
 omx setup
 ```
 
-### 第 4 步 — 启动 OMX 并尝试 `$autopilot`
-
-先启动一个 OMX 会话：
+### 第 4 步 — 运行首次会话冒烟测试
 
 ```bash
-omx
+omx doctor
+codex login status
+omx exec --skip-git-repo-check -C . "Reply with exactly OMX-EXEC-OK"
 ```
 
-然后在该会话中输入：
+### 第 5 步 — 按推荐方式启动 OMX
+
+```bash
+omx --madmax --high
+```
+
+然后在该会话中尝试标准工作流：
 
 ```
-$autopilot build me a todo app in next.js
+$deep-interview "澄清认证改动的需求"
+$ralplan "批准最安全的实现路径"
+$ralph "把已批准的计划推进到完成"
 ```
 
-如果你更喜欢隐式关键词触发，直接输入 `autopilot build me a todo app in next.js` 也可以。
+如果已批准的计划需要并行执行，请把最后一步改为 `$team 3:executor "并行执行已批准的计划"`，而不是 `$ralph`。
 
-## 下一步
+## 文档
 
-- [快速开始](./getting-started) — 完整安装与首次运行
-- [核心概念](./concepts) — 智能体、技能、钩子、团队
-- [智能体](./agents) — 33 个智能体提示词
-- [技能](./skills) — 37 个自动化技能
-- [集成](./integrations) — OpenClaw、MCP、跨 CLI 桥接
+<Cards>
+  <Card title="Getting Started" href="/zh/docs/getting-started">
+    安装、设置校验，以及一次良好的初始 OMX 会话
+  </Card>
+  <Card title="Core Concepts" href="/zh/docs/concepts">
+    智能体、技能、钩子与 `.omx/` 运行时状态
+  </Card>
+  <Card title="Guides" href="/zh/docs/guides">
+    规划、执行、QA 与调试的推荐工作流
+  </Card>
+  <Card title="Agents" href="/zh/docs/agents">
+    33 个角色化提示词的参考文档
+  </Card>
+  <Card title="Skills" href="/zh/docs/skills">
+    工作流/实用技能、调用规则与使用指南
+  </Card>
+  <Card title="Hooks" href="/zh/docs/hooks">
+    Codex 生命周期集成、关键词路由与钩子行为
+  </Card>
+  <Card title="Tools" href="/zh/docs/tools">
+    State、HUD、Wiki、Visual、provider bridge 等运行时内部能力层
+  </Card>
+  <Card title="Integrations" href="/zh/docs/integrations">
+    OpenClaw、Clawhip、MCP 与跨 CLI 互操作性
+  </Card>
+  <Card title="Reference" href="/zh/docs/reference">
+    配置、快捷命令、环境变量与契约
+  </Card>
+  <Card title="Support" href="/zh/docs/support">
+    FAQ、问题反馈与支持渠道
+  </Card>
+</Cards>

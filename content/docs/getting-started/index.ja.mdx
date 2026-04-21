@@ -1,6 +1,98 @@
 ---
 title: クイックスタート
-description: "Codex CLI をインストールし、oh-my-codex をインストールした後、`omx setup` を実行し、`omx` でセッションを開始してから `$autopilot` を呼び出します。"
+description: Codex CLI と oh-my-codex をインストールし、`omx setup` を実行したあと、実行境界を確認して推奨される最初の OMX セッションを始めます。
 ---
 
-Codex CLI をインストールし、oh-my-codex をインストールした後、`omx setup` を実行し、`omx` でセッションを開始してから `$autopilot` を呼び出します。
+oh-my-codex (OMX) は [OpenAI Codex CLI](https://github.com/openai/codex) の上で動作するワークフローレイヤーです。Codex を実行エンジンとして維持したまま、役割別エージェントプロンプト、再利用可能なスキル、イベント駆動のフックを重ねて、曖昧なアイデアから動くコードまでを一貫したループで運べるようにします。このページではインストール、セットアップ確認、最初のセッションの走らせ方を順に解説します。
+
+## 前提条件
+
+- **Node.js 22+** (最低 20+、推奨は 22)
+- **Codex CLI** がインストール・認証済みであること (`npm i -g @openai/codex` 後、`codex login`)
+- **macOS または Linux** — OMX は主にこの環境向けに設計され、調整されています。ネイティブ Windows は動作が崩れたり一貫性を欠いたりする場合があり、現状はサポートが薄めです
+- durable な team runtime を使うなら **tmux** (macOS/Linux)
+
+## インストール
+
+<Steps>
+<Step>
+### Codex CLI をインストール
+
+```bash
+npm install -g @openai/codex
+```
+
+続けて認証します:
+
+```bash
+codex login
+```
+</Step>
+
+<Step>
+### OMX をインストール
+
+```bash
+npm install -g oh-my-codex
+```
+</Step>
+
+<Step>
+### setup を実行
+
+```bash
+omx setup
+```
+
+`omx setup` は `.codex/config.toml` を書き込んで `codex_hooks = true` を有効化し、`.codex/hooks.json` に OMX のフックコマンドを登録します。さらに `.omx/` プロジェクト状態ディレクトリを作り、セッションプロンプトに OMX エージェントのコンテキストを接続します。
+</Step>
+</Steps>
+
+## 最初のセッション
+
+インストール後、両方の境界を確認します:
+
+```bash
+omx doctor
+codex login status
+omx exec --skip-git-repo-check -C . "Reply with exactly OMX-EXEC-OK"
+```
+
+`omx doctor` は OMX のファイル、フック、ローカルランタイムの前提条件が欠けていないかを検出します。`omx exec` のスモークテストは、いま開いているシェルと設定で、アクティブな Codex プロファイルが実際に認証・モデル呼び出しまで到達できることを証明します。
+
+推奨の起動方法:
+
+```bash
+omx --madmax --high
+```
+
+インタラクティブなリーダーセッションを tmux 内で明示的に起動したい場合は:
+
+```bash
+omx --tmux --madmax --high
+```
+
+その上で、標準ワークフローを試します:
+
+```
+$deep-interview "認証変更の要件を明確にして"
+$ralplan "もっとも安全な実装パスを承認して"
+$ralph "承認済みの計画を完了まで進めて"
+```
+
+承認済みの計画に並列実行が必要な場合は、最後のステップを次のように置き換えます:
+
+```
+$team 3:executor "承認済みの計画を並列で実行して"
+```
+
+`--madmax` は意識的に使ってください。Codex の承認とサンドボックスをバイパスします。承認済みの計画を複数レーンに分けたいときは `$team`、ひとりの持ち主に最後まで押し切らせたいときは `$ralph` を選びます。
+
+デフォルトの経路を一度でも体験したあとなら、ワンコマンドで走らせる [`$autopilot`](/ja/docs/skills/workflow/autopilot) も依然として使えます。
+
+## 次のステップ
+
+- [主要概念](/ja/docs/concepts) — エージェント / スキル / フックの分離を先に把握
+- [エージェントカタログ](/ja/docs/agents) — 4 レーンに分かれた 33 の役割別プロンプト
+- [スキルカタログ](/ja/docs/skills) — ワークフローとユーティリティのスキル群
+- [インテグレーション](/ja/docs/integrations) — OMX を外部ツールチェーンに接続

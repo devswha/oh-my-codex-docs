@@ -1,6 +1,98 @@
 ---
 title: 快速开始
-description: "安装 Codex CLI，安装 oh-my-codex，运行 `omx setup`，再通过 `omx` 启动会话，然后调用 `$autopilot`。"
+description: 安装 Codex CLI 和 oh-my-codex，运行 `omx setup`，确认执行边界，然后开始推荐的第一次 OMX 会话。
 ---
 
-安装 Codex CLI，安装 oh-my-codex，运行 `omx setup`，再通过 `omx` 启动会话，然后调用 `$autopilot`。
+oh-my-codex (OMX) 是运行在 [OpenAI Codex CLI](https://github.com/openai/codex) 之上的工作流层。它把 Codex 保留为执行引擎，再叠加角色化的 agent prompt、可复用 skill 与事件驱动的 hook，让一个模糊的想法能在同一个循环里跑到可运行的代码。本页带你完成安装、校验设置，并跑通一次效果良好的首次会话。
+
+## 前置条件
+
+- **Node.js 22+** (20+ 为最低要求，推荐 22)
+- **Codex CLI** 已安装并完成认证 (`npm i -g @openai/codex`，然后 `codex login`)
+- **macOS 或 Linux** — OMX 主要面向这两个平台设计和调校。原生 Windows 当前可能表现不稳定，支持也较弱
+- 需要持久化 team runtime 时安装 **tmux** (macOS/Linux)
+
+## 安装
+
+<Steps>
+<Step>
+### 安装 Codex CLI
+
+```bash
+npm install -g @openai/codex
+```
+
+随后完成认证:
+
+```bash
+codex login
+```
+</Step>
+
+<Step>
+### 安装 OMX
+
+```bash
+npm install -g oh-my-codex
+```
+</Step>
+
+<Step>
+### 运行 setup
+
+```bash
+omx setup
+```
+
+`omx setup` 会写入 `.codex/config.toml` (启用 `codex_hooks = true`) 并在 `.codex/hooks.json` 中注册 OMX 的 hook 命令。同时它会创建 `.omx/` 项目状态目录，并把 OMX 的 agent 上下文接入到会话 prompt。
+</Step>
+</Steps>
+
+## 一次效果良好的首次会话
+
+安装后，分别校验两侧边界:
+
+```bash
+omx doctor
+codex login status
+omx exec --skip-git-repo-check -C . "Reply with exactly OMX-EXEC-OK"
+```
+
+`omx doctor` 会检查 OMX 文件、hook 与本地运行时是否齐备。`omx exec` 这一步则证明当前 shell 和配置下，活跃的 Codex profile 确实能完成一次真实的认证和模型调用。
+
+以推荐方式启动:
+
+```bash
+omx --madmax --high
+```
+
+如果显式希望在 tmux 内打开交互式 leader 会话:
+
+```bash
+omx --tmux --madmax --high
+```
+
+然后尝试标准工作流:
+
+```
+$deep-interview "澄清认证改动的需求"
+$ralplan "批准最安全的实现路径"
+$ralph "把已批准的计划推进到完成"
+```
+
+如果已批准的计划需要并行执行，把最后一步换成:
+
+```
+$team 3:executor "并行执行已批准的计划"
+```
+
+`--madmax` 要有意使用，它会绕过 Codex 的审批和沙箱。当已批准的计划需要分到多条 lane 并行推进时用 `$team`；当需要一个持久 owner 把工作一路推到完成时用 `$ralph`。
+
+熟悉默认路径之后，仍然可以用一条命令跑完整个流程: [`$autopilot`](/zh/docs/skills/workflow/autopilot)。
+
+## 后续步骤
+
+- [核心概念](/zh/docs/concepts) — 先理解 agent / skill / hook 的分工
+- [Agents 目录](/zh/docs/agents) — 四条 lane 下的 33 个角色化 prompt
+- [Skills 目录](/zh/docs/skills) — workflow 与 utility 两类 skill
+- [Integrations](/zh/docs/integrations) — 把 OMX 接入外部工具链
