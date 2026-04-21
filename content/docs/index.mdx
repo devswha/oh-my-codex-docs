@@ -31,41 +31,61 @@ npm i -g oh-my-codex
 omx setup
 ```
 
-### Step 4 — Launch OMX and try `$autopilot`
-
-Start an OMX session:
+### Step 4 — Run the first-session smoke test
 
 ```bash
-omx
+omx doctor
+codex login status
+omx exec --skip-git-repo-check -C . "Reply with exactly OMX-EXEC-OK"
 ```
 
-Then, in that session, run:
+### Step 5 — Launch OMX the recommended way
+
+```bash
+omx --madmax --high
+```
+
+Then, in that session, try the canonical workflow:
 
 ```
-$autopilot build me a todo app in next.js
+$deep-interview "clarify the authentication change"
+$ralplan "approve the safest implementation path"
+$ralph "carry the approved plan to completion"
 ```
 
-If you prefer the implicit keyword trigger, `autopilot build me a todo app in next.js` also works.
+If the approved plan needs coordinated parallel execution, use `$team 3:executor "execute the approved plan in parallel"` instead of `$ralph`.
 
-## Documentation map
+## Documentation
 
-| Section | What you'll find |
-|---|---|
-| [Getting Started](./getting-started) | Installation, setup verification, and your first OMX session |
-| [Core Concepts](./concepts) | How agents, skills, hooks, and `.omx/` state fit together |
-| [Guides](./guides) | Recommended workflows for autopilot, planning, QA, and debugging |
-| [Agents](./agents) | The 33 prompt surfaces grouped by build, review, domain, and coordination lanes |
-| [Skills](./skills) | Workflow and utility skills, invocation rules, and when to use each one |
-| [Hooks](./hooks) | Codex lifecycle integrations, keyword detection, and hook behavior |
-| [Tools](./tools) | OMX MCP tools for state, HUD, wiki, visual QA, and provider bridges |
-| [Integrations](./integrations) | OpenClaw, Clawhip, MCP, and cross-CLI interoperability docs |
-| [Reference](./reference) | Configuration, quick commands, environment, migrations, and contracts |
-| [Support](./support) | FAQ, issue reporting, and support channels |
-
-## What's Next
-
-- [Getting Started](./getting-started) — full installation and first run
-- [Core Concepts](./concepts) — agents, skills, hooks, teams
-- [Agents](./agents) — the 33 agent prompts
-- [Skills](./skills) — the 37 automation skills
-- [Integrations](./integrations) — OpenClaw, MCP, cross-CLI bridges
+<Cards>
+  <Card title="Getting Started" href="/docs/getting-started">
+    Installation, setup verification, and a good first OMX session
+  </Card>
+  <Card title="Core Concepts" href="/docs/concepts">
+    Agents, skills, hooks, and `.omx/` runtime state
+  </Card>
+  <Card title="Guides" href="/docs/guides">
+    Recommended workflows for planning, execution, QA, and debugging
+  </Card>
+  <Card title="Agents" href="/docs/agents">
+    Reference for the 33 role-specific prompt surfaces
+  </Card>
+  <Card title="Skills" href="/docs/skills">
+    Workflow and utility skills, invocation rules, and usage guidance
+  </Card>
+  <Card title="Hooks" href="/docs/hooks">
+    Codex lifecycle integrations, keyword routing, and hook behavior
+  </Card>
+  <Card title="Tools" href="/docs/tools">
+    Runtime capability surfaces such as State, HUD, Wiki, Visual, and provider bridges
+  </Card>
+  <Card title="Integrations" href="/docs/integrations">
+    OpenClaw, Clawhip, MCP, and cross-CLI interoperability
+  </Card>
+  <Card title="Reference" href="/docs/reference">
+    Configuration, quick commands, environment variables, and contracts
+  </Card>
+  <Card title="Support" href="/docs/support">
+    FAQ, issue reporting, and support channels
+  </Card>
+</Cards>

@@ -1,9 +1,9 @@
 ---
 title: Getting Started
-description: "Install Codex CLI, install oh-my-codex, run omx setup, and invoke your first automated workflow."
+description: "Install Codex CLI, install oh-my-codex, run omx setup, verify execution boundaries, and launch your first recommended OMX session."
 ---
 
-oh-my-codex (OMX) is a workflow layer for [OpenAI Codex CLI](https://github.com/openai/codex). It keeps Codex as the execution engine and wraps it with role-specific agent prompts, reusable skills, and event-driven hooks so you can go from a vague idea to working code in one consistent loop. This page walks you through installing OMX, verifying the setup, and running your first session.
+oh-my-codex (OMX) is a workflow layer for [OpenAI Codex CLI](https://github.com/openai/codex). It keeps Codex as the execution engine and wraps it with role-specific agent prompts, reusable skills, and event-driven hooks so you can go from a vague idea to working code in one consistent loop. This page walks you through installing OMX, verifying the setup, and running a good first session.
 
 ## Prerequisites
 
@@ -46,48 +46,49 @@ omx setup
 
 `omx setup` wires the Codex-native hooks by writing `.codex/config.toml` (enables `codex_hooks = true`) and `.codex/hooks.json` (registers the OMX hook command). It also creates the `.omx/` project-state directory and configures the session prompt with OMX agent context.
 </Step>
+</Steps>
 
-<Step>
-### Verify the installation
+## A good first session
+
+After install, check both boundaries:
 
 ```bash
 omx doctor
-```
-
-`omx doctor` checks that all required files exist and are shaped correctly. To also prove the active Codex profile can complete a real model call, run:
-
-```bash
 codex login status
 omx exec --skip-git-repo-check -C . "Reply with exactly OMX-EXEC-OK"
 ```
-</Step>
-</Steps>
 
-## First run
+`omx doctor` catches missing OMX files, hooks, and local runtime prerequisites. The `omx exec` smoke test proves the active Codex profile can actually authenticate and complete a real model call from your current shell and config.
 
-Open a new OMX session and try the canonical autopilot skill:
-
-```
-omx
-> $autopilot build me a todo app in next.js
-```
-
-What happens under the hood:
-
-1. The `UserPromptSubmit` hook detects the `$autopilot` magic keyword and activates the skill.
-2. OMX routes to `$deep-interview` to clarify requirements before touching any code.
-3. Once requirements are confirmed, `$ralplan` drafts and validates a plan with consensus.
-4. `executor` carries out the implementation step-by-step.
-5. `$ultraqa` runs a QA iteration loop — test, verify, fix — until the acceptance criteria pass.
-6. `verifier` collects final evidence and confirms completion.
-
-If you already want the most aggressive autonomous mode, you can opt into it explicitly:
+Launch OMX the recommended way:
 
 ```bash
 omx --madmax --high
 ```
 
-Use `--madmax` intentionally: it bypasses Codex approvals and sandboxing.
+If you explicitly want the interactive leader session inside tmux, use:
+
+```bash
+omx --tmux --madmax --high
+```
+
+Then try the canonical workflow:
+
+```
+$deep-interview "clarify the authentication change"
+$ralplan "approve the safest implementation path"
+$ralph "carry the approved plan to completion"
+```
+
+If the approved plan needs coordinated parallel execution, switch the last step to:
+
+```
+$team 3:executor "execute the approved plan in parallel"
+```
+
+Use `--madmax` intentionally: it bypasses Codex approvals and sandboxing. Use `$team` when the approved plan needs coordinated parallel work, or `$ralph` when one persistent owner should keep pushing to completion.
+
+If you prefer a more hands-off, one-command workflow after learning the default path, [`$autopilot`](/docs/skills/workflow/autopilot) is still available.
 
 ## Next steps
 

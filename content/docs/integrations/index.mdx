@@ -1,24 +1,64 @@
 ---
 title: "Integrations"
-description: "OMX integrations with external ecosystems: OpenClaw (Codex↔Claude bridge), Clawhip event contract, MCP servers, and CLI bridges."
+description: An overview of how OMX connects to external systems, MCP servers, and other CLIs.
 ---
 
-Integrations explain how OMX connects its Codex-first runtime to adjacent systems: event gateways, interoperability contracts, MCP servers, and cross-CLI helper flows.
+## What are integrations?
 
-## Integration pages
+Integrations cover the points where OMX connects to systems outside itself.
 
-| Page | What it covers |
-|---|---|
-| [OpenClaw](/docs/integrations/openclaw) | The notification and dispatch bridge that sends OMX hook events to external gateways |
-| [Clawhip](/docs/integrations/clawhip) | The normalized event contract downstream consumers should route on |
-| [MCP](/docs/integrations/mcp) | How OMX discovers and invokes Model Context Protocol servers |
-| [CLI Bridges](/docs/integrations/cli-bridges) | `$ask-claude`, `$ask-gemini`, and multi-CLI consultation workflows |
+For example, OMX can:
 
-## When to use this section
+- send hook events to external gateways
+- discover and invoke MCP servers
+- hand bounded sub-questions to other CLIs and models
 
-Use the integrations docs when you need to:
+So this section is about **how OMX connects to the outside world**.
 
-- connect OMX hook events to another system,
-- understand the event envelope external consumers receive,
-- configure MCP-backed tools and servers,
-- or route work across Codex, Claude, and Gemini intentionally.
+## What integrations exist?
+
+### OpenClaw
+
+[OpenClaw](/docs/integrations/openclaw) is the bridge that sends OMX hook events to external gateways.
+
+Read it when you want to:
+
+- send events to Discord / Slack / Telegram / a custom target
+- connect hook-driven notifications or dispatch to another system
+
+### Clawhip
+
+[Clawhip](/docs/integrations/clawhip) explains the normalized event contract external consumers should rely on.
+
+In other words, it shows **what shape OMX events take once they leave the runtime**.
+
+### MCP
+
+[MCP](/docs/integrations/mcp) explains how OMX discovers and invokes Model Context Protocol servers.
+
+It matters when you want to:
+
+- expose external tools through MCP
+- understand which MCP calls happen beneath skill/tool surfaces
+- connect local capabilities into OMX in a structured way
+
+### CLI Bridges
+
+[CLI Bridges](/docs/integrations/cli-bridges) explains cross-CLI consultation flows such as `$ask-claude` and `$ask-gemini`.
+
+Read it when you want to:
+
+- consult another model intentionally
+- use a second CLI without polluting the active context
+- delegate bounded sub-questions outside the current Codex session
+
+## When should you read this section first?
+
+Integrations matter most when:
+
+- you need to connect OMX hook events to another system
+- you need to attach MCP-backed tools or servers
+- you want to distribute work intentionally across Codex, Claude, and Gemini
+- you want to understand how the runtime interacts with external systems
+
+So this is usually the section you open once you move beyond using OMX as a self-contained workflow layer and start **wiring it into a broader toolchain**.
