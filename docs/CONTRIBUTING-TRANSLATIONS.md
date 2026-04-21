@@ -95,6 +95,12 @@ Translate every `## Section` and `### Subsection` to your target language. Do no
 
 Proper nouns inside headings stay English: `## Autopilot の設定` is correct for Japanese; `## オートパイロットの設定` is not.
 
+## OMC tone reference
+
+When you are translating or restructuring OMX docs to feel closer to the sibling OMC docs, read [`OMC-DOCS-TONE-REFERENCE.md`](./OMC-DOCS-TONE-REFERENCE.md) first.
+
+That note captures the observed tone differences across English, Korean, Japanese, and Chinese OMC pages so you can copy the **reader experience** without copying OMC-only facts.
+
 ## Questions / stuck?
 
 Open an issue in [this repo](https://github.com/devswha/oh-my-codex-docs/issues) or ping a maintainer. Content and website code live in the same repository, so there is no separate place to file build issues.
