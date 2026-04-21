@@ -1,98 +1,140 @@
 ---
-title: クイックスタート
-description: Codex CLI と oh-my-codex をインストールし、`omx setup` を実行したあと、実行境界を確認して推奨される最初の OMX セッションを始めます。
+title: はじめに
+description: oh-my-codex (OMX) のインストールから最初のセッションまで最短で進める
 ---
 
-oh-my-codex (OMX) は [OpenAI Codex CLI](https://github.com/openai/codex) の上で動作するワークフローレイヤーです。Codex を実行エンジンとして維持したまま、役割別エージェントプロンプト、再利用可能なスキル、イベント駆動のフックを重ねて、曖昧なアイデアから動くコードまでを一貫したループで運べるようにします。このページではインストール、セットアップ確認、最初のセッションの走らせ方を順に解説します。
+## はじめに
 
-## 前提条件
+oh-my-codex (OMX) を初めて使うなら、以下の順で進めてください。
 
-- **Node.js 22+** (最低 20+、推奨は 22)
-- **Codex CLI** がインストール・認証済みであること (`npm i -g @openai/codex` 後、`codex login`)
-- **macOS または Linux** — OMX は主にこの環境向けに設計され、調整されています。ネイティブ Windows は動作が崩れたり一貫性を欠いたりする場合があり、現状はサポートが薄めです
-- durable な team runtime を使うなら **tmux** (macOS/Linux)
+1. [インストール](#install) — Codex CLI と OMX をインストールし、`omx setup` を実行
+2. [最初のセッション](#first-session) — 実行境界を確認し、推奨ワークフローを走らせる
+
+OMX は [OpenAI Codex CLI](https://github.com/openai/codex) の上で動くワークフローレイヤーです。Codex を実行エンジンとして残したまま、役割別のエージェントプロンプト、スキル、フックを重ねることで、曖昧なアイデアから動くコードまでを一貫したループで運べます。
+
+### 前提条件
+
+| 項目 | 要件 |
+|------|----------|
+| Node.js | 22+ 推奨 (最低 20+) |
+| [Codex CLI](https://github.com/openai/codex) | インストールと認証が必要 |
+| OS | macOS または Linux 推奨 |
+| tmux | durable な team runtime を使う場合に必要 |
+
+<Callout type="info">
+ネイティブ Windows では動作が崩れたり一貫しなかったりする場合があります。可能なら macOS か Linux を使ってください。
+</Callout>
+
+---
 
 ## インストール
 
-<Steps>
-<Step>
-### Codex CLI をインストール
+### Codex CLI のインストール
+
+まず Codex CLI をインストールします。
 
 ```bash
 npm install -g @openai/codex
 ```
 
-続けて認証します:
+続けて認証します。
 
 ```bash
 codex login
 ```
-</Step>
 
-<Step>
-### OMX をインストール
+### OMX のインストール
+
+次に OMX をインストールします。
 
 ```bash
 npm install -g oh-my-codex
 ```
-</Step>
 
-<Step>
-### setup を実行
+### setup 実行
+
+両方入ったら setup を実行します。
 
 ```bash
 omx setup
 ```
 
-`omx setup` は `.codex/config.toml` を書き込んで `codex_hooks = true` を有効化し、`.codex/hooks.json` に OMX のフックコマンドを登録します。さらに `.omx/` プロジェクト状態ディレクトリを作り、セッションプロンプトに OMX エージェントのコンテキストを接続します。
-</Step>
-</Steps>
+`omx setup` は次を自動で行います。
 
-## 最初のセッション
+- `.codex/config.toml` を書き、`codex_hooks = true` を有効化
+- `.codex/hooks.json` に OMX のフックコマンドを登録
+- `.omx/` プロジェクト状態ディレクトリを作成
+- セッションプロンプトに OMX エージェントのコンテキストを接続
 
-インストール後、両方の境界を確認します:
+### インストール確認
+
+正常にインストールされたかを確認します。
 
 ```bash
 omx doctor
+```
+
+`omx doctor` は欠けているファイル、フック、ローカルランタイムの前提条件を点検します。
+
+---
+
+## 最初のセッション
+
+インストールが確認できたら、実行境界を確認して最初のセッションを始めます。
+
+### 実行境界の確認
+
+現在のシェルと設定で実際にモデル呼び出しが可能か確認します。
+
+```bash
 codex login status
 omx exec --skip-git-repo-check -C . "Reply with exactly OMX-EXEC-OK"
 ```
 
-`omx doctor` は OMX のファイル、フック、ローカルランタイムの前提条件が欠けていないかを検出します。`omx exec` のスモークテストは、いま開いているシェルと設定で、アクティブな Codex プロファイルが実際に認証・モデル呼び出しまで到達できることを証明します。
+- `codex login status` は現在の認証状態を表示します。
+- `omx exec` のスモークテストは、アクティブな Codex プロファイルが実際にリクエストを投げ、応答を最後まで受け取れることを証明します。
 
-推奨の起動方法:
+### 推奨の起動方法
+
+OMX は次の方法で起動することを推奨します。
 
 ```bash
 omx --madmax --high
 ```
 
-インタラクティブなリーダーセッションを tmux 内で明示的に起動したい場合は:
+リーダーセッションを tmux 内で明示的に立ち上げたい場合は:
 
 ```bash
 omx --tmux --madmax --high
 ```
 
-その上で、標準ワークフローを試します:
+<Callout type="warn">
+`--madmax` は Codex の承認とサンドボックスをバイパスします。意識的に使ってください。
+</Callout>
 
-```
-$deep-interview "認証変更の要件を明確にして"
+### 標準ワークフローの実行
+
+最初のセッションでは以下の順番をおすすめします。
+
+```bash
+$deep-interview "認証変更を明確にして"
 $ralplan "もっとも安全な実装パスを承認して"
 $ralph "承認済みの計画を完了まで進めて"
 ```
 
-承認済みの計画に並列実行が必要な場合は、最後のステップを次のように置き換えます:
+各ステップの意味:
 
+| ステップ | 役割 |
+|------|------|
+| `$deep-interview` | 要件が曖昧なときに質問で整理 |
+| `$ralplan` | 実装前にもっとも安全な計画を合意 |
+| `$ralph` | 承認済みの計画を押し続け、完了まで実施 |
+
+承認済みの計画に並列実行が必要なら、最後のステップを次のように差し替えます。
+
+```bash
+$team 3:executor "承認済みの計画を並列実行して"
 ```
-$team 3:executor "承認済みの計画を並列で実行して"
-```
 
-`--madmax` は意識的に使ってください。Codex の承認とサンドボックスをバイパスします。承認済みの計画を複数レーンに分けたいときは `$team`、ひとりの持ち主に最後まで押し切らせたいときは `$ralph` を選びます。
-
-デフォルトの経路を一度でも体験したあとなら、ワンコマンドで走らせる [`$autopilot`](/ja/docs/skills/workflow/autopilot) も依然として使えます。
-
-## 次のステップ
-
-- [主要概念](/ja/docs/concepts) — エージェント / スキル / フックの分離を先に把握
-- [エージェントカタログ](/ja/docs/agents) — 4 レーンに分かれた 33 の役割別プロンプト
-- [スキルカタログ](/ja/docs/skills) — ワークフローとユーティリティのスキル群
-- [インテグレーション](/ja/docs/integrations) — OMX を外部ツールチェーンに接続
+- 並列作業が必要なら `$team`
+- 一人のオーナーが最後まで押し切るフローなら `$ralph`

@@ -1,98 +1,140 @@
 ---
 title: Getting Started
-description: "Install Codex CLI, install oh-my-codex, run omx setup, verify execution boundaries, and launch your first recommended OMX session."
+description: Go from install to your first OMX session fast
 ---
 
-oh-my-codex (OMX) is a workflow layer for [OpenAI Codex CLI](https://github.com/openai/codex). It keeps Codex as the execution engine and wraps it with role-specific agent prompts, reusable skills, and event-driven hooks so you can go from a vague idea to working code in one consistent loop. This page walks you through installing OMX, verifying the setup, and running a good first session.
+## Getting started
 
-## Prerequisites
+If this is your first time with oh-my-codex (OMX), follow the steps below.
 
-- **Node.js 22+** (20+ is the minimum; 22 is recommended)
-- **Codex CLI** installed and authenticated (`npm i -g @openai/codex`, then `codex login`)
-- **macOS or Linux** — OMX is primarily designed and actively tuned for these platforms. Native Windows may break or behave inconsistently and currently receives less support.
-- **tmux** (macOS/Linux) if you want the durable team runtime
+1. [Install](#install) — install Codex CLI and OMX, then run `omx setup`
+2. [First session](#first-session) — check execution boundaries and run the recommended workflow
+
+OMX is a workflow layer that runs on top of [OpenAI Codex CLI](https://github.com/openai/codex). It keeps Codex as the execution engine and adds role-specific agent prompts, skills, and hooks on top, so a vague idea can move to working code in one coherent loop.
+
+### Prerequisites
+
+| Item | Requirement |
+|------|----------|
+| Node.js | 22+ recommended (20+ minimum) |
+| [Codex CLI](https://github.com/openai/codex) | Installed and authenticated |
+| OS | macOS or Linux recommended |
+| tmux | Required for the durable team runtime |
+
+<Callout type="info">
+Native Windows may behave inconsistently or break. Prefer macOS or Linux when possible.
+</Callout>
+
+---
 
 ## Install
 
-<Steps>
-<Step>
 ### Install Codex CLI
+
+First install Codex CLI.
 
 ```bash
 npm install -g @openai/codex
 ```
 
-Then authenticate:
+Then authenticate.
 
 ```bash
 codex login
 ```
-</Step>
 
-<Step>
 ### Install OMX
+
+Then install OMX.
 
 ```bash
 npm install -g oh-my-codex
 ```
-</Step>
 
-<Step>
 ### Run setup
+
+Once both are installed, run setup.
 
 ```bash
 omx setup
 ```
 
-`omx setup` wires the Codex-native hooks by writing `.codex/config.toml` (enables `codex_hooks = true`) and `.codex/hooks.json` (registers the OMX hook command). It also creates the `.omx/` project-state directory and configures the session prompt with OMX agent context.
-</Step>
-</Steps>
+`omx setup` handles the following automatically:
 
-## A good first session
+- Writes `.codex/config.toml` and enables `codex_hooks = true`
+- Registers OMX hook commands in `.codex/hooks.json`
+- Creates the `.omx/` project state directory
+- Wires OMX agent context into the session prompt
 
-After install, check both boundaries:
+### Verify the install
+
+Confirm the install worked.
 
 ```bash
 omx doctor
+```
+
+`omx doctor` checks for missing files, hooks, and local runtime prerequisites.
+
+---
+
+## First session
+
+With the install verified, confirm the execution boundaries and start your first session.
+
+### Check execution boundaries
+
+Confirm the current shell and config can actually make a model call.
+
+```bash
 codex login status
 omx exec --skip-git-repo-check -C . "Reply with exactly OMX-EXEC-OK"
 ```
 
-`omx doctor` catches missing OMX files, hooks, and local runtime prerequisites. The `omx exec` smoke test proves the active Codex profile can actually authenticate and complete a real model call from your current shell and config.
+- `codex login status` shows the current auth state.
+- The `omx exec` smoke test proves the active Codex profile can send a real request and receive the full response.
 
-Launch OMX the recommended way:
+### Recommended launch
+
+OMX recommends starting this way.
 
 ```bash
 omx --madmax --high
 ```
 
-If you explicitly want the interactive leader session inside tmux, use:
+If you explicitly want the leader session inside tmux:
 
 ```bash
 omx --tmux --madmax --high
 ```
 
-Then try the canonical workflow:
+<Callout type="warn">
+`--madmax` bypasses Codex approvals and sandboxing. Use it intentionally.
+</Callout>
 
-```
+### Run the default workflow
+
+For the first session, this is the recommended sequence.
+
+```bash
 $deep-interview "clarify the authentication change"
 $ralplan "approve the safest implementation path"
 $ralph "carry the approved plan to completion"
 ```
 
-If the approved plan needs coordinated parallel execution, switch the last step to:
+Each step means:
 
-```
+| Step | Role |
+|------|------|
+| `$deep-interview` | Clarify the task through questioning when requirements are fuzzy |
+| `$ralplan` | Agree on the safest plan before implementation |
+| `$ralph` | Push the approved plan through to completion |
+
+If the approved plan needs parallel execution, swap the last step for:
+
+```bash
 $team 3:executor "execute the approved plan in parallel"
 ```
 
-Use `--madmax` intentionally: it bypasses Codex approvals and sandboxing. Use `$team` when the approved plan needs coordinated parallel work, or `$ralph` when one persistent owner should keep pushing to completion.
-
-If you prefer a more hands-off, one-command workflow after learning the default path, [`$autopilot`](/docs/skills/workflow/autopilot) is still available.
-
-## Next steps
-
-- [Core Concepts](/docs/concepts) — understand the agent/skill/hook separation before going deeper
-- [Agents catalog](/docs/agents) — 33 role-specific prompts across four lanes
-- [Skills catalog](/docs/skills) — 37 one-shot workflow and utility skills
-- [Integrations](/docs/integrations) — connect OMX to external tooling
+- Parallel work → `$team`
+- One persistent owner carrying it all the way through → `$ralph`
