@@ -16,7 +16,7 @@ description: 在当前OMX会话中将子问题委托给Gemini的桥接技能
 ## 何时避免
 
 - 需要当前代码库上下文的问题 → 在Codex中直接处理
-- 想同时比较Claude和Gemini → `$ccg` 三模型工作流更合适
+- 想在同一决策循环中比较 Claude 和 Gemini 时，请并行使用有边界的 `$ask-claude`/`$ask-gemini` 调用，或通过明确的 team orchestration 综合结果
 
 ## 命令
 

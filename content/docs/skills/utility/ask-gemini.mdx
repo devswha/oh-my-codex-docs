@@ -16,7 +16,7 @@ A bridge for sending sub-questions to Gemini without leaving the current Codex s
 ## When to avoid
 
 - Questions that require the current codebase context → handle directly in Codex
-- If you want Claude and Gemini simultaneously, `$ccg` triple-model workflow is a better fit
+- If you want Claude and Gemini in the same decision loop, run bounded `$ask-claude`/`$ask-gemini` calls or use explicit team orchestration and synthesize in Codex
 
 ## Commands
 

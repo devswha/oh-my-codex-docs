@@ -16,7 +16,7 @@ description: 현재 OMX 세션에서 Gemini에게 서브 질문을 위임하는 
 ## 언제 피하나
 
 - 현재 코드베이스 맥락이 필요한 질문 → Codex에서 직접 처리
-- Claude와 Gemini를 동시에 비교하려면 `$ccg` 트리플 모델 워크플로우가 더 적합
+- Claude와 Gemini를 같은 의사결정 루프에서 비교하려면 제한된 `$ask-claude`/`$ask-gemini` 호출을 나란히 쓰거나 명시적인 team orchestration으로 합성하세요
 
 ## 명령
 
