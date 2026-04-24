@@ -5,25 +5,38 @@ description: "OMX 릴리스 이력 — 최신 릴리스 요약과 업스트림 C
 
 전체 changelog는 업스트림 [`CHANGELOG.md`](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/CHANGELOG.md)에서 관리됩니다. 이 페이지는 최근 릴리스를 요약합니다.
 
-## 최신 릴리스 — v0.13.1
+## 최신 릴리스 — v0.14.4
 
-detached interactive Codex startup을 복구하는 hotfix입니다.
+기본 frontier lane을 `gpt-5.5`로 올리면서 standard/mini lane과 spark lane은 기존의 정확한 모델 고정값으로 유지하는 패치 릴리스입니다.
+
+**변경 사항:**
+- runtime 기본값, Codex agent 기본값, `omx explore` fallback 동작에서 frontier 기본값이 `gpt-5.5`를 사용합니다.
+- setup/config 안내와 regression coverage가 `gpt-5.5` 기본값을 설명하도록 갱신되었고, 기존 context size 권장값은 유지됩니다.
+- 생성되는 setup config와 executor worker launch 기본값이 이제 medium reasoning을 기본으로 사용합니다.
+- mini와 spark lane은 그대로입니다. `gpt-5.4-mini`와 `gpt-5.3-codex-spark` 동작은 변경되지 않았습니다.
 
 **수정 사항:**
-- detached tmux startup이 Codex stdin을 잃지 않습니다. detached leader wrapper가 backgrounding 과정에서도 stdin을 유지하므로, `omx --madmax --high` 같은 interactive detached launch가 시작 직후 종료되지 않습니다.
-- CLI regression test에서 Codex child의 stdin이 열려 있는지, leader cleanup semantics가 보존되는지 검증합니다.
+- Node/Cargo metadata, lockfile, changelog, release body, release note, release-readiness 자료의 릴리스 메타데이터 drift를 정렬했습니다.
 
-## v0.13.0
+## v0.14.3
 
-team worker 개선, hook pipeline 안정화, model routing 업데이트를 포함한 주요 릴리스입니다. 자세한 내용은 [전체 릴리스 노트](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/docs/release-notes-0.13.0.md)를 참고하세요.
+`0.14.2` 이후의 안정성 강화 릴리스입니다. `omx question`/deep-interview return-pane 동작, project-local explore launch context, setup TOML repair 안전성, HUD window targeting, ultrawork protocol 정렬, BusyBox cleanup 호환성, stale Stop/autopilot state 처리, supervisor runtime event, Docker-host tmux question rendering, native Windows psmux worker pane bootstrap hardening을 다룹니다.
 
-## v0.12.x 시리즈
+## v0.14.2 및 v0.14.1
 
-team pipeline 개선, spark worker routing, OpenClaw gateway 안정성, notifier verbosity control을 다룬 시리즈입니다.
+interactive orchestration 안정성에 집중한 패치 릴리스입니다. 더 안전한 `omx question` renderer 동작, 공유 tmux answer-submit semantics, 더 엄격한 deep-interview state 처리, Korean `ulw` keyboard drift handling, setup/update refresh 복원력, lifecycle contract cleanup, 더 명확한 deep-interview background-question guidance를 포함합니다.
 
-- [v0.12.6](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/docs/release-notes-0.12.6.md)
-- [v0.12.5](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/docs/release-notes-0.12.5.md)
-- [v0.12.4](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/docs/release-notes-0.12.4.md)
+## v0.14.0
+
+interactive orchestration 변화를 중심으로 한 minor release입니다. 새로운 `omx question` blocking-question entrypoint, 구조화된 deep-interview question obligation, advisory triage routing, validator-gated autoresearch, 명시적인 runtime run outcome, 더 명확한 specialist routing, 배포 패키지 hardening이 포함됩니다.
+
+## v0.13.x 시리즈
+
+`omx adapt` 기반, Ralph/runtime authority 수정, hook과 HUD 안정성, worker identity 보존, 보안 hardening, detached tmux startup repair를 다룬 시리즈입니다.
+
+- [v0.13.2](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/CHANGELOG.md#0132---2026-04-18)
+- [v0.13.1](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/CHANGELOG.md#0131---2026-04-16)
+- [v0.13.0](https://github.com/Yeachan-Heo/oh-my-codex/blob/main/docs/release-notes-0.13.0.md)
 
 ## 전체 이력
 
