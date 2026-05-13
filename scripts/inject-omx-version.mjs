@@ -36,10 +36,11 @@ try {
       `[inject-omx-version] fetch failed (${err.message}); keeping existing version.ts`,
     );
   } else {
-    const fallback = '0.13.2';
-    writeVersionFile(fallback);
-    console.warn(
-      `[inject-omx-version] fetch failed (${err.message}); wrote fallback ${fallback}`,
+    // No upstream and no committed version: fail loudly rather than write a
+    // stale literal that would silently downgrade the sidebar.
+    console.error(
+      `[inject-omx-version] fetch failed (${err.message}) and no existing ${outPath}.`,
     );
+    process.exit(1);
   }
 }
