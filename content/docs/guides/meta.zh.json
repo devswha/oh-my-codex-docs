@@ -1,8 +1,13 @@
 {
-  "title": "指南",
+  "title": "使用场景与指南",
   "pages": [
-    "[如何选择技能](/zh/docs/guides#when-to-use-which-skill)",
-    "[建议起步方式](/zh/docs/guides#suggested-first-moves)",
-    "[贡献指南](/zh/docs/guides#contributing-guides)"
+    "[决策表](/zh/docs/guides#决策表)",
+    "[默认 guided flow](/zh/docs/guides#默认-guided-flow)",
+    "[用 $autopilot 快速制作原型](/zh/docs/guides#用-autopilot-快速制作原型)",
+    "[实现前先规划](/zh/docs/guides#实现前先规划)",
+    "[用 $design 在 UI 工作前确定设计基准](/zh/docs/guides#用-design-在-ui-工作前确定设计基准)",
+    "[用 $ultragoal 跟踪 durable milestone](/zh/docs/guides#用-ultragoal-跟踪-durable-milestone)",
+    "[用 $team 拆分并行工作](/zh/docs/guides#用-team-拆分并行工作)",
+    "[用 $ultraqa 验证并修复](/zh/docs/guides#用-ultraqa-验证并修复)"
   ]
 }

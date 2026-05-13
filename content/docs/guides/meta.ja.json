@@ -1,8 +1,13 @@
 {
-  "title": "ガイド",
+  "title": "ユースケースとガイド",
   "pages": [
-    "[どのスキルを使うか](/ja/docs/guides#when-to-use-which-skill)",
-    "[最初に試すこと](/ja/docs/guides#suggested-first-moves)",
-    "[ガイドへの貢献](/ja/docs/guides#contributing-guides)"
+    "[判断表](/ja/docs/guides#判断表)",
+    "[標準 guided flow](/ja/docs/guides#標準-guided-flow)",
+    "[$autopilot ですばやくプロトタイプを作る](/ja/docs/guides#autopilot-ですばやくプロトタイプを作る)",
+    "[実装前に計画する](/ja/docs/guides#実装前に計画する)",
+    "[$design で UI 作業前に設計基準を作る](/ja/docs/guides#design-で-ui-作業前に設計基準を作る)",
+    "[$ultragoal で durable milestone を追跡する](/ja/docs/guides#ultragoal-で-durable-milestone-を追跡する)",
+    "[$team で並列作業を分ける](/ja/docs/guides#team-で並列作業を分ける)",
+    "[$ultraqa で検証と修正を繰り返す](/ja/docs/guides#ultraqa-で検証と修正を繰り返す)"
   ]
 }

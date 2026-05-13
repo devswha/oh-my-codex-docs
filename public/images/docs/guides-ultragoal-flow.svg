@@ -1,0 +1,88 @@
+<svg width="2401" height="440" viewBox="0 0 2401 440" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Ultragoal aggregate goal handoff workflow</title>
+  <desc id="desc">A brief becomes durable Ultragoal state, complete-goals prints a handoff prompt into active Codex goal mode, checkpoint evidence returns to the ledger, and a final gate leads to Done.</desc>
+  <defs>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap");
+      .bg { fill: #fdfbf7; }
+      .line { stroke: #b3b1a7; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+      .dash { stroke: #b3b1a7; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 3 8; fill: none; }
+      .boundary { stroke: #dcdad2; stroke-width: 1.1; stroke-linecap: round; stroke-dasharray: 2 7; fill: none; }
+      .green-box { fill: #f0f7eb; stroke: #b8dca8; stroke-width: 1.5; }
+      .purple-box { fill: #f5f3ff; stroke: #b7adf1; stroke-width: 1.5; }
+      .purple-outline { fill: none; stroke: #b7adf1; stroke-width: 1.5; }
+      .file-box { fill: #ffffff; stroke: #d6cff0; stroke-width: 1.1; }
+      .orange-pill { fill: #fff8f5; stroke: #f0b6a4; stroke-width: 1.5; }
+      .txt { font-family: "Space Grotesk", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-anchor: middle; dominant-baseline: middle; font-weight: 600; letter-spacing: -0.005em; }
+      .mono { font-family: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-weight: 500; letter-spacing: 0; }
+      .green { fill: #5a913e; }
+      .purple { fill: #6b62aa; }
+      .orange { fill: #c65f40; }
+      .label { fill: #7a7872; font-weight: 450; font-size: 22px; }
+      .file { font-size: 24px; fill: #6b62aa; font-weight: 500; }
+      .main { font-size: 34px; }
+      .sub { font-size: 25px; }
+      .left { text-anchor: end; }
+      .right { text-anchor: start; }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M1.5 1.5 L9 5 L1.5 8.5" fill="none" stroke="#b3b1a7" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="2401" height="440"/>
+
+  <!-- Input -->
+  <rect class="orange-pill" x="265" y="222" width="160" height="76" rx="38"/>
+  <text class="txt orange main" x="345" y="262">Brief</text>
+
+  <path class="line" d="M442 260 H538" marker-end="url(#arrow)"/>
+
+  <!-- Create plan -->
+  <text class="txt label" x="675" y="178">aggregate mode</text>
+  <rect class="green-box" x="555" y="210" width="240" height="100" rx="10"/>
+  <text class="txt green main mono" x="675" y="248">$ultragoal</text>
+  <text class="txt green sub mono" x="675" y="284">create-goals</text>
+
+  <path class="line" d="M812 260 H908" marker-end="url(#arrow)"/>
+
+  <!-- Durable files -->
+  <text class="txt label" x="1055" y="163">durable state</text>
+  <rect class="purple-box" x="925" y="178" width="260" height="164" rx="10"/>
+  <rect class="file-box" x="955" y="198" width="200" height="38" rx="6"/>
+  <text class="txt file mono" x="1055" y="218">brief.md</text>
+  <rect class="file-box" x="955" y="244" width="200" height="38" rx="6"/>
+  <text class="txt file mono" x="1055" y="264">goals.json</text>
+  <rect class="file-box" x="955" y="290" width="200" height="38" rx="6"/>
+  <text class="txt file mono" x="1055" y="310">ledger.jsonl</text>
+
+  <path class="line" d="M1202 260 H1298" marker-end="url(#arrow)"/>
+
+  <!-- Transient handoff -->
+  <text class="txt label" x="1425" y="178">complete-goals</text>
+  <rect class="purple-outline" x="1315" y="210" width="220" height="100" rx="10"/>
+  <text class="txt purple main" x="1425" y="262">handoff</text>
+
+  <path class="line" d="M1552 260 H1628" marker-end="url(#arrow)"/>
+
+  <!-- Active goal -->
+  <text class="txt label" x="1745" y="178">active thread</text>
+  <rect class="green-box" x="1645" y="210" width="200" height="100" rx="10"/>
+  <text class="txt green main" x="1745" y="248">Codex</text>
+  <text class="txt green sub" x="1745" y="284">goal</text>
+
+  <text class="txt label" x="1910" y="240">final gate</text>
+  <path class="line" d="M1862 260 H1958" marker-end="url(#arrow)"/>
+
+  <rect class="orange-pill" x="1975" y="222" width="160" height="76" rx="38"/>
+  <text class="txt orange main" x="2055" y="262">Done</text>
+
+  <!-- Concept boundary -->
+  <text class="txt label left" x="1240" y="78">repo artifacts</text>
+  <text class="txt label right" x="1260" y="78">active thread</text>
+  <path class="boundary" d="M1250 102 V368"/>
+
+  <!-- Evidence loop -->
+  <path class="dash" d="M1745 315 C 1560 370, 1295 370, 1185 295" marker-end="url(#arrow)"/>
+  <text class="txt label" x="1415" y="386">checkpoint evidence</text>
+</svg>

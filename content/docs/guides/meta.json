@@ -1,8 +1,13 @@
 {
-  "title": "Guides",
+  "title": "Use cases and guides",
   "pages": [
-    "[When to use which skill](/docs/guides#when-to-use-which-skill)",
-    "[Suggested first moves](/docs/guides#suggested-first-moves)",
-    "[Contributing guides](/docs/guides#contributing-guides)"
+    "[Decision table](/docs/guides#decision-table)",
+    "[Default guided flow](/docs/guides#default-guided-flow)",
+    "[Prototype quickly with $autopilot](/docs/guides#prototype-quickly-with-autopilot)",
+    "[Plan before implementation](/docs/guides#plan-before-implementation)",
+    "[Design before UI work with $design](/docs/guides#design-before-ui-work-with-design)",
+    "[Track durable milestones with $ultragoal](/docs/guides#track-durable-milestones-with-ultragoal)",
+    "[Split parallel work with $team](/docs/guides#split-parallel-work-with-team)",
+    "[Verify and repair with $ultraqa](/docs/guides#verify-and-repair-with-ultraqa)"
   ]
 }
